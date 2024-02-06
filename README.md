@@ -33,7 +33,7 @@ Tool
 <br>
 
 ## 📍 ERD 설계
-![GDHEALTH_ERD](GDHEALTH_ERD.png)
+![GDHEALTH_ERD](README/GDHEALTH_ERD.png)
 <br><br>
 
 ## 📍 담당 기능
