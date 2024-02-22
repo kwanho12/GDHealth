@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.headoffice.emp.EmpMapper">
-	
+
 	<select id="employeeList" parameterType="map" resultType="map">
 		SELECT
-			e.employee_id empId,  
-			ed.employee_name empName,
-			ed.employee_gender empGender,
-			ed.createdate createdate,
-			ei.employee_img_file_name filename
+		e.employee_id empId,
+		ed.employee_name empName,
+		ed.employee_gender empGender,
+		ed.createdate createdate,
+		ei.employee_img_file_name filename
 		FROM employee e
 		INNER JOIN employee_detail ed
-			ON ed.employee_no = e.employee_no
+		ON ed.employee_no = e.employee_no
 		INNER JOIN employee_img ei
-			ON ei.employee_no = e.employee_no
+		ON ei.employee_no = e.employee_no
 		INNER JOIN branch b
-			ON b.branch_no = e.branch_no
+		ON b.branch_no = e.branch_no
 		<where>
 			<choose>
 				<when test="type != null and type.equals('id')">
@@ -37,28 +37,29 @@
 		</where>
 		ORDER BY ed.createdate DESC
 		LIMIT #{beginRow}, #{rowPerPage}
-	</select>	
-	
+	</select>
+
 	<select id="employeeCnt" resultType="int">
 		SELECT COUNT(*)
-		FROM employee e
+		FROM employee
+		e
 		INNER JOIN employee_detail ed
-			ON ed.employee_no = e.employee_no
+		ON ed.employee_no = e.employee_no
 		INNER JOIN employee_img ei
-			ON ei.employee_no = e.employee_no
+		ON ei.employee_no = e.employee_no
 		INNER JOIN branch b
-			ON b.branch_no = e.branch_no
+		ON b.branch_no = e.branch_no
 	</select>
-	
+
 	<select id="searchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM employee e
 		INNER JOIN employee_detail ed
-			ON ed.employee_no = e.employee_no
+		ON ed.employee_no = e.employee_no
 		INNER JOIN employee_img ei
-			ON ei.employee_no = e.employee_no
+		ON ei.employee_no = e.employee_no
 		INNER JOIN branch b
-			ON b.branch_no = e.branch_no
+		ON b.branch_no = e.branch_no
 		<where>
 			<choose>
 				<when test="type != null and type.equals('id')">
@@ -85,77 +86,78 @@
 	</select>
 
 	<select id="idCheck" parameterType="String" resultType="int">
-		SELECT COUNT(*)
+		SELECT
+		COUNT(*)
 		FROM employee
 		WHERE employee_id = #{employeeId}
 	</select>
-	
+
 	<select id="employeeOne" resultType="map">
 		SELECT
-			e.employee_id empId,
-			e.employee_active empActive,
-			ed.employee_name empName,
-			ed.employee_phone empPhone,
-			ed.employee_email empEmail,
-			ed.employee_gender empGender,
-			ed.createdate createdate,
-			ei.employee_img_file_name filename,
-			b.branch_name branchName
+		e.employee_id empId,
+		e.employee_active empActive,
+		ed.employee_name empName,
+		ed.employee_phone empPhone,
+		ed.employee_email empEmail,
+		ed.employee_gender empGender,
+		ed.createdate createdate,
+		ei.employee_img_file_name filename,
+		b.branch_name branchName
 		FROM employee e
 		INNER JOIN employee_detail ed
-			ON ed.employee_no = e.employee_no
+		ON ed.employee_no = e.employee_no
 		INNER JOIN employee_img ei
-			ON ei.employee_no = e.employee_no
+		ON ei.employee_no = e.employee_no
 		INNER JOIN branch b
-			ON b.branch_no = e.branch_no
+		ON b.branch_no = e.branch_no
 		WHERE e.employee_id = #{employeeId}
 	</select>
-	
+
 	<insert id="insertEmployee" parameterType="com.tree.gdhealth.vo.Employee">
 		INSERT INTO employee(
-			branch_no,
-			employee_id,
-			employee_pw,
-			employee_position
+		branch_no,
+		employee_id,
+		employee_pw,
+		employee_position
 		) VALUES (
-			#{branchNo},
-			#{employeeId},
-			PASSWORD(#{employeePw}),
-			#{employeePosition}
+		#{branchNo},
+		#{employeeId},
+		PASSWORD(#{employeePw}),
+		#{employeePosition}
 		)
 		<selectKey resultType="int" keyProperty="employeeNo" order="AFTER">
-      		  SELECT LAST_INSERT_ID()
-   		</selectKey> 
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 	<insert id="insertEmployeeDetail" parameterType="com.tree.gdhealth.vo.EmployeeDetail">
 		INSERT INTO employee_detail(
-			employee_no,
-			employee_name,
-			employee_phone,
-			employee_email,
-			employee_gender		
+		employee_no,
+		employee_name,
+		employee_phone,
+		employee_email,
+		employee_gender
 		) VALUES (
-			#{employeeNo},
-			#{employeeName},
-			#{employeePhone},
-			#{employeeEmail},
-			#{employeeGender}
+		#{employeeNo},
+		#{employeeName},
+		#{employeePhone},
+		#{employeeEmail},
+		#{employeeGender}
 		)
 	</insert>
 	<insert id="insertEmployeeImg" parameterType="com.tree.gdhealth.vo.EmployeeImg">
 		INSERT INTO employee_img(
-			employee_no,
-			employee_img_origin_name,
-			employee_img_file_name,
-			employee_img_size,
-			employee_img_type		
+		employee_no,
+		employee_img_origin_name,
+		employee_img_file_name,
+		employee_img_size,
+		employee_img_type
 		) VALUES (
-			#{employeeNo},
-			#{employeeImgOriginName},
-			#{employeeImgFilename},
-			#{employeeImgSize},
-			#{employeeImgType}
+		#{employeeNo},
+		#{employeeImgOriginName},
+		#{employeeImgFilename},
+		#{employeeImgSize},
+		#{employeeImgType}
 		)
 	</insert>
-	
+
 </mapper>

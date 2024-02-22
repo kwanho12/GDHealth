@@ -13,19 +13,19 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-	
+
 	private final WebSocketHandler webSocketHandler;
-	
-	
+
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		
-	// HttpSessionHandshakeInterceptor : HttpSession에 저장 된 사용자ID를 WebSocketSession에서도 사용
+
+		// HttpSessionHandshakeInterceptor : HttpSession에 저장 된 사용자ID를
+		// WebSocketSession에서도 사용
 		registry.addHandler(webSocketHandler, "/chatting/{roomNo}")
-					.addInterceptors(new HttpSessionHandshakeInterceptor())
-					.setAllowedOrigins("http://localhost:80", "http://43.203.85.254", "http://52.78.98.70"); // 허용할 origin을 설정
-					
-		
+				.addInterceptors(new HttpSessionHandshakeInterceptor())
+				.setAllowedOrigins("http://localhost:80", "http://43.203.85.254", "http://52.78.98.70"); // 허용할 origin을
+																											// 설정
+
 	}
-	
+
 }

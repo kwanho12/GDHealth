@@ -1,154 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tree.gdhealth.headoffice.sportsEquipment.EquipmentMapper">
+<mapper
+	namespace="com.tree.gdhealth.headoffice.sportsEquipment.EquipmentMapper">
 
 	<select id="equipmentList" parameterType="map" resultType="map">
 		SELECT
-			s.sports_equipment_no equipmentNo,
-			s.item_name itemName,
-			s.item_price itemPrice,
-			s.note note,
-			s.active active,
-			s.createdate createdate,
-			si.sports_equipment_img_file_name filename,
-			ed.employee_name employeeName
+		s.sports_equipment_no equipmentNo,
+		s.item_name itemName,
+		s.item_price itemPrice,
+		s.note note,
+		s.active active,
+		s.createdate createdate,
+		si.sports_equipment_img_file_name filename,
+		ed.employee_name employeeName
 		FROM sports_equipment s
 		INNER JOIN sports_equipment_img si
-			ON si.sports_equipment_no = s.sports_equipment_no
-		INNER JOIN employee_detail ed
-			ON s.writer_employee_no = ed.employee_no 
+		ON si.sports_equipment_no = s.sports_equipment_no
+		INNER JOIN
+		employee_detail ed
+		ON s.writer_employee_no = ed.employee_no
 		<where>
 			<choose>
 				<when test="type != null and type.equals('name')">
 					s.item_name LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+				</when>
 				<when test="type != null and type.equals('note')">
 					s.note LIKE CONCAT('%',#{keyword},'%')
 				</when>
 				<when test="type != null and type.equals('writer')">
 					ed.employee_name LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+				</when>
 				<when test="type != null and type.equals('isActive')">
 					s.active LIKE CONCAT('%',#{keyword},'%')
-				</when>			
+				</when>
 			</choose>
 		</where>
 		ORDER BY s.item_price DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
-	
+
 	<select id="equipmentCnt" resultType="int">
 		SELECT COUNT(*)
-		FROM sports_equipment s
+		FROM
+		sports_equipment s
 		INNER JOIN sports_equipment_img si
-			ON si.sports_equipment_no = s.sports_equipment_no
+		ON si.sports_equipment_no = s.sports_equipment_no
 	</select>
-	
+
 	<select id="searchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM sports_equipment s
-		INNER JOIN sports_equipment_img si
-			ON si.sports_equipment_no = s.sports_equipment_no
-		INNER JOIN employee_detail ed
-			ON ed.employee_no = s.writer_employee_no
+		INNER JOIN sports_equipment_img
+		si
+		ON si.sports_equipment_no = s.sports_equipment_no
+		INNER JOIN
+		employee_detail ed
+		ON ed.employee_no = s.writer_employee_no
 		<where>
 			<choose>
 				<when test="type != null and type.equals('name')">
 					s.item_name LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+				</when>
 				<when test="type != null and type.equals('note')">
 					s.note LIKE CONCAT('%',#{keyword},'%')
 				</when>
 				<when test="type != null and type.equals('writer')">
-					ed.employee_name note LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+					ed.employee_name note LIKE
+					CONCAT('%',#{keyword},'%')
+				</when>
 				<when test="type != null and type.equals('isActive')">
 					s.active LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+				</when>
 			</choose>
 		</where>
 	</select>
-	
+
 	<select id="equipmentOne" parameterType="int" resultType="map">
 		SELECT
-			s.sports_equipment_no equipmentNo,
-			s.item_name itemName,
-			s.item_price itemPrice,
-			s.note note,
-			si.sports_equipment_img_file_name filename
+		s.sports_equipment_no equipmentNo,
+		s.item_name itemName,
+		s.item_price itemPrice,
+		s.note note,
+		si.sports_equipment_img_file_name filename
 		FROM sports_equipment s
 		INNER JOIN sports_equipment_img si
-			ON si.sports_equipment_no = s.sports_equipment_no
-		WHERE s.sports_equipment_no = #{equipmentNo}
+		ON si.sports_equipment_no = s.sports_equipment_no
+		WHERE
+		s.sports_equipment_no = #{equipmentNo}
 	</select>
-	
-	<insert id="insertEquipment" parameterType="com.tree.gdhealth.vo.SportsEquipment">
+
+	<insert id="insertEquipment"
+		parameterType="com.tree.gdhealth.vo.SportsEquipment">
 		INSERT INTO sports_equipment(
-			writer_employee_no,
-			item_name,
-			item_price,
-			note
+		writer_employee_no,
+		item_name,
+		item_price,
+		note
 		) VALUES (
-			#{employeeNo},
-			#{itemName},
-			#{itemPrice},
-			#{note}
+		#{employeeNo},
+		#{itemName},
+		#{itemPrice},
+		#{note}
 		)
-		<selectKey resultType="int" keyProperty="sportsEquipmentNo" order="AFTER">
-      		  SELECT LAST_INSERT_ID()
-   		</selectKey> 
+		<selectKey resultType="int" keyProperty="sportsEquipmentNo"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
-	
-	<insert id="insertEquipmentImg" parameterType="com.tree.gdhealth.vo.SportsEquipmentImg">
+
+	<insert id="insertEquipmentImg"
+		parameterType="com.tree.gdhealth.vo.SportsEquipmentImg">
 		INSERT INTO sports_equipment_img (
-			sports_equipment_no,
-			sports_equipment_img_origin_name,
-			sports_equipment_img_file_name,
-			sports_equipment_img_size,
-			sports_equipment_img_type
+		sports_equipment_no,
+		sports_equipment_img_origin_name,
+		sports_equipment_img_file_name,
+		sports_equipment_img_size,
+		sports_equipment_img_type
 		) VALUES (
-			#{sportsEquipmentNo},
-			#{sportsEquipmentImgOriginName},
-			#{sportsEquipmentImgFileName},
-			#{sportsEquipmentImgSize},
-			#{sportsEquipmentImgType}
+		#{sportsEquipmentNo},
+		#{sportsEquipmentImgOriginName},
+		#{sportsEquipmentImgFileName},
+		#{sportsEquipmentImgSize},
+		#{sportsEquipmentImgType}
 		)
 	</insert>
-	
-	<update id="updateEquipment" parameterType="com.tree.gdhealth.vo.SportsEquipment">
+
+	<update id="updateEquipment"
+		parameterType="com.tree.gdhealth.vo.SportsEquipment">
 		UPDATE sports_equipment
 		SET
-			item_name = #{itemName},
-			item_price = #{itemPrice},
-			note = #{note},
-			updatedate = NOW()
+		item_name = #{itemName},
+		item_price = #{itemPrice},
+		note = #{note},
+		updatedate = NOW()
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
-	
-	<update id="updateEquipmentImg" parameterType="com.tree.gdhealth.vo.SportsEquipmentImg">
+
+	<update id="updateEquipmentImg"
+		parameterType="com.tree.gdhealth.vo.SportsEquipmentImg">
 		UPDATE sports_equipment_img
 		SET
-			sports_equipment_img_origin_name = #{sportsEquipmentImgOriginName},
-			sports_equipment_img_file_name = #{sportsEquipmentImgFileName},
-			sports_equipment_img_size = #{sportsEquipmentImgSize},
-			sports_equipment_img_type = #{sportsEquipmentImgType},
-			updatedate = NOW()
+		sports_equipment_img_origin_name = #{sportsEquipmentImgOriginName},
+		sports_equipment_img_file_name = #{sportsEquipmentImgFileName},
+		sports_equipment_img_size = #{sportsEquipmentImgSize},
+		sports_equipment_img_type = #{sportsEquipmentImgType},
+		updatedate = NOW()
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
-	
+
 	<update id="deactiveEquipment">
 		UPDATE sports_equipment
 		SET
-			active = 'N',
-			updatedate = NOW()
+		active = 'N',
+		updatedate = NOW()
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
-	
+
 	<update id="activeEquipment">
 		UPDATE sports_equipment
 		SET
-			active = 'Y',
-			updatedate = NOW()
+		active = 'Y',
+		updatedate = NOW()
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
 

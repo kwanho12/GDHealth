@@ -8,13 +8,13 @@ import com.tree.gdhealth.vo.Membership;
 
 @Mapper
 public interface MembershipMapper {
-	
+
 	List<Membership> membershipList();
-	
-	int addMembership (Membership membership);
-	
-	int activeY (Membership membership);
-	
-	int activeN (Membership membership);
+
+	int addMembership(Membership membership);
+
+	int activeY(Membership membership);
+
+	int activeN(Membership membership);
 
 }

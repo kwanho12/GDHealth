@@ -1,200 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tree.gdhealth.headoffice.program.ProgramMapper">
+<mapper
+	namespace="com.tree.gdhealth.headoffice.program.ProgramMapper">
 
 	<select id="programList" parameterType="Map" resultType="Map">
 		SELECT
-			ed.employee_name empName,
-			p.program_no programNo,
-			p.program_name programName,
-			p.program_detail programDetail,		
-			p.program_max_customer maxCustomer,
-			p.program_active programActive,
-			pi.program_img_file filename,
-			pd.program_date programDate
+		ed.employee_name empName,
+		p.program_no programNo,
+		p.program_name programName,
+		p.program_detail programDetail,
+		p.program_max_customer maxCustomer,
+		p.program_active programActive,
+		pi.program_img_file filename,
+		pd.program_date programDate
 		FROM program p
 		INNER JOIN employee_detail ed
-			ON ed.employee_no = p.writer_employee_no
+		ON ed.employee_no = p.writer_employee_no
 		INNER JOIN program_date pd
-			ON pd.program_no = p.program_no
+		ON pd.program_no = p.program_no
 		INNER JOIN program_img pi
-			ON p.program_no = pi.program_no	
+		ON p.program_no = pi.program_no
 		<where>
 			<choose>
 				<when test="type != null and type.equals('title')">
 					p.program_name LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+				</when>
 				<when test="type != null and type.equals('detail')">
 					p.program_detail LIKE CONCAT('%',#{keyword},'%')
 				</when>
 				<when test="type != null and type.equals('active')">
 					p.program_active LIKE CONCAT('%',#{keyword},'%')
-				</when>			
+				</when>
 			</choose>
 		</where>
 		ORDER BY pd.program_date DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
-	
+
 	<select id="programCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM program p
 		INNER JOIN program_date pd
-			ON pd.program_no = p.program_no
+		ON pd.program_no = p.program_no
 		INNER JOIN program_img pi
-			ON p.program_no = pi.program_no
+		ON p.program_no = pi.program_no
 	</select>
-	
+
 	<select id="searchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM program p
 		INNER JOIN program_date pd
-			ON pd.program_no = p.program_no
+		ON pd.program_no = p.program_no
 		INNER JOIN program_img pi
-			ON p.program_no = pi.program_no
+		ON p.program_no = pi.program_no
 		<where>
 			<choose>
 				<when test="type != null and type.equals('title')">
 					program_name LIKE CONCAT('%',#{keyword},'%')
-				</when>	
+				</when>
 				<when test="type != null and type.equals('detail')">
 					program_detail LIKE CONCAT('%',#{keyword},'%')
 				</when>
 				<when test="type != null and type.equals('active')">
 					program_active LIKE CONCAT('%',#{keyword},'%')
-				</when>			
+				</when>
 			</choose>
 		</where>
 	</select>
-	
+
 	<select id="programOne" parameterType="map" resultType="Map">
 		SELECT
-			ed.employee_name empName,
-			p.program_no programNo,
-			p.program_name programName,
-			p.program_max_customer maxCustomer,
-			p.program_detail programDetail,
-			p.program_max_customer maxCustomer,
-			p.program_active active,
-			pi.program_img_no programImgNo,
-			pi.program_img_file filename,
-			pd.program_date programDate
+		ed.employee_name empName,
+		p.program_no programNo,
+		p.program_name programName,
+		p.program_max_customer maxCustomer,
+		p.program_detail programDetail,
+		p.program_max_customer maxCustomer,
+		p.program_active active,
+		pi.program_img_no programImgNo,
+		pi.program_img_file filename,
+		pd.program_date programDate
 		FROM program p
 		INNER JOIN employee_detail ed
-			ON ed.employee_no = p.writer_employee_no
+		ON ed.employee_no = p.writer_employee_no
 		INNER JOIN program_date pd
-			ON pd.program_no = p.program_no
+		ON pd.program_no = p.program_no
 		INNER JOIN program_img pi
-			ON p.program_no = pi.program_no
+		ON p.program_no = pi.program_no
 		WHERE p.program_no = #{programNo}
-		AND pd.program_date = #{programDate}
+		AND
+		pd.program_date = #{programDate}
 	</select>
-	
-	<select id="checkDatesExists" parameterType="list" resultType="boolean">
+
+	<select id="checkDatesExists" parameterType="list"
+		resultType="boolean">
 		SELECT
-			CASE
-		        WHEN COUNT(*) > 0 THEN true
-		        ELSE false
-     		 END AS result
-		FROM program_date 
+		CASE
+		WHEN COUNT(*) > 0 THEN true
+		ELSE false
+		END AS result
+		FROM program_date
 		WHERE program_date IN
-			<foreach collection="dateList" item="value" open="(" separator="," close=")">
-      		 	 #{value}
-    		</foreach>	
+		<foreach collection="dateList" item="value" open="("
+			separator="," close=")">
+			#{value}
+		</foreach>
 	</select>
-	
-	<select id="checkDateOneExists" parameterType="String" resultType="boolean">
+
+	<select id="checkDateOneExists" parameterType="String"
+		resultType="boolean">
 		SELECT
-			CASE
-		        WHEN COUNT(*) > 0 THEN true
-		        ELSE false
-     		 END AS result
-		FROM program_date 
+		CASE
+		WHEN COUNT(*) > 0 THEN true
+		ELSE false
+		END AS result
+		FROM program_date
 		WHERE program_date = #{programDate}
 	</select>
-	
-	<insert id="insertProgram" parameterType="com.tree.gdhealth.vo.Program">
+
+	<insert id="insertProgram"
+		parameterType="com.tree.gdhealth.vo.Program">
 		INSERT INTO program(
-			writer_employee_no,
-			program_name,
-			program_detail,
-			program_max_customer
+		writer_employee_no,
+		program_name,
+		program_detail,
+		program_max_customer
 		) VALUES (
-			#{employeeNo},
-			#{programName},
-			#{programDetail},
-			#{programMaxCustomer}
+		#{employeeNo},
+		#{programName},
+		#{programDetail},
+		#{programMaxCustomer}
 		)
-		<selectKey resultType="int" keyProperty="programNo" order="AFTER">
-      		  SELECT LAST_INSERT_ID()
-   		</selectKey> 
+		<selectKey resultType="int" keyProperty="programNo"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 	<insert id="insertProgramDates" parameterType="list">
 		INSERT INTO program_date(
-			program_no,
-			program_date
+		program_no,
+		program_date
 		) VALUES
 		<foreach collection="dateList" item="item" separator=",">
 			(#{item.programNo},#{item.programDate})
-		</foreach> 		
+		</foreach>
 	</insert>
-	<insert id="insertProgramImg" parameterType="com.tree.gdhealth.vo.ProgramImg">
+	<insert id="insertProgramImg"
+		parameterType="com.tree.gdhealth.vo.ProgramImg">
 		INSERT INTO program_img(
-			program_no,
-			program_img_origin,
-			program_img_file,
-			program_img_size,
-			program_img_type
+		program_no,
+		program_img_origin,
+		program_img_file,
+		program_img_size,
+		program_img_type
 		) VALUES (
-			#{programNo},
-			#{originName},
-			#{filename},
-			#{programImgSize},
-			#{programImgType}
+		#{programNo},
+		#{originName},
+		#{filename},
+		#{programImgSize},
+		#{programImgType}
 		)
 	</insert>
-	
-	<update id="updateProgram" parameterType="com.tree.gdhealth.vo.Program">
+
+	<update id="updateProgram"
+		parameterType="com.tree.gdhealth.vo.Program">
 		UPDATE program
-		SET 
-			program_name = #{programName},
-			program_detail = #{programDetail},
-			program_max_customer = #{programMaxCustomer},
-			updatedate = NOW()
+		SET
+		program_name = #{programName},
+		program_detail = #{programDetail},
+		program_max_customer = #{programMaxCustomer},
+		updatedate = NOW()
 		WHERE program_no = #{programNo}
 	</update>
-	<update id="updateProgramDate" parameterType="com.tree.gdhealth.vo.ProgramDate">
+	<update id="updateProgramDate"
+		parameterType="com.tree.gdhealth.vo.ProgramDate">
 		UPDATE program_date
 		SET
-			program_date = #{programDate},
-			updatedate = NOW()
+		program_date = #{programDate},
+		updatedate = NOW()
 		WHERE program_no = #{programNo}
-		AND program_date = #{originDate}
-	</update>	
-	<update id="updateProgramImg" parameterType="com.tree.gdhealth.vo.ProgramImg">
+		AND program_date =
+		#{originDate}
+	</update>
+	<update id="updateProgramImg"
+		parameterType="com.tree.gdhealth.vo.ProgramImg">
 		UPDATE program_img
 		SET
-			program_img_origin = #{originName},
-			program_img_file = #{filename},
-			program_img_size = #{programImgSize},
-			program_img_type = #{programImgType},
-			updatedate = NOW()
+		program_img_origin = #{originName},
+		program_img_file = #{filename},
+		program_img_size = #{programImgSize},
+		program_img_type = #{programImgType},
+		updatedate = NOW()
 		WHERE program_no = #{programNo}
 	</update>
-	
+
 	<update id="deactiveProgram">
 		UPDATE program
 		SET
-			program_active = 'N',
-			updatedate = NOW()
+		program_active = 'N',
+		updatedate = NOW()
 		WHERE program_no = #{programNo}
 	</update>
-		
+
 	<update id="activeProgram">
 		UPDATE program
 		SET
-			program_active = 'Y',
-			updatedate = NOW()
+		program_active = 'Y',
+		updatedate = NOW()
 		WHERE program_no = #{programNo}
 	</update>
 </mapper>

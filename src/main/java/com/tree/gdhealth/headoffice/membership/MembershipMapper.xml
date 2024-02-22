@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tree.gdhealth.headoffice.membership.MembershipMapper">
+<mapper
+	namespace="com.tree.gdhealth.headoffice.membership.MembershipMapper">
 	<select id="membershipList" resultType="java.util.Map">
 		SELECT
-			membership_no membershipNo,
-			membership_name membershipName,
-			membership_month membershipMonth,
-			membership_price membershipPrice,
-			active
+		membership_no membershipNo,
+		membership_name membershipName,
+		membership_month membershipMonth,
+		membership_price membershipPrice,
+		active
 		FROM membership;
 	</select>
 	<insert id="addMembership">
-		INSERT INTO membership(membership_name, membership_month, membership_price, createdate, updatedate) VALUES(#{membershipName}, #{membershipMonth}, #{membershipPrice}, NOW(),NOW());
+		INSERT INTO membership(membership_name,
+		membership_month, membership_price, createdate, updatedate)
+		VALUES(#{membershipName}, #{membershipMonth}, #{membershipPrice},
+		NOW(),NOW());
 	</insert>
-	
+
 	<update id="activeY">
-		UPDATE membership SET active = 'Y' WHERE membership_no = #{membershipNo}
+		UPDATE membership SET active = 'Y' WHERE
+		membership_no = #{membershipNo}
 	</update>
-	
+
 	<update id="activeN">
-		UPDATE membership SET active = 'N' WHERE membership_no = #{membershipNo}
+		UPDATE membership SET active = 'N' WHERE
+		membership_no = #{membershipNo}
 	</update>
 </mapper>

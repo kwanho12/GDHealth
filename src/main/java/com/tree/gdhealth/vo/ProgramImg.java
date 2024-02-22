@@ -2,7 +2,7 @@ package com.tree.gdhealth.vo;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.headoffice.customValidation.ValidFile;
+import com.tree.gdhealth.utils.customvalidation.ValidFile;
 
 import lombok.Data;
 

@@ -40,6 +40,6 @@ public class MembershipController {
 		membershipService.addMembership(membership);
 		
 		return "redirect:/headoffice/membershipList";
-		
+
 	}
 }

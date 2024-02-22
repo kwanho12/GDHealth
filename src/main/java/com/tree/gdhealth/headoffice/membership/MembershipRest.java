@@ -11,26 +11,25 @@ public class MembershipRest {
 
 	@Autowired
 	private MembershipService membershipService;
-	
-	
+
 	@PostMapping("/headoffice/deleteMembership")
 	public int deleteMembership(Membership membership) {
-		
+
 		String active = membership.getActive();
 		System.out.println("aactive" + active);
-		
-		if("N".equals(active)) {
-			
+
+		if ("N".equals(active)) {
+
 			membershipService.activeY(membership);
-			
+
 		}
-		
-		if("Y".equals(active)) {
-			
+
+		if ("Y".equals(active)) {
+
 			membershipService.activeN(membership);
-			
+
 		}
-		
+
 		return 1;
 	}
 }

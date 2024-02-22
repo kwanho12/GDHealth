@@ -10,20 +10,25 @@ import com.tree.gdhealth.vo.SportsEquipmentImg;
 
 @Mapper
 public interface EquipmentMapper {
-	
+
 	List<Map<String, Object>> equipmentList(Map<String, Object> map);
+
 	int equipmentCnt();
+
 	int searchCnt(Map<String, Object> map);
-	
+
 	Map<String, Object> equipmentOne(int equipmentNo);
-	
+
 	int insertEquipment(SportsEquipment sportsEquipment);
+
 	int insertEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
-	
+
 	int updateEquipment(SportsEquipment sportsEquipment);
+
 	int updateEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
-	
+
 	int deactiveEquipment(int sportsEquipmentNo);
+
 	int activeEquipment(int sportsEquipmentNo);
-	
+
 }

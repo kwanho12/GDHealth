@@ -2,11 +2,11 @@ package com.tree.gdhealth.vo;
 
 import java.util.List;
 
-import com.tree.gdhealth.headoffice.customValidation.FutureDate;
-import com.tree.gdhealth.headoffice.customValidation.FutureDates;
-import com.tree.gdhealth.headoffice.customValidation.ListPattern;
-import com.tree.gdhealth.headoffice.customValidation.group.DateGroup;
-import com.tree.gdhealth.headoffice.customValidation.group.DatesGroup;
+import com.tree.gdhealth.utils.customvalidation.FutureDate;
+import com.tree.gdhealth.utils.customvalidation.FutureDates;
+import com.tree.gdhealth.utils.customvalidation.ListPattern;
+import com.tree.gdhealth.utils.customvalidation.group.DateGroup;
+import com.tree.gdhealth.utils.customvalidation.group.DatesGroup;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
