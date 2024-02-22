@@ -38,10 +38,10 @@ Tool
 
 ## 📍 담당 기능
 - 공통 기능
-  - 페이징(Paging.java) <a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/headoffice/Paging.java#L41" target="_blank">📌 코드 확인</a>
+  - 페이징(Paging.java) 
       - Builder 패턴으로 pageNumCut(한 번에 표시할 페이징 번호의 개수), rowPerPage(한 페이지에 나타낼 데이터 수), currentPage(현재 페이지), cnt(전체 데이터 수)를 받는 calculation()
       - calculation()을 통해 값이 대입된 field를 model에 보내는 pagingAttributes()
-  - 파일 저장(ImageSave.java) <a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/headoffice/ImageSave.java#L14" target="_blank">📌 코드 확인</a>
+  - 파일 저장(ImageSave.java) 
       - MultipartFile type을 매개변수로 받고 임의의 문자 + 파일의 확장자를 String type으로 return 하는 getFileName()
       - MultipartFile, String(path), String(filename)을 매개변수로 받고 파일을 저장하는 saveFile()
 <br>
@@ -110,25 +110,22 @@ Tool
 1. 
    - 문제 : 프로그램을 추가할 때 파일이 추가되었는지 검증을 해야 하는데 스프링이 제공하는 validation API로는 MultipartFile type 검증이 어려웠습니다.
    - 해결 : Custom Validator API를 만들어 프로그램 파일을 첨부하였는지 검증하였습니다. <br>
-  <a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/headoffice/customValidation/validator/ValidFileValidator.java" target="_blank">📌 코드 확인</a>
 <br>
 
-2. 
+1. 
    - 문제 : 한 번에 DB의 program_date table에 여러 개의 프로그램 날짜들을 추가하려고 할 때  Service Layer에서 프로그램 날짜 1개를 추가할 때마다 insert 작업을 한 번 하려고 하였으나 DB 성능 저하가 우려되었습니다.
    - 해결 : ProgramMapper.xml에서 foreach문을 사용하여 List&lt;VO&gt; type으로 한 번의 insert 작업으로 여러 개의 프로그램 날짜들을 추가하였습니다.
-   <br><a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/headoffice/program/ProgramMapper.xml#L132" target="_blank">📌 코드 확인</a>
+   <br>
 <br>
 
-3. 
+1. 
     - 문제 : 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증을 해야 하는데 스프링이 제공하는 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.
     - 해결 : Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. <br>
-    <a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/headoffice/customValidation/validator/ListPatternValidator.java#L27" target="_blank">📌 코드 확인(ListPatternValidator)</a><br>
-    <a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/headoffice/customValidation/validator/FutureDatesValidator.java#L15" target="_blank">📌 코드 확인(FutureDatesValidator)</a>
 <br>
 
-4. 
+1. 
     - 문제 : 채팅 방에서 로그인된 고객을 특정해야 하는데 WebSocketSession 객체로는 각각의 고객에 대해 특정하기 어려웠습니다.
     - 해결 : HttpSessionHandshakeInterceptor을 이용하여 WebSocketHandler가 실행되기 전에 저장된 고객의 세센 값을 가져 와서 고객을 특정하는 것이 가능해졌습니다.
-    <br><a href="https://github.com/sksmss14/GD_HEALTH/blob/develop/src/main/java/com/tree/gdhealth/chat/WebSocketConfig.java#L25" target="_blank">📌 코드 확인</a>
+
 
 
