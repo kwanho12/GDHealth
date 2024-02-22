@@ -112,18 +112,18 @@ Tool
    - 해결 : Custom Validator API를 만들어 프로그램 파일을 첨부하였는지 검증하였습니다. <br>
 <br>
 
-1. 
+2. 
    - 문제 : 한 번에 DB의 program_date table에 여러 개의 프로그램 날짜들을 추가하려고 할 때  Service Layer에서 프로그램 날짜 1개를 추가할 때마다 insert 작업을 한 번 하려고 하였으나 DB 성능 저하가 우려되었습니다.
    - 해결 : ProgramMapper.xml에서 foreach문을 사용하여 List&lt;VO&gt; type으로 한 번의 insert 작업으로 여러 개의 프로그램 날짜들을 추가하였습니다.
    <br>
 <br>
 
-1. 
+3. 
     - 문제 : 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증을 해야 하는데 스프링이 제공하는 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.
     - 해결 : Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. <br>
 <br>
 
-1. 
+4. 
     - 문제 : 채팅 방에서 로그인된 고객을 특정해야 하는데 WebSocketSession 객체로는 각각의 고객에 대해 특정하기 어려웠습니다.
     - 해결 : HttpSessionHandshakeInterceptor을 이용하여 WebSocketHandler가 실행되기 전에 저장된 고객의 세센 값을 가져 와서 고객을 특정하는 것이 가능해졌습니다.
 
