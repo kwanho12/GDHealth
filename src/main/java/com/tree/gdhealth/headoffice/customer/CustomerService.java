@@ -25,7 +25,7 @@ public class CustomerService {
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 
-		List<Map<String, Object>> customerList = customerMapper.customerList(map);
+		List<Map<String, Object>> customerList = customerMapper.selectCustomerList(map);
 
 		return customerList;
 
@@ -34,7 +34,7 @@ public class CustomerService {
 	@Transactional(readOnly = true)
 	public int getCustomerCnt() {
 
-		int customerCnt = customerMapper.customerCnt();
+		int customerCnt = customerMapper.selectCustomerCnt();
 		// 디버깅
 		log.debug("고객 수 : " + customerCnt);
 
@@ -50,7 +50,7 @@ public class CustomerService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		List<Map<String, Object>> searchList = customerMapper.customerList(map);
+		List<Map<String, Object>> searchList = customerMapper.selectCustomerList(map);
 
 		return searchList;
 
@@ -63,7 +63,7 @@ public class CustomerService {
 		map.put("keyword", keyword);
 		map.put("type", type);
 
-		int searchCnt = customerMapper.searchCnt(map);
+		int searchCnt = customerMapper.selectSearchCnt(map);
 		// 디버깅
 		log.debug("검색 결과 개수 : " + searchCnt);
 

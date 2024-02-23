@@ -1,4 +1,4 @@
-package com.tree.gdhealth.chat;
+package com.tree.gdhealth.utils.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;

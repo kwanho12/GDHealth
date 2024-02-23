@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.tree.gdhealth.headoffice.sportsEquipment.EquipmentMapper">
 
-	<select id="equipmentList" parameterType="map" resultType="map">
+	<select id="selectEquipmentList" parameterType="map" resultType="map">
 		SELECT
 		s.sports_equipment_no equipmentNo,
 		s.item_name itemName,
@@ -39,7 +39,7 @@
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 
-	<select id="equipmentCnt" resultType="int">
+	<select id="selectEquipmentCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM
 		sports_equipment s
@@ -47,7 +47,7 @@
 		ON si.sports_equipment_no = s.sports_equipment_no
 	</select>
 
-	<select id="searchCnt" parameterType="map" resultType="int">
+	<select id="selectSearchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM sports_equipment s
 		INNER JOIN sports_equipment_img
@@ -75,7 +75,7 @@
 		</where>
 	</select>
 
-	<select id="equipmentOne" parameterType="int" resultType="map">
+	<select id="selectEquipmentOne" parameterType="int" resultType="map">
 		SELECT
 		s.sports_equipment_no equipmentNo,
 		s.item_name itemName,
@@ -148,7 +148,7 @@
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
 
-	<update id="deactiveEquipment">
+	<update id="updateToDeactiveEquipment">
 		UPDATE sports_equipment
 		SET
 		active = 'N',
@@ -156,7 +156,7 @@
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
 
-	<update id="activeEquipment">
+	<update id="updateToActiveEquipment">
 		UPDATE sports_equipment
 		SET
 		active = 'Y',

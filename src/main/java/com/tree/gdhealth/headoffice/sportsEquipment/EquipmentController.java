@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tree.gdhealth.employee.login.LoginEmployee;
-import com.tree.gdhealth.utils.Paging;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
+import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 import com.tree.gdhealth.vo.SportsEquipment;
 import com.tree.gdhealth.vo.SportsEquipmentImg;
 
@@ -43,8 +43,8 @@ public class EquipmentController {
 		return "headoffice/equipmentList";
 	}
 
-	@GetMapping("/paging")
-	public String paging(Model model, int page) {
+	@GetMapping("/pagination")
+	public String pagination(Model model, int page) {
 
 		// 전체 물품 수
 		int equipmentCnt = equipmentService.getEquipmentCnt();
@@ -52,51 +52,51 @@ public class EquipmentController {
 		log.debug("전체 물품 수 : " + equipmentCnt);
 
 		// 페이징
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
+		HeadofficePagination pagination = HeadofficePagination.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
 				.rowPerPage(8) // 한 페이지에 나타낼 row 수
 				.currentPage(page) // 현재 페이지
 				.cnt(equipmentCnt) // 전체 row 수
 				.build();
-		paging.calculation();
+		pagination.calculation();
 
-		List<Map<String, Object>> equipmentList = equipmentService.getEquipmentList(paging.getBeginRow(),
-				paging.getRowPerPage());
+		List<Map<String, Object>> equipmentList = equipmentService.getEquipmentList(pagination.getBeginRow(),
+				pagination.getRowPerPage());
 		model.addAttribute("equipmentList", equipmentList);
 
 		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
+		pagination.paginationAttributes(model, pagination, page);
 
-		return "headoffice/fragment/equipment";
+		return "headoffice/fragment/equipmentList";
 	}
 
-	@GetMapping("/searchPaging")
-	public String searchPaging(Model model, String type, String keyword, int page) {
+	@GetMapping("/searchPagination")
+	public String searchPagination(Model model, String type, String keyword, int page) {
 
 		// 검색 결과 개수
 		int searchCnt = equipmentService.getSearchCnt(type, keyword);
 		// 디버깅
-		log.debug("검색 결과 개수(searchPaging) " + searchCnt);
+		log.debug("검색 결과 개수(searchPagination) " + searchCnt);
 
 		// 페이징
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
+		HeadofficePagination pagination = HeadofficePagination.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
 				.rowPerPage(8) // 한 페이지에 나타낼 row 수
 				.currentPage(page) // 현재 페이지
 				.cnt(searchCnt) // 전체 row 수
 				.build();
-		paging.calculation();
+		pagination.calculation();
 
-		List<Map<String, Object>> searchList = equipmentService.getSearchList(paging.getBeginRow(),
-				paging.getRowPerPage(), type, keyword);
+		List<Map<String, Object>> searchList = equipmentService.getSearchList(pagination.getBeginRow(),
+				pagination.getRowPerPage(), type, keyword);
 		model.addAttribute("equipmentList", searchList);
 
 		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
+		pagination.paginationAttributes(model, pagination, page);
 
 		// search parameter 추가
 		model.addAttribute("type", type);
 		model.addAttribute("keyword", keyword);
 
-		return "headoffice/fragment/searchEquipment";
+		return "headoffice/fragment/searchEquipmentList";
 
 	}
 

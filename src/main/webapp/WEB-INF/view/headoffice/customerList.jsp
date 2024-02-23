@@ -203,12 +203,12 @@
 <script>
 	
 	// 초기 화면
-	paging(1);
+	pagination(1);
 	
-	function paging(page) {
+	function pagination(page) {
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/customer/paging',
+			url : '${pageContext.request.contextPath}/headoffice/customer/pagination',
 			method : 'get',
 			data : {
 				page : page
@@ -221,10 +221,10 @@
 		
 	}
 	
-	function searchPaging(page, type, keyword) {
+	function searchPagination(page, type, keyword) {
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/customer/searchPaging',
+			url : '${pageContext.request.contextPath}/headoffice/customer/searchPagination',
 			method : 'get',
 			data : {
 				page : page,
@@ -314,7 +314,7 @@
 			
 		}
 		
-		searchPaging(1,type,keyword);
+		searchPagination(1,type,keyword);
 		
 	});
 	
@@ -325,7 +325,7 @@
 		let page = $(this).data('page');
 		console.log(page);
 		
-		paging(page);
+		pagination(page);
 		
 	});
 	
@@ -338,7 +338,7 @@
 		let keyword = $(this).data('keyword');
 		console.log(page);
 		
-		searchPaging(page,type,keyword);
+		searchPagination(page,type,keyword);
 		
 	});
 

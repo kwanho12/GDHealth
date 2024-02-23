@@ -187,11 +187,11 @@
 <script>
 
 	// 초기 화면
-	paging(1);
+	pagination(1);
 	
-	function paging(page) {
+	function pagination(page) {
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/program/paging',
+			url : '${pageContext.request.contextPath}/headoffice/program/pagination',
 			method : 'get',
 			data : {
 				page : page
@@ -203,10 +203,10 @@
 		});
 	}
 	
-	function searchPaging(page, type, keyword) {
+	function searchPagination(page, type, keyword) {
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/program/searchPaging',
+			url : '${pageContext.request.contextPath}/headoffice/program/searchPagination',
 			method : 'get',
 			data : {
 				page : page,
@@ -273,7 +273,7 @@
 			
 		}
 		
-		searchPaging(1,type,keyword);
+		searchPagination(1,type,keyword);
 		
 	});
 	
@@ -284,7 +284,7 @@
 		let page = $(this).data('page');
 		console.log(page);
 		
-		paging(page);		
+		pagination(page);		
 	});
 	
 	// 동적으로 추가된 요소에 대해 이벤트 처리
@@ -295,7 +295,7 @@
 		let type = $(this).data('type');
 		let keyword = $(this).data('keyword');
 		
-		searchPaging(page,type,keyword);	
+		searchPagination(page,type,keyword);	
 	});
 	
 </script>

@@ -1,4 +1,4 @@
-package com.tree.gdhealth.utils;
+package com.tree.gdhealth.utils.imagesave;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ImageSave {
+public class HeadofficeImageSaver {
 
 	public String getFilename(MultipartFile multipartFile) {
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.utils.ImageSave;
+import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.vo.Employee;
 import com.tree.gdhealth.vo.EmployeeDetail;
 import com.tree.gdhealth.vo.EmployeeImg;
@@ -32,7 +32,7 @@ public class EmpService {
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 
-		List<Map<String, Object>> employeeList = empMapper.employeeList(map);
+		List<Map<String, Object>> employeeList = empMapper.selectEmployeeList(map);
 
 		return employeeList;
 	}
@@ -40,7 +40,7 @@ public class EmpService {
 	@Transactional(readOnly = true)
 	public int getEmployeeCnt() {
 
-		int employeeCnt = empMapper.employeeCnt();
+		int employeeCnt = empMapper.selectEmployeeCnt();
 		// 디버깅
 		log.debug("전체 직원 수 : " + employeeCnt);
 
@@ -56,7 +56,7 @@ public class EmpService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		List<Map<String, Object>> searchList = empMapper.employeeList(map);
+		List<Map<String, Object>> searchList = empMapper.selectEmployeeList(map);
 
 		return searchList;
 
@@ -69,7 +69,7 @@ public class EmpService {
 		map.put("keyword", keyword);
 		map.put("type", type);
 
-		int searchCnt = empMapper.searchCnt(map);
+		int searchCnt = empMapper.selectSearchCnt(map);
 		// 디버깅
 		log.debug("검색 결과 개수 : " + searchCnt);
 
@@ -79,7 +79,7 @@ public class EmpService {
 	@Transactional(readOnly = true)
 	public List<String> getBranchList() {
 
-		List<String> branchList = empMapper.branchList();
+		List<String> branchList = empMapper.selectBranchList();
 		// 디버깅
 		log.debug("지점 목록 : " + branchList);
 
@@ -89,7 +89,7 @@ public class EmpService {
 	@Transactional(readOnly = true)
 	public Map<String, Object> getEmployeeOne(String employeeId) {
 
-		Map<String, Object> employeeOne = empMapper.employeeOne(employeeId);
+		Map<String, Object> employeeOne = empMapper.selectEmployeeOne(employeeId);
 		// 디버깅
 		log.debug("직원 상세 정보 : " + employeeOne);
 
@@ -97,9 +97,9 @@ public class EmpService {
 	}
 
 	@Transactional(readOnly = true)
-	public int idCheck(String employeeId) {
+	public int getIsIdExists(String employeeId) {
 
-		int result = empMapper.idCheck(employeeId);
+		int result = empMapper.selectIsIdExists(employeeId);
 
 		return result;
 	}
@@ -124,7 +124,7 @@ public class EmpService {
 
 	public void insertEmpImg(MultipartFile employeeFile, String path, int employeeNo) {
 
-		ImageSave imgSave = new ImageSave();
+		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
 
 		EmployeeImg img = new EmployeeImg();
 		img.setEmployeeNo(employeeNo);

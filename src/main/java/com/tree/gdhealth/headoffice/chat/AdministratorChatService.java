@@ -1,12 +1,12 @@
-package com.tree.gdhealth.chat;
+package com.tree.gdhealth.headoffice.chat;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tree.gdhealth.vo.ChatMessage;
-import com.tree.gdhealth.vo.ChatRoom;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +15,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class ChatService {
+public class AdministratorChatService {
 
-	private final ChatMapper chatMapper;
+	private final AdministratorChatMapper chatMapper;
+
+	public List<Map<String, Object>> getRoomList() {
+
+		List<Map<String, Object>> chatRoomList = chatMapper.selectRoomList();
+		// 디버깅
+		log.debug("방 리스트 : " + chatRoomList.toString());
+
+		return chatRoomList;
+
+	}
 
 	public List<ChatMessage> getChatList(int chatRoomNo) {
 
@@ -35,25 +45,6 @@ public class ChatService {
 		log.debug("방 번호 : " + getRoomNo);
 
 		return getRoomNo;
-	}
-
-	public boolean getIsRoomExists(int customerNo) {
-
-		boolean isRoomExists = chatMapper.selectIsRoomExists(customerNo);
-		// 디버깅
-		log.debug("방이 존재하는지 여부 : " + isRoomExists);
-
-		return isRoomExists;
-	}
-
-	public int insertRoom(ChatRoom chatRoom) {
-
-		int result = chatMapper.insertRoom(chatRoom);
-		// 디버깅
-		log.debug("방 추가(성공:1) : " + result);
-
-		return result;
-
 	}
 
 }

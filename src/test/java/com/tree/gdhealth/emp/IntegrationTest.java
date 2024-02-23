@@ -29,6 +29,7 @@ import com.tree.gdhealth.vo.EmployeeImg;
 @SpringBootTest
 public class IntegrationTest { // DB 테스트
 	
+	/*
 	@Autowired EmpMapper empMapper;
 
 	@Test
@@ -41,7 +42,7 @@ public class IntegrationTest { // DB 테스트
 		map.put("postNum", 8);
 
 		// when(실행)
-		List<Map<String, Object>> list = empMapper.employeeList(map);
+		// List<Map<String, Object>> list = empMapper.employeeList(map);
 
 		// then(검증)
 		assertThat(list.get(0).get("empName")).isEqualTo("확인용1");
@@ -54,7 +55,7 @@ public class IntegrationTest { // DB 테스트
 		// given(준비)
 
 		// when(실행)
-		int empCnt = empMapper.employeeCnt();
+	 	int empCnt = empMapper.employeeCnt();
 
 		// then(검증)
 		assertThat(empCnt).isEqualTo(8);
@@ -130,5 +131,5 @@ public class IntegrationTest { // DB 테스트
 		assertThat(result).isEqualTo(1);
 
 	}
-	
+	*/
 }

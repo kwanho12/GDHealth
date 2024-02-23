@@ -1,4 +1,4 @@
-package com.tree.gdhealth.utils;
+package com.tree.gdhealth.utils.pagination;
 
 import org.springframework.ui.Model;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class Paging {
+public class HeadofficePagination {
 
 	// 한번에 표시할 페이징 번호의 갯수
 	private int pageNumCnt;
@@ -64,7 +64,7 @@ public class Paging {
 
 	}
 
-	public void pagingAttributes(Model model, Paging paging, int page) {
+	public void paginationAttributes(Model model, HeadofficePagination paging, int page) {
 
 		model.addAttribute("lastPage", paging.getLastPage());
 		model.addAttribute("currentPage", page);

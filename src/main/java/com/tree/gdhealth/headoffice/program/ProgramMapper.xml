@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.tree.gdhealth.headoffice.program.ProgramMapper">
 
-	<select id="programList" parameterType="Map" resultType="Map">
+	<select id="selectProgramList" parameterType="Map" resultType="Map">
 		SELECT
 		ed.employee_name empName,
 		p.program_no programNo,
@@ -37,7 +37,7 @@
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 
-	<select id="programCnt" resultType="int">
+	<select id="selectProgramCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM program p
 		INNER JOIN program_date pd
@@ -46,7 +46,7 @@
 		ON p.program_no = pi.program_no
 	</select>
 
-	<select id="searchCnt" parameterType="map" resultType="int">
+	<select id="selectSearchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM program p
 		INNER JOIN program_date pd
@@ -68,7 +68,7 @@
 		</where>
 	</select>
 
-	<select id="programOne" parameterType="map" resultType="Map">
+	<select id="selectProgramOne" parameterType="map" resultType="Map">
 		SELECT
 		ed.employee_name empName,
 		p.program_no programNo,
@@ -92,7 +92,7 @@
 		pd.program_date = #{programDate}
 	</select>
 
-	<select id="checkDatesExists" parameterType="list"
+	<select id="selectIsDatesExists" parameterType="list"
 		resultType="boolean">
 		SELECT
 		CASE
@@ -107,7 +107,7 @@
 		</foreach>
 	</select>
 
-	<select id="checkDateOneExists" parameterType="String"
+	<select id="selectIsDateOneExists" parameterType="String"
 		resultType="boolean">
 		SELECT
 		CASE
@@ -194,7 +194,7 @@
 		WHERE program_no = #{programNo}
 	</update>
 
-	<update id="deactiveProgram">
+	<update id="updateToDeactiveProgram">
 		UPDATE program
 		SET
 		program_active = 'N',
@@ -202,7 +202,7 @@
 		WHERE program_no = #{programNo}
 	</update>
 
-	<update id="activeProgram">
+	<update id="updateToActiveProgram">
 		UPDATE program
 		SET
 		program_active = 'Y',

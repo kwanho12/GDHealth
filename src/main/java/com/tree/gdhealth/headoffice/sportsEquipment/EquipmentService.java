@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.utils.ImageSave;
 import com.tree.gdhealth.utils.enumtype.ImageType;
+import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.vo.SportsEquipment;
 import com.tree.gdhealth.vo.SportsEquipmentImg;
 
@@ -32,7 +32,7 @@ public class EquipmentService {
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 
-		List<Map<String, Object>> equipmentList = equipmentMapper.equipmentList(map);
+		List<Map<String, Object>> equipmentList = equipmentMapper.selectEquipmentList(map);
 
 		return equipmentList;
 	}
@@ -40,7 +40,7 @@ public class EquipmentService {
 	@Transactional(readOnly = true)
 	public int getEquipmentCnt() {
 
-		int equipmentCnt = equipmentMapper.equipmentCnt();
+		int equipmentCnt = equipmentMapper.selectEquipmentCnt();
 		// 디버깅
 		log.debug("전체 물품 수 : " + equipmentCnt);
 
@@ -57,7 +57,7 @@ public class EquipmentService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		List<Map<String, Object>> searchList = equipmentMapper.equipmentList(map);
+		List<Map<String, Object>> searchList = equipmentMapper.selectEquipmentList(map);
 
 		return searchList;
 
@@ -70,7 +70,7 @@ public class EquipmentService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		int searchCnt = equipmentMapper.searchCnt(map);
+		int searchCnt = equipmentMapper.selectSearchCnt(map);
 		// 디버깅
 		log.debug("검색 결과 개수 : " + searchCnt);
 
@@ -81,7 +81,7 @@ public class EquipmentService {
 	@Transactional(readOnly = true)
 	public Map<String, Object> getEquipmentOne(int equipmentNo) {
 
-		Map<String, Object> equipment = equipmentMapper.equipmentOne(equipmentNo);
+		Map<String, Object> equipment = equipmentMapper.selectEquipmentOne(equipmentNo);
 		// 디버깅
 		log.debug("equipment 상세 : " + equipment);
 
@@ -90,7 +90,7 @@ public class EquipmentService {
 
 	public int deactiveEquipment(int sportsEquipmentNo) {
 
-		int result = equipmentMapper.deactiveEquipment(sportsEquipmentNo);
+		int result = equipmentMapper.updateToDeactiveEquipment(sportsEquipmentNo);
 		// 디버깅
 		log.debug("물품 비활성화(성공:1,실패:0) : " + result);
 
@@ -99,7 +99,7 @@ public class EquipmentService {
 
 	public int activeEquipment(int sportsEquipmentNo) {
 
-		int result = equipmentMapper.activeEquipment(sportsEquipmentNo);
+		int result = equipmentMapper.updateToActiveEquipment(sportsEquipmentNo);
 		// 디버깅
 		log.debug("물품 활성화(성공:1,실패:0) : " + result);
 
@@ -151,7 +151,7 @@ public class EquipmentService {
 	public void insertOrUpdateEquipmentImg(MultipartFile equipmentFile, String path, int equipmentNo,
 			boolean isInsert) {
 
-		ImageSave imgSave = new ImageSave();
+		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
 
 		SportsEquipmentImg img = new SportsEquipmentImg();
 		img.setSportsEquipmentNo(equipmentNo);

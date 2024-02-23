@@ -1,7 +1,6 @@
 package com.tree.gdhealth.chat;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,13 +10,11 @@ import com.tree.gdhealth.vo.ChatRoom;
 @Mapper
 public interface ChatMapper {
 
-	List<Map<String, Object>> roomList();
+	List<ChatMessage> selectChatList(int chatRoomNo);
 
-	List<ChatMessage> chatList(int chatRoomNo);
+	boolean selectIsRoomExists(int customerNo);
 
-	boolean isRoomExists(int customerNo);
-
-	int getRoomNo(String customerId);
+	int selectRoomNo(String customerId);
 
 	int insertRoom(ChatRoom chatRoom);
 

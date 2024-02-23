@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.utils.ImageSave;
+import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.vo.Program;
 import com.tree.gdhealth.vo.ProgramDate;
 import com.tree.gdhealth.vo.ProgramImg;
@@ -36,7 +36,7 @@ public class ProgramService {
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 
-		List<Map<String, Object>> programList = programMapper.programList(map);
+		List<Map<String, Object>> programList = programMapper.selectProgramList(map);
 
 		return programList;
 
@@ -45,7 +45,7 @@ public class ProgramService {
 	@Transactional(readOnly = true)
 	public int getProgramCnt() {
 
-		int programCnt = programMapper.programCnt();
+		int programCnt = programMapper.selectProgramCnt();
 		// 디버깅
 		log.debug("전체 프로그램 수 : " + programCnt);
 
@@ -61,7 +61,7 @@ public class ProgramService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		List<Map<String, Object>> searchList = programMapper.programList(map);
+		List<Map<String, Object>> searchList = programMapper.selectProgramList(map);
 
 		return searchList;
 
@@ -74,7 +74,7 @@ public class ProgramService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		int searchCnt = programMapper.searchCnt(map);
+		int searchCnt = programMapper.selectSearchCnt(map);
 		// 디버깅
 		log.debug("검색 결과 개수 : " + searchCnt);
 
@@ -89,7 +89,7 @@ public class ProgramService {
 		map.put("programNo", programNo);
 		map.put("programDate", programDate);
 
-		Map<String, Object> programOne = programMapper.programOne(map);
+		Map<String, Object> programOne = programMapper.selectProgramOne(map);
 
 		return programOne;
 	}
@@ -97,7 +97,7 @@ public class ProgramService {
 	@Transactional(readOnly = true)
 	public boolean checkDatesExists(List<String> programDates) {
 
-		boolean checkDatesExists = programMapper.checkDatesExists(programDates);
+		boolean checkDatesExists = programMapper.selectIsDatesExists(programDates);
 		// 디버깅
 		log.debug("dates 존재 확인(존재:true,존재x:false) : " + checkDatesExists);
 
@@ -107,7 +107,7 @@ public class ProgramService {
 	@Transactional(readOnly = true)
 	public boolean checkDateOneExists(String programDate) {
 
-		boolean checkDateOneExists = programMapper.checkDateOneExists(programDate);
+		boolean checkDateOneExists = programMapper.selectIsDateOneExists(programDate);
 		// 디버깅
 		log.debug("dateOne 존재 확인(존재:true,존재x:false) : " + checkDateOneExists);
 
@@ -151,7 +151,7 @@ public class ProgramService {
 
 		MultipartFile programFile = programImg.getProgramFile();
 		// 파일 저장
-		insertOrUpdateProgramImg(programFile, path, program.getProgramNo(), true);
+		insertOrModifyProgramImg(programFile, path, program.getProgramNo(), true);
 
 	}
 
@@ -178,32 +178,32 @@ public class ProgramService {
 			int programNo = program.getProgramNo();
 
 			// 수정한 파일 저장
-			insertOrUpdateProgramImg(programFile, newPath, programNo, false);
+			insertOrModifyProgramImg(programFile, newPath, programNo, false);
 		}
 
 	}
 
-	public int deactiveProgram(int programNo) {
+	public int modifyToDeactiveProgram(int programNo) {
 
-		int result = programMapper.deactiveProgram(programNo);
+		int result = programMapper.updateToDeactiveProgram(programNo);
 		// 디버깅
 		log.debug("프로그램 비활성화(성공:1,실패:0) : " + result);
 
 		return result;
 	}
 
-	public int activeProgram(int programNo) {
+	public int modifyToActiveProgram(int programNo) {
 
-		int result = programMapper.activeProgram(programNo);
+		int result = programMapper.updateToActiveProgram(programNo);
 		// 디버깅
 		log.debug("프로그램 활성화(성공:1,실패:0) : " + result);
 
 		return result;
 	}
 
-	public void insertOrUpdateProgramImg(MultipartFile programFile, String path, int programNo, boolean isInsert) {
+	public void insertOrModifyProgramImg(MultipartFile programFile, String path, int programNo, boolean isInsert) {
 
-		ImageSave imgSave = new ImageSave();
+		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
 
 		ProgramImg img = new ProgramImg();
 		img.setProgramNo(programNo);

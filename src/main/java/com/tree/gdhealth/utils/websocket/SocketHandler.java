@@ -1,4 +1,4 @@
-package com.tree.gdhealth.chat;
+package com.tree.gdhealth.utils.websocket;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +14,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.tree.gdhealth.chat.ChatMapper;
 import com.tree.gdhealth.employee.login.LoginEmployee;
+import com.tree.gdhealth.headoffice.chat.AdministratorChatMapper;
 import com.tree.gdhealth.vo.ChatMessage;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
 
-	private final ChatMapper chatMapper;
+	private final ChatMapper customerChatMapper;
+	private final AdministratorChatMapper headofficeChatMapper;
 
 	List<HashMap<String, Object>> roomListSessions = new ArrayList<>(); // 웹소켓 세션을 담아 둘 리스트
 
@@ -117,12 +120,16 @@ public class SocketHandler extends TextWebSocketHandler {
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setChatRoomNo(Integer.parseInt(roomNo));
 			chatMessage.setMessageContent(message2);
+
+			int insertMessage;
 			if (status.equals("customer")) {
 				chatMessage.setCustomerNo(Integer.parseInt(indexNo));
+				insertMessage = customerChatMapper.insertMessage(chatMessage);
 			} else {
 				chatMessage.setEmployeeNo(Integer.parseInt(indexNo));
+				insertMessage = headofficeChatMapper.insertMessage(chatMessage);
 			}
-			int insertMessage = chatMapper.insertMessage(chatMessage);
+
 			log.debug("메시지 추가(성공:1) : " + insertMessage);
 
 			for (int i = 0; i < roomListSessions.size(); i++) {

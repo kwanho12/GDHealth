@@ -12,17 +12,17 @@ import com.tree.gdhealth.vo.ProgramImg;
 @Mapper
 public interface ProgramMapper {
 
-	List<Map<String, Object>> programList(Map<String, Object> map);
+	List<Map<String, Object>> selectProgramList(Map<String, Object> map);
 
-	int programCnt();
+	int selectProgramCnt();
 
-	int searchCnt(Map<String, Object> map);
+	int selectSearchCnt(Map<String, Object> map);
 
-	boolean checkDatesExists(List<String> dateList);
+	boolean selectIsDatesExists(List<String> dateList);
 
-	boolean checkDateOneExists(String date);
+	boolean selectIsDateOneExists(String date);
 
-	Map<String, Object> programOne(Map<String, Object> map);
+	Map<String, Object> selectProgramOne(Map<String, Object> map);
 
 	int insertProgram(Program program);
 
@@ -36,8 +36,8 @@ public interface ProgramMapper {
 
 	int updateProgramImg(ProgramImg programImg);
 
-	int deactiveProgram(int programNo);
+	int updateToDeactiveProgram(int programNo);
 
-	int activeProgram(int programNo);
+	int updateToActiveProgram(int programNo);
 
 }
