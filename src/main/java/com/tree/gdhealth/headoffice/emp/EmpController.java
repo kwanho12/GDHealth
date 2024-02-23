@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,18 +13,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tree.gdhealth.utils.Paging;
+import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.dto.EmployeeDetail;
+import com.tree.gdhealth.dto.EmployeeImg;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
-import com.tree.gdhealth.vo.Employee;
-import com.tree.gdhealth.vo.EmployeeDetail;
-import com.tree.gdhealth.vo.EmployeeImg;
+import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/**
+ * @author 진관호
+ */
 @RequestMapping("/headoffice/emp")
 @RequiredArgsConstructor
 @Controller
@@ -33,153 +33,150 @@ public class EmpController {
 
 	private final EmpService empService;
 
+	/**
+	 * 전체 직원 목록을 나타내는 페이지로 이동합니다.
+	 * 
+	 * @return 직원 목록 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping
-	public String emp() {
-
+	public String getEmpList() {
 		return "headoffice/empList";
-
 	}
 
-	@GetMapping("/paging")
-	public String paging(Model model, int page) {
+	/**
+	 * 페이지네이션 후의 직원 목록 영역을 리턴합니다.
+	 * 
+	 * @param pageNum 이동할 페이지 번호
+	 * @return 페이지네이션 후의 직원 목록
+	 * @apiNote 페이지 전체가 아닌 직원의 목록을 나타내는 영역만 리턴합니다.
+	 */
+	@GetMapping("/pagination")
+	public String getPagination(Model model, int pageNum) {
 
-		// 전체 직원 수
 		int employeeCnt = empService.getEmployeeCnt();
-		// 디버깅
-		log.debug("전체 직원 수 : " + employeeCnt);
+		HeadofficePagination pagination = empService.getPagination(pageNum, employeeCnt);
 
-		// 페이징
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
-				.rowPerPage(8) // 한 페이지에 나타낼 row 수
-				.currentPage(page) // 현재 페이지
-				.cnt(employeeCnt) // 전체 row 수
-				.build();
-		paging.calculation();
+		List<Map<String, Object>> empList = empService.getEmployeeList(pagination.getBeginRow(),
+				pagination.getRowPerPage());
 
-		List<Map<String, Object>> empList = empService.getEmployeeList(paging.getBeginRow(), paging.getRowPerPage());
+		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("empList", empList);
 
-		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
-
-		return "headoffice/fragment/emp";
-
+		return "headoffice/fragment/empList";
 	}
 
-	@GetMapping("/searchPaging")
-	public String searchPaging(Model model, String type, String keyword, int page) {
+	/**
+	 * 검색 결과가 반영된 페이지네이션 후의 직원 목록 영역을 리턴합니다.
+	 * 
+	 * @param type    검색할 keyword의 속성(id,active...)
+	 * @param keyword 검색 내용
+	 * @param pageNum 이동할 페이지 번호
+	 * @return 페이지네이션 후의 직원 목록
+	 * @apiNote 페이지 전체가 아닌 직원의 목록을 나타내는 영역만 리턴합니다.
+	 */
+	@GetMapping("/searchPagination")
+	public String getPagination(Model model, String type, String keyword, int pageNum) {
 
-		// 검색 결과 개수
-		int searchCnt = empService.getSearchCnt(type, keyword);
-		// 디버깅
-		log.debug("검색 결과 개수(searchPaging) : " + searchCnt);
+		int searchCnt = empService.getEmployeeCnt(type, keyword);
+		HeadofficePagination pagination = empService.getPagination(pageNum, searchCnt);
 
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
-				.rowPerPage(8) // 한 페이지에 나타낼 row 수
-				.currentPage(page) // 현재 페이지
-				.cnt(searchCnt) // 전체 row 수
-				.build();
-		paging.calculation();
+		List<Map<String, Object>> searchList = empService.getEmployeeList(pagination.getBeginRow(),
+				pagination.getRowPerPage(), type, keyword);
 
-		List<Map<String, Object>> searchList = empService.getSearchList(paging.getBeginRow(), paging.getRowPerPage(),
-				type, keyword);
+		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("empList", searchList);
-
-		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
-
-		// search parameter 추가
 		model.addAttribute("type", type);
 		model.addAttribute("keyword", keyword);
 
-		return "headoffice/fragment/searchEmp";
-
+		return "headoffice/fragment/searchEmpList";
 	}
 
+	/**
+	 * 전체 지점 목록을 리턴합니다.
+	 * 
+	 * @return 지점 목록
+	 */
 	@ResponseBody
 	@GetMapping("/branchList")
-	public List<String> branchList() {
-
-		List<String> branchList = empService.getBranchList();
-
-		return branchList;
-
+	public List<String> getBranchList() {
+		return empService.getBranchList();
 	}
 
+	/**
+	 * 데이터베이스에서 해당 id를 검색하여 직원 id의 중복 여부를 확인합니다.
+	 * 입력한 id가 데이터베이스에 존재하지 않는다면 0을 리턴합니다.
+	 * 
+	 * @param employeeId 입력한 직원id
+	 * @return 입력한 id가 데이터베이스에 존재하지 않는다면 0, 이미 존재한다면 1
+	 */
 	@ResponseBody
-	@PostMapping("/addEmpIdCheck")
-	public int addEmpIdCheck(String employeeId) {
+	@PostMapping("/checkExistingId")
+	public int checkExistingId(String employeeId) {
 
-		int result = empService.idCheck(employeeId);
-
-		log.debug("아이디 중복 체크(중복o:1,중복x:0) : " + result);
+		int result = empService.getResultOfIdCheck(employeeId);
 
 		return result;
 	}
 
+	/**
+	 * 직원 추가 페이지로 이동합니다.
+	 * 
+	 * @return 직원 추가 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/addEmp")
-	public String addEmp(HttpSession session) {
-
+	public String addEmp() {
 		return "headoffice/addEmp";
-
 	}
 
+	/**
+	 * 성공적으로 직원 정보를 추가했을 경우 직원 목록 페이지로 리다이렉트합니다.
+	 * 유효성 검사 실패로 인해 추가가 중단된 경우 다시 직원 추가 페이지로 이동합니다.
+	 * 
+	 * @param employee       추가할 직원의 기본 정보를 담은 Employee 객체
+	 * @param bindingResult1 employee 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param employeeDetail 추가할 직원의 상세 정보를 담은 EmployeeDetail 객체
+	 * @param bindingResult2 employeeDetail 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param employeeImg    추가할 직원의 이미지 정보를 담은 EmployeeImg 객체
+	 * @param bindingResult3 employeeImg 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @return 직원 목록 페이지로 리다이렉트
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/addEmp")
 	public String addEmp(@Validated Employee employee, BindingResult bindingResult1,
 			@Validated EmployeeDetail employeeDetail, BindingResult bindingResult2, @Validated EmployeeImg employeeImg,
 			BindingResult bindingResult3, HttpSession session, Model model) {
 
-		// 첫 번째 객체(Employee)의 유효성 검사 실패 시 처리
 		if (bindingResult1.hasErrors()) {
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult1.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
 			return "headoffice/addEmp";
 		}
 
-		// 두 번째 객체(EmployeeDetail)의 유효성 검사 실패 시 처리
 		if (bindingResult2.hasErrors()) {
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult2.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
 			return "headoffice/addEmp";
 		}
 
-		// 세 번째 객체(EmployeeImg)의 유효성 검사 실패 시 처리
 		if (bindingResult3.hasErrors()) {
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult3.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
 			return "headoffice/addEmp";
 		}
 
 		String path = session.getServletContext().getRealPath("/upload/emp");
-		// 디버깅
-		log.debug("저장 경로 : " + path);
-		empService.insertEmployee(employee, employeeDetail, employeeImg, path);
+		empService.addEmployee(employee, employeeDetail, employeeImg, path);
 
 		return "redirect:/headoffice/emp";
 	}
 
+	/**
+	 * 직원의 상세 정보 페이지로 이동합니다.
+	 *
+	 * @param employeeId 조회할 직원의 ID
+	 * @return 직원의 상세 정보 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/empOne/{employeeId}")
-	public String empOne(Model model, @PathVariable String employeeId) {
+	public String getEmpOne(Model model, @PathVariable String employeeId) {
 
 		Map<String, Object> employeeOne = empService.getEmployeeOne(employeeId);
-		// 디버깅
-		log.debug("회원 상세 정보 : " + employeeOne);
 		model.addAttribute("empOne", employeeOne);
 
 		return "headoffice/empOne";

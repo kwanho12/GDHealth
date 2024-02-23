@@ -8,30 +8,42 @@ import com.tree.gdhealth.utils.customvalidation.FutureDate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+/**
+ * {@link FutureDate} 애노테이션을 사용하여 검증하는 미래 날짜 유효성 검사 클래스
+ * <p>
+ * 이 클래스는 {@link ConstraintValidator} 인터페이스를 구현하여 사용자가 입력한 날짜가 현재 날짜와 같거나 미래인지
+ * 검증합니다.
+ * </p>
+ * 
+ * @author 진관호
+ */
 public class FutureDateValidator implements ConstraintValidator<FutureDate, String> {
 
+	/**
+	 * 주어진 값이 유효한 미래 날짜인지 검증합니다.
+	 *
+	 * @param value   유효성을 검사할 값
+	 * @param context 제약 조건 검사를 위한 컨텍스트
+	 * @return 주어진 값이 현재 날짜와 같거나 미래의 날짜이면 true, 그렇지 않으면 false
+	 */
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 
 		if (value == null || value.trim().isEmpty()) {
-			return false; // 비어있는 값은 유효하지 않다고 간주
+			return false;
 		}
 
 		try {
-			// String을 파싱하여 LocalDate로 변환
 			LocalDate date = LocalDate.parse(value);
 
-			// 날짜가 현재 날짜와 같거나 그 이후가 아니면 false 반환
 			if (!(date.isEqual(LocalDate.now()) || date.isAfter(LocalDate.now()))) {
 				return false;
 			}
 
 		} catch (DateTimeParseException e) {
-			// DateTimeParseException이 발생하면 false 반환
 			return false;
 		}
 
-		// 모든 요소가 현재 날짜와 같거나 그 이후이면 유효하다고 판단하여 true를 반환
 		return true;
 	}
 }

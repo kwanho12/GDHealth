@@ -293,7 +293,7 @@
 						if (employeeId != '') {
 							$
 									.ajax({
-										url : '${pageContext.request.contextPath}/headoffice/emp/addEmpIdCheck',
+										url : '${pageContext.request.contextPath}/headoffice/emp/checkExistingId',
 										method : 'post',
 										data : {
 											employeeId : employeeId

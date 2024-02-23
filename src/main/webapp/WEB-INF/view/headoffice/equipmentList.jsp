@@ -200,38 +200,34 @@
 <script>
 	
 	// 초기 화면
-	paging(1);
+	pagination(1);
 	
-	function paging(page) {
+	function pagination(pageNum) {
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/equipment/paging',
+			url : '${pageContext.request.contextPath}/headoffice/equipment/pagination',
 			method : 'get',
 			data : {
-				page : page
+				pageNum : pageNum
 			},
 			success : function(result){
-				console.log('페이징 성공! : page=' + page)
 				$('#fragment').html(result);
 			}			
 		});
 		
 	}
 	
-	function searchPaging(page, type, keyword) {
+	function searchPagination(pageNum, type, keyword) {
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/equipment/searchPaging',
+			url : '${pageContext.request.contextPath}/headoffice/equipment/searchPagination',
 			method : 'get',
 			data : {
-				page : page,
+				pageNum : pageNum,
 				type : type,
 				keyword : keyword
 			},
 			success : function(result){
-				console.log('페이징 성공! : page=' + page)
-				console.log('페이징 성공! : type=' + type)
-				console.log('페이징 성공! : keyword=' + keyword)
 				$('#fragment').html(result);
 			}			
 		});
@@ -298,7 +294,7 @@
 			
 		}
 		
-		searchPaging(1,type,keyword);
+		searchPagination(1,type,keyword);
 		
 	});
 	
@@ -306,10 +302,9 @@
 	// 페이징
 	$(document).on('click', '.pageBtn', function(e){
 		e.preventDefault();
-		let page = $(this).data('page');
-		console.log(page);
+		let pageNum = $(this).data('page');
 		
-		paging(page);
+		pagination(pageNum);
 		
 	});
 	
@@ -317,22 +312,21 @@
 	// search 후 페이징
 	$(document).on('click', '.searchPageBtn', function(e){
 		e.preventDefault();
-		let page = $(this).data('page');
+		let pageNum = $(this).data('page');
 		let type = $(this).data('type');
 		let keyword = $(this).data('keyword');
-		console.log(page);
 		
-		searchPaging(page,type,keyword);
+		searchPagination(pageNum,type,keyword);
 		
 	});
 	
-	$(document).on('click', '.deactiveBtn', function(){
+	$(document).on('click', '.deactivateBtn', function(){
 		
-		let deactiveBtn = $(this);
-		let equipmentNo = deactiveBtn.data('equipmentno');
+		let deactivateBtn = $(this);
+		let equipmentNo = deactivateBtn.data('equipmentno');
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/equipment/deactive',
+			url : '${pageContext.request.contextPath}/headoffice/equipment/deactivate',
 			method : 'get',
 			data : {
 				equipmentNo : equipmentNo
@@ -340,8 +334,8 @@
 			success : function(result){
 				
 				if(result == 1) {
-					deactiveBtn.text('비활성화');
-					deactiveBtn.removeClass('deactiveBtn').addClass('activeBtn'); // 클래스 변경
+					deactivateBtn.text('비활성화');
+					deactivateBtn.removeClass('deactivateBtn').addClass('activateBtn'); // 클래스 변경
 					return;
 				}
 			}			
@@ -349,13 +343,13 @@
 		
 	});
 	
-	$(document).on('click', '.activeBtn', function(){
+	$(document).on('click', '.activateBtn', function(){
 		
-		let activeBtn = $(this);
-		let equipmentNo = activeBtn.data('equipmentno');
+		let activateBtn = $(this);
+		let equipmentNo = activateBtn.data('equipmentno');
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/equipment/active',
+			url : '${pageContext.request.contextPath}/headoffice/equipment/activate',
 			method : 'get',
 			data : {
 				equipmentNo : equipmentNo
@@ -363,8 +357,8 @@
 			success : function(result){
 				
 				if(result == 1) {
-					activeBtn.text('활성화');
-					activeBtn.removeClass('activeBtn').addClass('deactiveBtn'); // 클래스 변경
+					activateBtn.text('활성화');
+					activateBtn.removeClass('activateBtn').addClass('deactivateBtn'); // 클래스 변경
 					return;
 				}
 			}			

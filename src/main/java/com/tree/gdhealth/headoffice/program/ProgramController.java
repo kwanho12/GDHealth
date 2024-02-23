@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,125 +16,138 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tree.gdhealth.dto.Program;
+import com.tree.gdhealth.dto.ProgramDate;
+import com.tree.gdhealth.dto.ProgramImg;
 import com.tree.gdhealth.employee.login.LoginEmployee;
-import com.tree.gdhealth.utils.Paging;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 import com.tree.gdhealth.utils.customvalidation.group.DateGroup;
 import com.tree.gdhealth.utils.customvalidation.group.DatesGroup;
-import com.tree.gdhealth.vo.Program;
-import com.tree.gdhealth.vo.ProgramDate;
-import com.tree.gdhealth.vo.ProgramImg;
+import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/**
+ * @author 진관호
+ */
 @RequestMapping("/headoffice/program")
 @RequiredArgsConstructor
 @Controller
 public class ProgramController {
 
-	// DI
 	private final ProgramService programService;
 
+	/**
+	 * 전체 프로그램 목록을 나타내는 페이지로 이동합니다.
+	 * 
+	 * @return 프로그램 목록 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping
-	public String program() {
-
+	public String getProgramList() {
 		return "headoffice/programList";
 	}
 
-	@GetMapping("/paging")
-	public String paging(Model model, int page) {
+	/**
+	 * 페이지네이션 후의 프로그램 목록 영역을 리턴합니다.
+	 * 
+	 * @param pageNum 이동할 페이지 번호
+	 * @return 페이지네이션 후의 프로그램 목록
+	 * @apiNote 페이지 전체가 아닌 프로그램의 목록을 나타내는 영역만 리턴합니다.
+	 */
+	@GetMapping("/pagination")
+	public String getPagination(Model model, int pageNum) {
 
-		// 전체 프로그램 수
 		int programCnt = programService.getProgramCnt();
-		// 디버깅
-		log.debug("전체 프로그램 수 : " + programCnt);
+		HeadofficePagination pagination = programService.getPagination(pageNum, programCnt);
+		
+		List<Map<String, Object>> programList = programService.getProgramList(pagination.getBeginRow(),
+				pagination.getRowPerPage());
 
-		// 페이징
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
-				.rowPerPage(8) // 한 페이지에 나타낼 row 수
-				.currentPage(page) // 현재 페이지
-				.cnt(programCnt) // 전체 row 수
-				.build();
-		paging.calculation();
-
-		List<Map<String, Object>> programList = programService.getProgramList(paging.getBeginRow(),
-				paging.getRowPerPage());
+		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("programList", programList);
 
-		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
-
-		return "headoffice/fragment/program";
-
+		return "headoffice/fragment/programList";
 	}
+	
+	/**
+	 * 검색 결과가 반영된 페이지네이션 후의 프로그램 목록 영역을 리턴합니다.
+	 * 
+	 * @param type    검색할 keyword의 속성(programName,programDetail...)
+	 * @param keyword 검색 내용
+	 * @param pageNum 이동할 페이지 번호
+	 * @return 페이지네이션 후의 프로그램 목록
+	 * @apiNote 페이지 전체가 아닌 프로그램의 목록을 나타내는 영역만 리턴합니다.
+	 */
+	@GetMapping("/searchPagination")
+	public String getPagination(Model model, String type, String keyword, int pageNum) {
 
-	@GetMapping("/searchPaging")
-	public String searchPaging(Model model, String type, String keyword, int page) {
+		int searchCnt = programService.getProgramCnt(type, keyword);
+		HeadofficePagination pagination = programService.getPagination(pageNum, searchCnt);
 
-		// 검색 결과 개수
-		int searchCnt = programService.getSearchCnt(type, keyword);
-		// 디버깅
-		log.debug("검색 결과 개수(searchPaging) " + searchCnt);
+		List<Map<String, Object>> searchList = programService.getProgramList(pagination.getBeginRow(),
+				pagination.getRowPerPage(), type, keyword);
 
-		// 페이징
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
-				.rowPerPage(8) // 한 페이지에 나타낼 row 수
-				.currentPage(page) // 현재 페이지
-				.cnt(searchCnt) // 전체 row 수
-				.build();
-		paging.calculation();
-
-		List<Map<String, Object>> searchList = programService.getSearchList(paging.getBeginRow(),
-				paging.getRowPerPage(), type, keyword);
+		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("programList", searchList);
-
-		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
-
-		// search parameter 추가
 		model.addAttribute("type", type);
 		model.addAttribute("keyword", keyword);
 
-		return "headoffice/fragment/searchProgram";
-
+		return "headoffice/fragment/searchProgramList";
 	}
 
+	/**
+	 * 프로그램 추가 페이지로 이동합니다.
+	 * 
+	 * @return 프로그램 추가 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/addProgram")
 	public String addProgram() {
-
 		return "headoffice/addProgram";
 	}
 
+	/**
+	 * 데이터베이스에서 해당 날짜들을 검색하여 프로그램 날짜들의 중복 여부를 확인합니다. 
+	 * 입력한 날짜들이 모두 데이터베이스에 존재하지 않는다면 false를 반환합니다.
+	 * 
+	 * @param programDates 프로그램 날짜 목록
+	 * @return 입력한 날짜들 중 최소 1개가 이미 존재한다면 true, 존재하지 않는다면 false
+	 */
 	@ResponseBody
-	@PostMapping("/datesCheck")
-	public boolean dateCheck(@RequestBody List<String> programDates) {
-		// @RequestBody : HTTP 메시지 바디 정보(클라이언트에서 전송한 JSON 형식의 데이터)를 자바 객체로 변환해 준다.
-
-		boolean checkDatesExists = programService.checkDatesExists(programDates);
-		// 디버깅
-		log.debug("선택한 날짜들이 이미 존재하는지 확인(존재:true,존재x:false) : " + checkDatesExists);
-
-		return checkDatesExists;
-
+	@PostMapping("/checkDates")
+	public boolean checkDates(@RequestBody List<String> programDates) {
+		return programService.getResultOfDatesCheck(programDates);
 	}
 
+	/**
+	 * 데이터베이스에서 해당 날짜를 검색하여 프로그램 날짜의 중복 여부를 확인합니다. 
+	 * 입력한 날짜가 데이터베이스에 존재하지 않는다면 false를 반환합니다.
+	 * 
+	 * @param programDate 프로그램 날짜
+	 * @return 입력한 날짜가 이미 존재한다면 false, 존재하지 않는다면 true
+	 */
 	@ResponseBody
-	@PostMapping("/dateOneCheck")
-	public boolean dateOneCheck(String programDate) {
-
-		boolean checkDateOneExists = programService.checkDateOneExists(programDate);
-		// 디버깅
-		log.debug("선택한 날짜가 이미 존재하는지 확인(존재:true,존재x:false) : " + checkDateOneExists);
-
-		return checkDateOneExists;
+	@PostMapping("/checkDateOne")
+	public boolean checkDateOne(String programDate) {
+		return programService.getResultOfDateOneCheck(programDate);
 	}
 
+	/**
+	 * 성공적으로 프로그램을 추가했을 경우 프로그램 목록 페이지로 리다이렉트합니다.
+	 * 유효성 검사 실패로 인해 추가가 중단된 경우 다시 프로그램 추가 페이지로 이동합니다.
+	 * 
+	 * @param program        추가할 프로그램의 정보를 담은 Program 객체
+	 * @param bindingResult1 program 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param programDate    추가할 프로그램의 날짜 정보를 담은 ProgramDate 객체
+	 * @param bindingResult2 programDate 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param programImg     추가할 프로그램의 이미지 정보를 담은 ProgramImg 객체
+	 * @param bindingResult3 programImg 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param empInfo        로그인한 직원의 정보를 담은 LoginEmployee 객체
+	 * @return 프로그램 목록 페이지로 리다이렉트
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/addProgram")
 	public String addProgram(@Validated Program program, BindingResult bindingResult1,
@@ -143,78 +155,71 @@ public class ProgramController {
 			@Validated ProgramImg programImg, BindingResult bindingResult3, HttpSession session,
 			@SessionAttribute(name = "loginEmployee") LoginEmployee empInfo) {
 
-		// 첫 번째 객체(Program)의 유효성 검증 실패시 처리
 		if (bindingResult1.hasErrors()) {
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult1.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
+			return "headoffice/addProgram";
+		} else if (bindingResult2.hasErrors()) {
+			return "headoffice/addProgram";
+		} else if (bindingResult3.hasErrors()) {
 			return "headoffice/addProgram";
 		}
-
-		// 두 번째 객체(ProgramDate)의 유효성 검증 실패시 처리
-		if (bindingResult2.hasErrors()) {
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult2.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
-			return "headoffice/addProgram";
-		}
-
-		// 세 번째 객체(ProgramDate)의 유효성 검증 실패시 처리
-		if (bindingResult3.hasErrors()) {
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult3.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
-			return "headoffice/addProgram";
-		}
-
-		String path = session.getServletContext().getRealPath("/upload/program");
-		// 디버깅
-		log.debug("저장 경로 : " + path);
 
 		int employeeNo = empInfo.getEmployeeNo();
 		program.setEmployeeNo(employeeNo);
 
-		programService.insertProgram(program, programDate, programImg, path);
+		String path = session.getServletContext().getRealPath("/upload/program");
+		programService.addProgram(program, programDate, programImg, path);
 
 		return "redirect:/headoffice/program";
 	}
 
+	/**
+	 * 특정 프로그램의 상세 정보 페이지로 이동합니다.
+	 * 
+	 * @param programNo   조회할 프로그램의 번호
+	 * @param programDate 조회할 프로그램의 날짜
+	 * @return 프로그램 상세 정보 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/programOne/{programNo}/{programDate}")
-	public String programOne(Model model, @PathVariable int programNo, @PathVariable String programDate) {
+	public String getProgramOne(Model model, @PathVariable int programNo, @PathVariable String programDate) {
 
 		Map<String, Object> programOne = programService.getProgramOne(programNo, programDate);
-		// 디버깅
-		log.debug("프로그램 상세 정보 : " + programOne);
 		model.addAttribute("programOne", programOne);
 
 		return "headoffice/programOne";
 	}
 
+	/**
+	 * 특정 프로그램의 업데이트 페이지로 이동합니다.
+	 * 
+	 * @param programNo   업데이트할 프로그램의 번호
+	 * @param programDate 업데이트할 프로그램의 날짜
+	 * @return 프로그램 업데이트 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/update/{programNo}/{programDate}")
-	public String update(Model model, @PathVariable int programNo, @PathVariable String programDate) {
+	public String modifyProgram(Model model, @PathVariable int programNo, @PathVariable String programDate) {
 
 		Map<String, Object> programOne = programService.getProgramOne(programNo, programDate);
-		// 디버깅
-		log.debug("프로그램 상세 정보 : " + programOne);
 		model.addAttribute("programOne", programOne);
 
 		return "headoffice/updateProgram";
 	}
 
+	/**
+	 * 프로그램 업데이트를 성공했을 경우 프로그램 상세 페이지로 리다이렉트합니다. 
+	 * 유효성 검사 실패로 인해 업데이트가 중단된 경우 다시 프로그램 업데이트 페이지로 리다이렉트합니다.
+	 * 
+	 * @param program        업데이트할 프로그램의 정보를 담은 Program 객체
+	 * @param bindingResult1 program 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param programDate    업데이트할 프로그램의 날짜 정보를 담은 ProgramDate 객체
+	 * @param bindingResult2 programDate 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
+	 * @param programImg     업데이트할 프로그램의 이미지 정보를 담은 ProgramImg 객체
+	 * @return 프로그램 상세 정보 페이지로 리다이렉트
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/update")
-	public String update(@Validated Program program, BindingResult bindingResult1,
+	public String modifyProgram(@Validated Program program, BindingResult bindingResult1,
 			@Validated(DateGroup.class) ProgramDate programDate, BindingResult bindingResult2, ProgramImg programImg,
 			HttpSession session, RedirectAttributes redirectAttributes) {
 
@@ -222,36 +227,19 @@ public class ProgramController {
 		redirectAttributes.addAttribute("programNo", programNo);
 
 		String originDate = programDate.getOriginDate();
-		// 첫 번째 객체(Program)의 유효성 검증 실패시 처리
+
 		if (bindingResult1.hasErrors()) {
-
 			redirectAttributes.addAttribute("originDate", originDate);
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult1.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
 			return "redirect:/headoffice/program/update/{programNo}/{originDate}";
-		}
-
-		// 두 번째 객체(ProgramDate)의 유효성 검증 실패시 error 발생 시 처리
-		if (bindingResult2.hasErrors()) {
-
+		} else if (bindingResult2.hasErrors()) {
 			redirectAttributes.addAttribute("originDate", originDate);
-
-			// 에러 메시지 출력
-			for (ObjectError error : bindingResult2.getAllErrors()) {
-				log.debug(error.getDefaultMessage());
-			}
-
 			return "redirect:/headoffice/program/update/{programNo}/{originDate}";
 		}
 
 		String oldPath = session.getServletContext().getRealPath("/upload/program/" + programImg.getFilename());
 		String newPath = session.getServletContext().getRealPath("/upload/program");
 
-		programService.updateProgram(program, programDate, programImg, newPath, oldPath);
+		programService.modifyProgram(program, programDate, programImg, newPath, oldPath);
 
 		String date = programDate.getProgramDate();
 		redirectAttributes.addAttribute("programDate", date);
@@ -259,25 +247,31 @@ public class ProgramController {
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
 	}
 
+	/**
+	 * 프로그램을 비활성화하고 프로그램 상세 정보 페이지로 리다이렉트합니다.
+	 * 
+	 * @param programNo   비활성화할 프로그램 번호
+	 * @param programDate 비활성화할 프로그램 날짜
+	 * @return 프로그램 상세 정보 페이지로 리다이렉트
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/deactive/{programNo}/{programDate}")
-	public String deactive(@PathVariable int programNo, @PathVariable String programDate) {
-
-		int result = programService.deactiveProgram(programNo);
-		// 디버깅
-		log.debug("프로그램 비활성화(성공:1,실패:0) : " + result);
-
+	@GetMapping("/deactivate/{programNo}/{programDate}")
+	public String deactivateProgram(@PathVariable int programNo, @PathVariable String programDate) {
+		programService.modifyDeactivation(programNo);
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
 	}
 
+	/**
+	 * 프로그램을 활성화하고 프로그램 상세 정보 페이지로 리다이렉트합니다.
+	 * 
+	 * @param programNo   활성화할 프로그램 번호
+	 * @param programDate 활성화할 프로그램 날짜
+	 * @return 프로그램 상세 정보 페이지로 리다이렉트
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/active/{programNo}/{programDate}")
-	public String active(@PathVariable int programNo, @PathVariable String programDate) {
-
-		int result = programService.activeProgram(programNo);
-		// 디버깅
-		log.debug("프로그램 활성화(성공:1,실패:0) : " + result);
-
+	@GetMapping("/activate/{programNo}/{programDate}")
+	public String activateProgram(@PathVariable int programNo, @PathVariable String programDate) {
+		programService.modifyActivation(programNo);
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
 	}
 

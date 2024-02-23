@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.headoffice.emp.EmpMapper">
 
-	<select id="employeeList" parameterType="map" resultType="map">
+	<select id="selectEmployeeList" parameterType="map" resultType="map">
 		SELECT
 		e.employee_id empId,
 		ed.employee_name empName,
@@ -39,7 +39,7 @@
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 
-	<select id="employeeCnt" resultType="int">
+	<select id="selectEmployeeCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM employee
 		e
@@ -51,7 +51,7 @@
 		ON b.branch_no = e.branch_no
 	</select>
 
-	<select id="searchCnt" parameterType="map" resultType="int">
+	<select id="selectSearchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM employee e
 		INNER JOIN employee_detail ed
@@ -80,19 +80,19 @@
 			</choose>
 		</where>
 	</select>
-	<select id="branchList" resultType="String">
+	<select id="selectBranchList" resultType="String">
 		SELECT branch_name
 		FROM branch
 	</select>
 
-	<select id="idCheck" parameterType="String" resultType="int">
+	<select id="selectIsIdExists" parameterType="String" resultType="int">
 		SELECT
 		COUNT(*)
 		FROM employee
 		WHERE employee_id = #{employeeId}
 	</select>
 
-	<select id="employeeOne" resultType="map">
+	<select id="selectEmployeeOne" resultType="map">
 		SELECT
 		e.employee_id empId,
 		e.employee_active empActive,
@@ -113,7 +113,7 @@
 		WHERE e.employee_id = #{employeeId}
 	</select>
 
-	<insert id="insertEmployee" parameterType="com.tree.gdhealth.vo.Employee">
+	<insert id="insertEmployee" parameterType="com.tree.gdhealth.dto.Employee">
 		INSERT INTO employee(
 		branch_no,
 		employee_id,
@@ -129,7 +129,7 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<insert id="insertEmployeeDetail" parameterType="com.tree.gdhealth.vo.EmployeeDetail">
+	<insert id="insertEmployeeDetail" parameterType="com.tree.gdhealth.dto.EmployeeDetail">
 		INSERT INTO employee_detail(
 		employee_no,
 		employee_name,
@@ -144,7 +144,7 @@
 		#{employeeGender}
 		)
 	</insert>
-	<insert id="insertEmployeeImg" parameterType="com.tree.gdhealth.vo.EmployeeImg">
+	<insert id="insertEmployeeImg" parameterType="com.tree.gdhealth.dto.EmployeeImg">
 		INSERT INTO employee_img(
 		employee_no,
 		employee_img_origin_name,

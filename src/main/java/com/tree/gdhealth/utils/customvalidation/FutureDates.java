@@ -11,18 +11,20 @@ import com.tree.gdhealth.utils.customvalidation.validator.FutureDatesValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
+/**
+ * {@link FutureDatesValidator} 클래스를 기반으로 하며, 날짜가 오늘 날짜 혹은 그 이후인지를 검증하는 애노테이션
+ * 
+ * @author 진관호
+ */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = FutureDatesValidator.class)
 @Documented
 public @interface FutureDates {
 
-	// 유효성 검사가 실패했을 때 사용될 기본 에러 메시지
-	String message() default "선택한 날짜는 오늘 날짜 이후여야 합니다.";
+	String message() default "선택한 날짜들은 오늘 날짜 이후여야 합니다.";
 
-	// Jakarta Bean Validation에서 그룹 기반 유효성 검사를 할 때 사용
 	Class<?>[] groups() default {};
 
-	// 페이로드 : 특별한 정보를 전달할 때 사용
 	Class<? extends Payload>[] payload() default {};
 }

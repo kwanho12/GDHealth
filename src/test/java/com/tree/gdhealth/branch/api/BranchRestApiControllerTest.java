@@ -1,6 +1,5 @@
 package com.tree.gdhealth.branch.api;
 
-import com.tree.gdhealth.vo.Branch;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.tree.gdhealth.dto.Branch;
 
 import java.net.URI;
 import java.util.List;

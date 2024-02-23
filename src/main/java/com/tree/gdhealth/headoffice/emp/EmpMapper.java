@@ -5,24 +5,27 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.vo.Employee;
-import com.tree.gdhealth.vo.EmployeeDetail;
-import com.tree.gdhealth.vo.EmployeeImg;
+import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.dto.EmployeeDetail;
+import com.tree.gdhealth.dto.EmployeeImg;
 
+/**
+ * @author 진관호
+ */
 @Mapper
 public interface EmpMapper {
 
-	List<Map<String, Object>> employeeList(Map<String, Object> map);
+	List<Map<String, Object>> selectEmployeeList(Map<String, Object> map);
 
-	int employeeCnt();
+	int selectEmployeeCnt();
 
-	int searchCnt(Map<String, Object> map);
+	int selectSearchCnt(Map<String, Object> map);
 
-	List<String> branchList();
+	List<String> selectBranchList();
 
-	Map<String, Object> employeeOne(String employeeId);
+	Map<String, Object> selectEmployeeOne(String employeeId);
 
-	int idCheck(String employeeId);
+	int selectIsIdExists(String employeeId);
 
 	int insertEmployee(Employee employee);
 

@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tree.gdhealth.vo.Customer;
-import com.tree.gdhealth.vo.CustomerDetail;
-import com.tree.gdhealth.vo.CustomerImg;
-import com.tree.gdhealth.vo.CustomerMyPage;
+import com.tree.gdhealth.dto.Customer;
+import com.tree.gdhealth.dto.CustomerDetail;
+import com.tree.gdhealth.dto.CustomerImg;
+import com.tree.gdhealth.dto.CustomerMyPage;
 
 @Service
 @Transactional

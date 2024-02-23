@@ -187,14 +187,14 @@
 <script>
 
 	// 초기 화면
-	paging(1);
+	pagination(1);
 	
-	function paging(page) {
+	function pagination(pageNum) {
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/program/paging',
+			url : '${pageContext.request.contextPath}/headoffice/program/pagination',
 			method : 'get',
 			data : {
-				page : page
+				pageNum : pageNum
 			},
 			success : function(result){
 				console.log('페이징 성공!')
@@ -203,13 +203,13 @@
 		});
 	}
 	
-	function searchPaging(page, type, keyword) {
+	function searchPagination(pageNum, type, keyword) {
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/program/searchPaging',
+			url : '${pageContext.request.contextPath}/headoffice/program/searchPagination',
 			method : 'get',
 			data : {
-				page : page,
+				pageNum : pageNum,
 				type : type,
 				keyword : keyword
 			},
@@ -273,7 +273,7 @@
 			
 		}
 		
-		searchPaging(1,type,keyword);
+		searchPagination(1,type,keyword);
 		
 	});
 	
@@ -281,21 +281,20 @@
 	// 페이징
 	$(document).on('click', '.pageBtn', function(e){
 		e.preventDefault();
-		let page = $(this).data('page');
-		console.log(page);
+		let pageNum = $(this).data('page');
 		
-		paging(page);		
+		pagination(pageNum);		
 	});
 	
 	// 동적으로 추가된 요소에 대해 이벤트 처리
 	// search 후 페이징
 	$(document).on('click', '.searchPageBtn', function(e){
 		e.preventDefault();
-		let page = $(this).data('page');
+		let pageNum = $(this).data('page');
 		let type = $(this).data('type');
 		let keyword = $(this).data('keyword');
 		
-		searchPaging(page,type,keyword);	
+		searchPagination(pageNum,type,keyword);	
 	});
 	
 </script>

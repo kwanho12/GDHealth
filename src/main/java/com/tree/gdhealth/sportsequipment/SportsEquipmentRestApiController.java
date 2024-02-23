@@ -1,7 +1,8 @@
 package com.tree.gdhealth.sportsequipment;
 
+import com.tree.gdhealth.dto.SportsEquipment;
 import com.tree.gdhealth.utils.ResponseEntityGenerator;
-import com.tree.gdhealth.vo.SportsEquipment;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

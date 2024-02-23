@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.question.QuestionMapper">
 <select id="questionList"
-		parameterType="com.tree.gdhealth.vo.Question"
-		resultType="com.tree.gdhealth.vo.Question">
+		parameterType="com.tree.gdhealth.dto.Question"
+		resultType="com.tree.gdhealth.dto.Question">
 	
 	SELECT
 	    q.question_no AS questionNo,
@@ -28,7 +28,7 @@
 
 <select id = "questionOne"
 	parameterType="int"
-	resultType="com.tree.gdhealth.vo.Question">
+	resultType="com.tree.gdhealth.dto.Question">
 	
 	SELECT
 		q.question_no AS questionNo,
@@ -63,7 +63,7 @@
 </select>
 
 <insert id="addQuestion"
-		parameterType="com.tree.gdhealth.vo.Question">
+		parameterType="com.tree.gdhealth.dto.Question">
 		
 		INSERT INTO question(
 			question_no,
@@ -83,7 +83,7 @@
 </insert>
 
 <update id="updateQuestion"
-		parameterType="com.tree.gdhealth.vo.Question">
+		parameterType="com.tree.gdhealth.dto.Question">
 		
 		UPDATE question
 		SET branch_no = #{branchNo}, question_title = #{questionTitle}, question_content = #{questionContent}, isSecret = #{isSecret}, updatedate = NOW()
@@ -91,7 +91,7 @@
 </update>
 
 <delete id="deleteQuestion"
-		parameterType="com.tree.gdhealth.vo.Question">
+		parameterType="com.tree.gdhealth.dto.Question">
 		
 		DELETE 
 		FROM question

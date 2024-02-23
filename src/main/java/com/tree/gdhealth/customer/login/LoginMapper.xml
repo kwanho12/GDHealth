@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.customer.login.LoginMapper">
-<select id="customerLoginCk" parameterType="com.tree.gdhealth.vo.Customer" resultType="INTEGER">
+<select id="customerLoginCk" parameterType="com.tree.gdhealth.dto.Customer" resultType="INTEGER">
 	SELECT
 	customer_no
 	FROM customer
 	WHERE customer_id = #{customerId} AND customer_active = 'Y' AND customer_pw = PASSWORD(#{customerPw})
 </select>
-<select id="customerFindPwCk" parameterType="com.tree.gdhealth.vo.Customer" resultType="INTEGER">
+<select id="customerFindPwCk" parameterType="com.tree.gdhealth.dto.Customer" resultType="INTEGER">
 	SELECT
 	c.customer_no
 	FROM customer c JOIN customer_detail d
@@ -15,7 +15,7 @@
 	WHERE c.customer_id = #{customerId} AND c.customer_active = 'Y' AND d.customer_birth = #{customerBirth}
 </select>
 
-<update id="customerResetPw" parameterType="com.tree.gdhealth.vo.Customer">
+<update id="customerResetPw" parameterType="com.tree.gdhealth.dto.Customer">
 	UPDATE customer
 	SET customer_pw = PASSWORD(#{customerPw})
 	WHERE customer_no = #{customerNo}

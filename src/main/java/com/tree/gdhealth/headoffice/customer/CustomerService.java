@@ -7,10 +7,13 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
-@Slf4j
+import lombok.RequiredArgsConstructor;
+
+/**
+ * @author 진관호
+ */
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -18,6 +21,13 @@ public class CustomerService {
 
 	private final CustomerMapper customerMapper;
 
+	/**
+	 * 전체 회원 목록을 리턴합니다.
+	 * 
+	 * @param beginRow   해당 페이지 내에서의 첫번째 회원
+	 * @param rowPerPage 한 페이지에 나타낼 회원의 수
+	 * @return 회원 목록
+	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getCustomerList(int beginRow, int rowPerPage) {
 
@@ -25,49 +35,75 @@ public class CustomerService {
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 
-		List<Map<String, Object>> customerList = customerMapper.customerList(map);
-
-		return customerList;
-
+		return customerMapper.selectCustomerList(map);
 	}
 
+	/**
+	 * 전체 회원 수를 리턴합니다.
+	 * 
+	 * @return 회원 수
+	 */
 	@Transactional(readOnly = true)
 	public int getCustomerCnt() {
-
-		int customerCnt = customerMapper.customerCnt();
-		// 디버깅
-		log.debug("고객 수 : " + customerCnt);
-
-		return customerCnt;
+		return customerMapper.selectCustomerCnt();
 	}
 
+	/**
+	 * 검색 조건을 만족하는 회원 목록을 리턴합니다.
+	 * 
+	 * @param beginRow   해당 페이지 내에서의 첫번째 회원
+	 * @param rowPerPage 한 페이지에 나타낼 회원의 수
+	 * @param type       검색할 keyword의 속성(id,active...)
+	 * @param keyword    검색 내용
+	 * @return 검색 후의 회원 목록
+	 */
 	@Transactional(readOnly = true)
-	public List<Map<String, Object>> getSearchList(int beginRow, int rowPerPage, String type, String keyword) {
+	public List<Map<String, Object>> getCustomerList(int beginRow, int rowPerPage, String type, String keyword) {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 		map.put("type", type);
 		map.put("keyword", keyword);
-
-		List<Map<String, Object>> searchList = customerMapper.customerList(map);
-
-		return searchList;
-
+		
+		return customerMapper.selectCustomerList(map);
 	}
 
+	/**
+	 * 검색 조건을 만족하는 회원 수를 리턴합니다.
+	 * 
+	 * @param type       검색할 keyword의 속성(id,active...)
+	 * @param keyword    검색 내용
+	 * @return 검색 조건을 만족하는 회원 수
+	 */
 	@Transactional(readOnly = true)
-	public int getSearchCnt(String type, String keyword) {
+	public int getCustomerCnt(String type, String keyword) {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
 		map.put("type", type);
 
-		int searchCnt = customerMapper.searchCnt(map);
-		// 디버깅
-		log.debug("검색 결과 개수 : " + searchCnt);
-
-		return searchCnt;
+		return customerMapper.selectSearchCnt(map);
+	}
+	
+	/**
+	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
+	 *
+	 * @param pageNum     현재 페이지 번호
+	 * @param customerCnt 고객 수
+	 * @return 페이지네이션 정보
+	 */
+	public HeadofficePagination getPagination(int pageNum, int customerCnt) {
+		
+		HeadofficePagination pagination = HeadofficePagination.builder()
+				.numberOfPaginationToShow(10)
+				.rowPerPage(8)
+				.currentPageNum(pageNum)
+				.rowCnt(customerCnt)
+				.build();
+		pagination.calculateProperties();
+		
+		return pagination;
 	}
 
 }

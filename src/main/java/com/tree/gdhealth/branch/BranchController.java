@@ -3,13 +3,14 @@ package com.tree.gdhealth.branch;
 import com.tree.gdhealth.program.dto.BranchProgramCalendar;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderAddRequest;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderInformation;
+import com.tree.gdhealth.dto.Employee;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderRetrieveCriteria;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 import com.tree.gdhealth.utils.pagination.PageUri;
 import com.tree.gdhealth.utils.pagination.PaginationUriGenerator;
-import com.tree.gdhealth.vo.Employee;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

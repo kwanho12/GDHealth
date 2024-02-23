@@ -2,7 +2,7 @@
 <!-- author 정인호-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.sportsequipment.SportsEquipmentApiMapper">
-    <select id="selectSportsEquipmentAll" resultType="com.tree.gdhealth.vo.SportsEquipment">
+    <select id="selectSportsEquipmentAll" resultType="com.tree.gdhealth.dto.SportsEquipment">
         SELECT sports_equipment_no sportsEquipmentNo,
                item_name itemName,
                item_price itemPrice,
@@ -11,7 +11,7 @@
                updatedate
         FROM sports_equipment
     </select>
-    <select id="selectSportsEquipmentOne" resultType="com.tree.gdhealth.vo.SportsEquipment">
+    <select id="selectSportsEquipmentOne" resultType="com.tree.gdhealth.dto.SportsEquipment">
         SELECT sports_equipment_no sportsEquipmentNo,
                item_name itemName,
                item_price itemPrice,
@@ -36,7 +36,7 @@
         WHERE order_no = #{orderNo}
     </update>
 
-    <select id="getBranchOne" resultType="com.tree.gdhealth.vo.Branch">
+    <select id="getBranchOne" resultType="com.tree.gdhealth.dto.Branch">
         SELECT
             branch_no branchNo,
             branch_name branchName,
@@ -114,7 +114,7 @@
                  LEFT JOIN employee_detail aed ON seo.employee_approver = aed.employee_no
         where seo.order_no = #{orderNo}
     </select>
-    <select id="selectSportsEquipmentImage" resultType="com.tree.gdhealth.vo.SportsEquipmentImg">
+    <select id="selectSportsEquipmentImage" resultType="com.tree.gdhealth.dto.SportsEquipmentImg">
         SELECT
             sports_equipment_img_no sportsEquipmentImgNo,
             sports_equipment_no sportsEquipmentNo,

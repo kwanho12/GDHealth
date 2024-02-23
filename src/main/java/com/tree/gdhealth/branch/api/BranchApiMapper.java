@@ -1,7 +1,8 @@
 package com.tree.gdhealth.branch.api;
 
 import com.tree.gdhealth.branch.dto.BranchRetrieveCriteria;
-import com.tree.gdhealth.vo.Branch;
+import com.tree.gdhealth.dto.Branch;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -6,6 +6,7 @@ import com.tree.gdhealth.program.ProgramApiService;
 import com.tree.gdhealth.program.dto.BranchProgramDate;
 import com.tree.gdhealth.sportsequipment.SportsEquipmentApiService;
 import com.tree.gdhealth.sportsequipment.dto.*;
+import com.tree.gdhealth.dto.Employee;
 import com.tree.gdhealth.employee.api.EmployeeApiService;
 import com.tree.gdhealth.employee.login.EmpLoginService;
 import com.tree.gdhealth.employee.login.LoginEmployee;
@@ -13,7 +14,7 @@ import com.tree.gdhealth.utils.holidayapi.HolidayApi;
 import com.tree.gdhealth.utils.holidayapi.HolidayApiVo;
 import com.tree.gdhealth.utils.pagination.PageUri;
 import com.tree.gdhealth.utils.pagination.PaginationUriGenerator;
-import com.tree.gdhealth.vo.Employee;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

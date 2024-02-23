@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tree.gdhealth.customer.login.LoginMapper;
-import com.tree.gdhealth.vo.Employee;
+import com.tree.gdhealth.dto.Employee;
 
 import java.util.Map;
 

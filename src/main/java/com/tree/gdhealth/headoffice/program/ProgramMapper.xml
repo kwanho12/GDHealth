@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.tree.gdhealth.headoffice.program.ProgramMapper">
 
-	<select id="programList" parameterType="Map" resultType="Map">
+	<select id="selectProgramList" parameterType="Map" resultType="Map">
 		SELECT
 		ed.employee_name empName,
 		p.program_no programNo,
@@ -37,7 +37,7 @@
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 
-	<select id="programCnt" resultType="int">
+	<select id="selectProgramCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM program p
 		INNER JOIN program_date pd
@@ -46,7 +46,7 @@
 		ON p.program_no = pi.program_no
 	</select>
 
-	<select id="searchCnt" parameterType="map" resultType="int">
+	<select id="selectSearchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM program p
 		INNER JOIN program_date pd
@@ -68,7 +68,7 @@
 		</where>
 	</select>
 
-	<select id="programOne" parameterType="map" resultType="Map">
+	<select id="selectProgramOne" parameterType="map" resultType="Map">
 		SELECT
 		ed.employee_name empName,
 		p.program_no programNo,
@@ -92,7 +92,7 @@
 		pd.program_date = #{programDate}
 	</select>
 
-	<select id="checkDatesExists" parameterType="list"
+	<select id="selectResultOfDatesCheck" parameterType="list"
 		resultType="boolean">
 		SELECT
 		CASE
@@ -107,7 +107,7 @@
 		</foreach>
 	</select>
 
-	<select id="checkDateOneExists" parameterType="String"
+	<select id="selectResultOfDateOneCheck" parameterType="String"
 		resultType="boolean">
 		SELECT
 		CASE
@@ -119,7 +119,7 @@
 	</select>
 
 	<insert id="insertProgram"
-		parameterType="com.tree.gdhealth.vo.Program">
+		parameterType="com.tree.gdhealth.dto.Program">
 		INSERT INTO program(
 		writer_employee_no,
 		program_name,
@@ -146,7 +146,7 @@
 		</foreach>
 	</insert>
 	<insert id="insertProgramImg"
-		parameterType="com.tree.gdhealth.vo.ProgramImg">
+		parameterType="com.tree.gdhealth.dto.ProgramImg">
 		INSERT INTO program_img(
 		program_no,
 		program_img_origin,
@@ -163,7 +163,7 @@
 	</insert>
 
 	<update id="updateProgram"
-		parameterType="com.tree.gdhealth.vo.Program">
+		parameterType="com.tree.gdhealth.dto.Program">
 		UPDATE program
 		SET
 		program_name = #{programName},
@@ -173,7 +173,7 @@
 		WHERE program_no = #{programNo}
 	</update>
 	<update id="updateProgramDate"
-		parameterType="com.tree.gdhealth.vo.ProgramDate">
+		parameterType="com.tree.gdhealth.dto.ProgramDate">
 		UPDATE program_date
 		SET
 		program_date = #{programDate},
@@ -183,7 +183,7 @@
 		#{originDate}
 	</update>
 	<update id="updateProgramImg"
-		parameterType="com.tree.gdhealth.vo.ProgramImg">
+		parameterType="com.tree.gdhealth.dto.ProgramImg">
 		UPDATE program_img
 		SET
 		program_img_origin = #{originName},
@@ -194,7 +194,7 @@
 		WHERE program_no = #{programNo}
 	</update>
 
-	<update id="deactiveProgram">
+	<update id="updateToDeactiveProgram">
 		UPDATE program
 		SET
 		program_active = 'N',
@@ -202,7 +202,7 @@
 		WHERE program_no = #{programNo}
 	</update>
 
-	<update id="activeProgram">
+	<update id="updateToActiveProgram">
 		UPDATE program
 		SET
 		program_active = 'Y',

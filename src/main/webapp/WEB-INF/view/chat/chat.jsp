@@ -52,10 +52,10 @@ input {
 <body>
 	<div id="container" class="container">
 		<c:if test="${status == 'customer'}">
-			<h1>${sessionScope.customerId}의채팅방</h1>
+			<h1>${sessionScope.customerId}의 채팅방</h1>
 		</c:if>
 		<c:if test="${status == 'employee'}">
-			<h1>${customerId}의채팅방(본사 직원용)</h1>
+			<h1>${customerId}의 채팅방(본사 직원용)</h1>
 		</c:if>
 
 		<input type="hidden" id="status" value="${status}"> <input type="hidden" id="roomNo" value="${roomNo}">

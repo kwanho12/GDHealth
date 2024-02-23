@@ -8,23 +8,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.utils.ImageSave;
-import com.tree.gdhealth.vo.Employee;
-import com.tree.gdhealth.vo.EmployeeDetail;
-import com.tree.gdhealth.vo.EmployeeImg;
+import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.dto.EmployeeDetail;
+import com.tree.gdhealth.dto.EmployeeImg;
+import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
+import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/**
+ * @author 진관호
+ */
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class EmpService {
 
-	// DI
 	private final EmpMapper empMapper;
 
+	/**
+	 * 전체 직원 목록을 리턴합니다.
+	 * 
+	 * @param beginRow   해당 페이지 내에서의 첫번째 직원
+	 * @param rowPerPage 한 페이지에 나타낼 직원의 수
+	 * @return 직원 목록
+	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getEmployeeList(int beginRow, int rowPerPage) {
 
@@ -32,23 +40,30 @@ public class EmpService {
 		map.put("beginRow", beginRow);
 		map.put("rowPerPage", rowPerPage);
 
-		List<Map<String, Object>> employeeList = empMapper.employeeList(map);
-
-		return employeeList;
+		return empMapper.selectEmployeeList(map);
 	}
 
+	/**
+	 * 전체 직원 수를 리턴합니다.
+	 * 
+	 * @return 직원 수
+	 */
 	@Transactional(readOnly = true)
 	public int getEmployeeCnt() {
-
-		int employeeCnt = empMapper.employeeCnt();
-		// 디버깅
-		log.debug("전체 직원 수 : " + employeeCnt);
-
-		return employeeCnt;
+		return empMapper.selectEmployeeCnt();
 	}
 
+	/**
+	 * 검색 조건을 만족하는 직원 목록을 리턴합니다.
+	 * 
+	 * @param beginRow   해당 페이지 내에서의 첫번째 직원
+	 * @param rowPerPage 한 페이지에 나타낼 직원의 수
+	 * @param type       검색할 keyword의 속성(id,active...)
+	 * @param keyword    검색 내용
+	 * @return 검색 후의 직원 목록
+	 */
 	@Transactional(readOnly = true)
-	public List<Map<String, Object>> getSearchList(int beginRow, int rowPerPage, String type, String keyword) {
+	public List<Map<String, Object>> getEmployeeList(int beginRow, int rowPerPage, String type, String keyword) {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("beginRow", beginRow);
@@ -56,75 +71,88 @@ public class EmpService {
 		map.put("type", type);
 		map.put("keyword", keyword);
 
-		List<Map<String, Object>> searchList = empMapper.employeeList(map);
-
-		return searchList;
-
+		return empMapper.selectEmployeeList(map);
 	}
 
+	/**
+	 * 검색 조건을 만족하는 직원 수를 리턴합니다.
+	 * 
+	 * @param type    검색할 keyword의 속성(id,active...)
+	 * @param keyword 검색 내용
+	 * @return 검색 조건을 만족하는 직원 수
+	 */
 	@Transactional(readOnly = true)
-	public int getSearchCnt(String type, String keyword) {
+	public int getEmployeeCnt(String type, String keyword) {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
 		map.put("type", type);
 
-		int searchCnt = empMapper.searchCnt(map);
-		// 디버깅
-		log.debug("검색 결과 개수 : " + searchCnt);
-
-		return searchCnt;
+		return empMapper.selectSearchCnt(map);
 	}
 
+	/**
+	 * 전체 지점 목록을 리턴합니다.
+	 * 
+	 * @return 지점 목록
+	 */
 	@Transactional(readOnly = true)
 	public List<String> getBranchList() {
-
-		List<String> branchList = empMapper.branchList();
-		// 디버깅
-		log.debug("지점 목록 : " + branchList);
-
-		return branchList;
+		return empMapper.selectBranchList();
 	}
 
+	/**
+	 * 직원 상세 정보를 리턴합니다.
+	 * 
+	 * @param employeeId 조회할 직원의 id
+	 * @return 직원 상세 정보
+	 */
 	@Transactional(readOnly = true)
 	public Map<String, Object> getEmployeeOne(String employeeId) {
-
-		Map<String, Object> employeeOne = empMapper.employeeOne(employeeId);
-		// 디버깅
-		log.debug("직원 상세 정보 : " + employeeOne);
-
-		return employeeOne;
+		return  empMapper.selectEmployeeOne(employeeId);
 	}
 
+	/**
+	 * 데이터베이스에서 해당 id를 검색하여 직원 id의 중복 여부를 확인합니다.
+	 * 입력한 id가 존재하지 않는다면 0을 리턴합니다.
+	 * 
+	 * @param employeeId
+	 * @return 입력한 id가 존재하지 않는다면 0, 이미 존재한다면 1
+	 */
 	@Transactional(readOnly = true)
-	public int idCheck(String employeeId) {
-
-		int result = empMapper.idCheck(employeeId);
-
-		return result;
+	public int getResultOfIdCheck(String employeeId) {
+		return empMapper.selectIsIdExists(employeeId);
 	}
 
-	public void insertEmployee(Employee employee, EmployeeDetail employeeDetail, EmployeeImg employeeImg, String path) {
+	/**
+	 * 직원 정보를 데이터베이스에 삽입합니다.
+	 *
+	 * @param employee       삽입할 직원의 기본 정보를 담은 Employee 객체
+	 * @param employeeDetail 삽입할 직원의 상세 정보를 담은 EmployeeDetail 객체
+	 * @param employeeImg    삽입할 직원의 이미지 정보를 담은 EmployeeImg 객체
+	 * @param path           직원 이미지 파일을 저장할 경로
+	 */
+	public void addEmployee(Employee employee, EmployeeDetail employeeDetail, EmployeeImg employeeImg, String path) {
 
-		int result = empMapper.insertEmployee(employee);
-		// 디버깅
-		log.debug("employee 추가(성공:1) : " + result);
+		empMapper.insertEmployee(employee);
 
-		// empMapper.xml에서 selectKey로 얻어 온 employee table의 auto increment 값
 		employeeDetail.setEmployeeNo(employee.getEmployeeNo());
-		int detailResult = empMapper.insertEmployeeDetail(employeeDetail);
-		// 디버깅
-		log.debug("employeeDetail 추가(성공:1) : " + detailResult);
+		empMapper.insertEmployeeDetail(employeeDetail);
 
 		MultipartFile employeeFile = employeeImg.getEmployeeFile();
-		// 파일 저장
-		insertEmpImg(employeeFile, path, employee.getEmployeeNo());
-
+		addEmpImg(employeeFile, path, employee.getEmployeeNo());
 	}
 
-	public void insertEmpImg(MultipartFile employeeFile, String path, int employeeNo) {
+	/**
+	 * 직원 이미지 파일을 서버에 저장하고 데이터베이스에 이미지 정보를 삽입합니다.
+	 *
+	 * @param employeeFile 직원 이미지 파일을 나타내는 MultipartFile 객체
+	 * @param path         직원 이미지 파일을 저장할 경로
+	 * @param employeeNo   이미지가 속하는 직원의 번호
+	 */
+	public void addEmpImg(MultipartFile employeeFile, String path, int employeeNo) {
 
-		ImageSave imgSave = new ImageSave();
+		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
 
 		EmployeeImg img = new EmployeeImg();
 		img.setEmployeeNo(employeeNo);
@@ -135,12 +163,29 @@ public class EmpService {
 		String filename = imgSave.getFilename(employeeFile);
 		img.setEmployeeImgFilename(filename);
 
-		int imgResult = empMapper.insertEmployeeImg(img);
-		log.debug("employeeImg 추가(성공:1) : " + imgResult);
+		empMapper.insertEmployeeImg(img);
 
-		// 파일 저장
 		imgSave.saveFile(employeeFile, path, filename);
-
+	}
+	
+	/**
+	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
+	 *
+	 * @param pageNum     현재 페이지 번호
+	 * @param customerCnt 고객 수
+	 * @return 페이지네이션 정보
+	 */
+	public HeadofficePagination getPagination(int pageNum, int employeeCnt) {
+		
+		HeadofficePagination pagination = HeadofficePagination.builder()
+				.numberOfPaginationToShow(10)
+				.rowPerPage(8)
+				.currentPageNum(pageNum)
+				.rowCnt(employeeCnt)
+				.build();
+		pagination.calculateProperties();
+		
+		return pagination;
 	}
 
 }

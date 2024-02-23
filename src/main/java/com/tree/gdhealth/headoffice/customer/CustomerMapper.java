@@ -5,13 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * @author 진관호
+ */
 @Mapper
 public interface CustomerMapper {
 
-	List<Map<String, Object>> customerList(Map<String, Object> map);
+	List<Map<String, Object>> selectCustomerList(Map<String, Object> map);
 
-	int customerCnt();
+	int selectCustomerCnt();
 
-	int searchCnt(Map<String, Object> map);
+	int selectSearchCnt(Map<String, Object> map);
 
 }

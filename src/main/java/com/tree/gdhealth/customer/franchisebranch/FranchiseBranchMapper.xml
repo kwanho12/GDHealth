@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.tree.gdhealth.customer.franchisebranch.FranchiseBranchMapper">
-	<select id="branchInfo" parameterType="com.tree.gdhealth.vo.Branch" resultType="com.tree.gdhealth.vo.Branch">
+	<select id="branchInfo" parameterType="com.tree.gdhealth.dto.Branch" resultType="com.tree.gdhealth.dto.Branch">
 	SELECT
 		branch_no branchNo,
 		branch_name branchName,
@@ -11,28 +11,28 @@
 	FROM branch
 	WHERE branch_level != 1 AND branch_active = 'Y'
 	</select>
-	<select id="branchMemberCnt" parameterType="com.tree.gdhealth.vo.Branch" resultType="com.tree.gdhealth.vo.Branch">
+	<select id="branchMemberCnt" parameterType="com.tree.gdhealth.dto.Branch" resultType="com.tree.gdhealth.dto.Branch">
 	SELECT
 		count(*) count
 	FROM customer_attendance
 	WHERE customer_attendance_exit_time IS null
 	</select>
 	
-	<select id="branchInfoOne" parameterType="com.tree.gdhealth.vo.Branch" resultType="com.tree.gdhealth.vo.Branch">
+	<select id="branchInfoOne" parameterType="com.tree.gdhealth.dto.Branch" resultType="com.tree.gdhealth.dto.Branch">
 	SELECT
 		branch_tel branchTel, branch_address branchAddress, branch_name branchName
 	FROM branch
 	WHERE branch_no = #{branchNo}
 	</select>
 	
-	<select id="branchTrainerCount" parameterType="com.tree.gdhealth.vo.Branch" resultType="int">
+	<select id="branchTrainerCount" parameterType="com.tree.gdhealth.dto.Branch" resultType="int">
 	SELECT
 		count(*) trainerCount
 	FROM employee
 	WHERE branch_no != 1 AND employee_active = 'Y' AND employee_position = 'trainer'
 	</select>
 	
-	<select id="branchMemberCounterOne" parameterType="com.tree.gdhealth.vo.Branch" resultType="int">
+	<select id="branchMemberCounterOne" parameterType="com.tree.gdhealth.dto.Branch" resultType="int">
 	SELECT
 		count(*) count
 	FROM branch b JOIN customer_attendance a 
@@ -40,20 +40,20 @@
 	WHERE a.branch_no = #{branchNo} AND a.customer_attendance_exit_time IS null
 	</select>
 	
-	<select id="branchTrainerCountOne" parameterType="com.tree.gdhealth.vo.Branch" resultType="int">
+	<select id="branchTrainerCountOne" parameterType="com.tree.gdhealth.dto.Branch" resultType="int">
 	SELECT
 		count(*) trainerCount
 	FROM employee
 	WHERE branch_no = #{branchNo} AND employee_active = 'Y' AND employee_position = 'trainer'
 	</select>
 	
-	<select id="branchReviewCountOne" parameterType="com.tree.gdhealth.vo.Branch" resultType="int">
+	<select id="branchReviewCountOne" parameterType="com.tree.gdhealth.dto.Branch" resultType="int">
 	SELECT count(*)
 	FROM review r JOIN program_reservation p
 	ON r.program_reservation_no = p.program_reservation_no
 	WHERE p.branch_no = #{branchNo}
 	</select> 
-	<select id="reviewCount" parameterType="com.tree.gdhealth.vo.Branch" resultType="int">
+	<select id="reviewCount" parameterType="com.tree.gdhealth.dto.Branch" resultType="int">
 	SELECT count(*)
 	FROM review 
 	</select>

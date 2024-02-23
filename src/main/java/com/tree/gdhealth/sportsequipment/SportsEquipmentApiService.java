@@ -1,10 +1,11 @@
 package com.tree.gdhealth.sportsequipment;
 
+import com.tree.gdhealth.dto.SportsEquipment;
+import com.tree.gdhealth.dto.SportsEquipmentImg;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderAddRequest;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderInformation;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderRetrieveCriteria;
-import com.tree.gdhealth.vo.SportsEquipment;
-import com.tree.gdhealth.vo.SportsEquipmentImg;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@
 <mapper namespace="com.tree.gdhealth.answer.AnswerMapper">
 	<select id= "answerOne"
 			parameterType="int"
-			resultType="com.tree.gdhealth.vo.Answer">
+			resultType="com.tree.gdhealth.dto.Answer">
 	SELECT	
 		a.answer_no AS answerNo,
 		e.employee_id AS employeeId,
@@ -17,7 +17,7 @@
 	</select>
 	
 	<insert id="addAnswer"
-			parameterType="com.tree.gdhealth.vo.Answer">
+			parameterType="com.tree.gdhealth.dto.Answer">
 	INSERT INTO answer (
 		question_no,
 		employee_no,
@@ -30,7 +30,7 @@
 	</insert>
 	
 	<update id="updateAnswer"
-			parameterType="com.tree.gdhealth.vo.Answer">
+			parameterType="com.tree.gdhealth.dto.Answer">
 	UPDATE answer
 	SET answer_content = #{answerContent}, updatedate = NOW()
 	WHERE question_no = #{questionNo}
@@ -38,7 +38,7 @@
 	</update>
 	
 	<delete id="deleteAnswer"
-			parameterType="com.tree.gdhealth.vo.Answer">
+			parameterType="com.tree.gdhealth.dto.Answer">
 	DELETE 
 	FROM answer
 	where question_no = #{questionNo}

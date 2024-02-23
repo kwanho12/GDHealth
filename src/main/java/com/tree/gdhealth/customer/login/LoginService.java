@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tree.gdhealth.vo.Customer;
+import com.tree.gdhealth.dto.Customer;
 
 @Service
 @Transactional

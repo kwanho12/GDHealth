@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.vo.Notice;
+import com.tree.gdhealth.dto.Notice;
 
 @Mapper
 public interface NoticeMapper {

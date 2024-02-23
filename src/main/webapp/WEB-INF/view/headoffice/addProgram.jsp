@@ -443,7 +443,7 @@
 						// 선택한 개설 날짜가 DB에 이미 존재하는지 확인
 						$
 								.ajax({
-									url : '${pageContext.request.contextPath}/headoffice/program/datesCheck',
+									url : '${pageContext.request.contextPath}/headoffice/program/checkDates',
 									method : 'post',
 									data : JSON.stringify(values),
 									dataType : 'json', // 서버에서 받을 데이터의 타입 

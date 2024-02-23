@@ -1,7 +1,8 @@
 package com.tree.gdhealth.utils.typehandler;
 
+import com.tree.gdhealth.dto.SportsEquipmentImg;
 import com.tree.gdhealth.utils.enumtype.ImageType;
-import com.tree.gdhealth.vo.SportsEquipmentImg;
+
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;

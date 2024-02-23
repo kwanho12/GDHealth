@@ -1,8 +1,9 @@
 package com.tree.gdhealth.branch.api;
 
 import com.tree.gdhealth.branch.dto.BranchRetrieveCriteria;
+import com.tree.gdhealth.dto.Branch;
 import com.tree.gdhealth.utils.exception.TooManyResultsException;
-import com.tree.gdhealth.vo.Branch;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

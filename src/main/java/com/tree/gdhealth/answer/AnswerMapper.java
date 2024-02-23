@@ -2,7 +2,7 @@ package com.tree.gdhealth.answer;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.vo.Answer;
+import com.tree.gdhealth.dto.Answer;
 
 @Mapper
 public interface AnswerMapper {

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tree.gdhealth.vo.Customer;
-import com.tree.gdhealth.vo.CustomerDetail;
-import com.tree.gdhealth.vo.CustomerImg;
-import com.tree.gdhealth.vo.CustomerMyPage;
+import com.tree.gdhealth.dto.Customer;
+import com.tree.gdhealth.dto.CustomerDetail;
+import com.tree.gdhealth.dto.CustomerImg;
+import com.tree.gdhealth.dto.CustomerMyPage;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

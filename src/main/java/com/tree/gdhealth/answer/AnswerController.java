@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.tree.gdhealth.dto.Answer;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.question.QuestionService;
-import com.tree.gdhealth.vo.Answer;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

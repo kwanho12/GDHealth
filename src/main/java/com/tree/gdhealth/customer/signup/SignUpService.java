@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.vo.Customer;
-import com.tree.gdhealth.vo.CustomerSignUp;
+import com.tree.gdhealth.dto.Customer;
+import com.tree.gdhealth.dto.CustomerSignUp;
 
 @Service
 @Transactional

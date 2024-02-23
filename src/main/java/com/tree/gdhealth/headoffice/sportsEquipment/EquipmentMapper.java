@@ -5,19 +5,22 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.vo.SportsEquipment;
-import com.tree.gdhealth.vo.SportsEquipmentImg;
+import com.tree.gdhealth.dto.SportsEquipment;
+import com.tree.gdhealth.dto.SportsEquipmentImg;
 
+/**
+ * @author 진관호
+ */
 @Mapper
 public interface EquipmentMapper {
 
-	List<Map<String, Object>> equipmentList(Map<String, Object> map);
+	List<Map<String, Object>> selectEquipmentList(Map<String, Object> map);
 
-	int equipmentCnt();
+	int selectEquipmentCnt();
 
-	int searchCnt(Map<String, Object> map);
+	int selectSearchCnt(Map<String, Object> map);
 
-	Map<String, Object> equipmentOne(int equipmentNo);
+	Map<String, Object> selectEquipmentOne(int equipmentNo);
 
 	int insertEquipment(SportsEquipment sportsEquipment);
 
@@ -27,8 +30,8 @@ public interface EquipmentMapper {
 
 	int updateEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
 
-	int deactiveEquipment(int sportsEquipmentNo);
+	int updateToDeactiveEquipment(int sportsEquipmentNo);
 
-	int activeEquipment(int sportsEquipmentNo);
+	int updateToActiveEquipment(int sportsEquipmentNo);
 
 }

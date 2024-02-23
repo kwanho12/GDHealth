@@ -8,14 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.tree.gdhealth.utils.Paging;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
+import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/**
+ * @author 진관호
+ */
 @RequestMapping("/headoffice/customer")
 @RequiredArgsConstructor
 @Controller
@@ -23,67 +24,64 @@ public class CustomerController {
 
 	private final CustomerService customerService;
 
+	/**
+	 * 전체 회원 목록을 나타내는 페이지로 이동합니다.
+	 * 
+	 * @return 회원 목록 페이지
+	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping
-	public String customer() {
+	public String getCustomerList() {
 
 		return "headoffice/customerList";
 	}
 
-	@GetMapping("/paging")
-	public String paging(Model model, int page) {
+	/**
+	 * 페이지네이션 후의 회원 목록 영역을 리턴합니다.
+	 * 
+	 * @param pageNum 이동할 페이지 번호
+	 * @return 페이지네이션 후의 회원 목록
+	 * @apiNote 페이지 전체가 아닌 회원의 목록을 나타내는 영역만 리턴합니다.
+	 */
+	@GetMapping("/pagination")
+	public String getPagination(Model model, int pageNum) {
 
-		// 전체 고객 수
 		int customerCnt = customerService.getCustomerCnt();
-		// 디버깅
-		log.debug("전체 고객 수 : " + customerCnt);
+		HeadofficePagination pagination = customerService.getPagination(pageNum, customerCnt);
 
-		// 페이징
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
-				.rowPerPage(8) // 한 페이지에 나타낼 row 수
-				.currentPage(page) // 현재 페이지
-				.cnt(customerCnt) // 전체 row 수
-				.build();
-		paging.calculation();
+		List<Map<String, Object>> customerList = customerService.getCustomerList(pagination.getBeginRow(),
+				pagination.getRowPerPage());
 
-		List<Map<String, Object>> customerList = customerService.getCustomerList(paging.getBeginRow(),
-				paging.getRowPerPage());
+		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("customerList", customerList);
 
-		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
-
-		return "headoffice/fragment/customer";
+		return "headoffice/fragment/customerList";
 	}
 
-	@GetMapping("/searchPaging")
-	public String searchPaging(Model model, String type, String keyword, int page) {
+	/**
+	 * 검색 결과가 반영된 페이지네이션 후의 회원 목록 영역을 리턴합니다.
+	 * 
+	 * @param type    검색할 keyword의 속성(id,active...)
+	 * @param keyword 검색 내용
+	 * @param pageNum 이동할 페이지 번호
+	 * @return 페이지네이션 후의 회원 목록
+	 * @apiNote 페이지 전체가 아닌 회원의 목록을 나타내는 영역만 리턴합니다.
+	 */
+	@GetMapping("/searchPagination")
+	public String getPagination(Model model, String type, String keyword, int pageNum) {
 
-		// 검색 결과 개수
-		int searchCnt = customerService.getSearchCnt(type, keyword);
-		// 디버깅
-		log.debug("검색 결과 개수(searchPaging) : " + searchCnt);
+		int searchCnt = customerService.getCustomerCnt(type, keyword);
+		HeadofficePagination pagination = customerService.getPagination(pageNum, searchCnt);
 
-		Paging paging = Paging.builder().pageNumCnt(10) // 한번에 표시할 페이징 번호의 갯수
-				.rowPerPage(8) // 한 페이지에 나타낼 row 수
-				.currentPage(page) // 현재 페이지
-				.cnt(searchCnt) // 전체 row 수
-				.build();
-		paging.calculation();
+		List<Map<String, Object>> searchList = customerService.getCustomerList(pagination.getBeginRow(),
+				pagination.getRowPerPage(), type, keyword);
 
-		List<Map<String, Object>> searchList = customerService.getSearchList(paging.getBeginRow(),
-				paging.getRowPerPage(), type, keyword);
+		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("customerList", searchList);
-
-		// 페이징(model 추가)
-		paging.pagingAttributes(model, paging, page);
-
-		// search parameter 추가
 		model.addAttribute("type", type);
 		model.addAttribute("keyword", keyword);
 
-		return "headoffice/fragment/searchCustomer";
-
+		return "headoffice/fragment/searchCustomerList";
 	}
 
 }

@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.tree.gdhealth.headoffice.sportsEquipment.EquipmentMapper">
 
-	<select id="equipmentList" parameterType="map" resultType="map">
+	<select id="selectEquipmentList" parameterType="map" resultType="map">
 		SELECT
 		s.sports_equipment_no equipmentNo,
 		s.item_name itemName,
@@ -39,7 +39,7 @@
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 
-	<select id="equipmentCnt" resultType="int">
+	<select id="selectEquipmentCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM
 		sports_equipment s
@@ -47,11 +47,10 @@
 		ON si.sports_equipment_no = s.sports_equipment_no
 	</select>
 
-	<select id="searchCnt" parameterType="map" resultType="int">
+	<select id="selectSearchCnt" parameterType="map" resultType="int">
 		SELECT COUNT(*)
 		FROM sports_equipment s
-		INNER JOIN sports_equipment_img
-		si
+		INNER JOIN sports_equipment_img si
 		ON si.sports_equipment_no = s.sports_equipment_no
 		INNER JOIN
 		employee_detail ed
@@ -65,8 +64,7 @@
 					s.note LIKE CONCAT('%',#{keyword},'%')
 				</when>
 				<when test="type != null and type.equals('writer')">
-					ed.employee_name note LIKE
-					CONCAT('%',#{keyword},'%')
+					ed.employee_name LIKE CONCAT('%',#{keyword},'%')
 				</when>
 				<when test="type != null and type.equals('isActive')">
 					s.active LIKE CONCAT('%',#{keyword},'%')
@@ -75,7 +73,7 @@
 		</where>
 	</select>
 
-	<select id="equipmentOne" parameterType="int" resultType="map">
+	<select id="selectEquipmentOne" parameterType="int" resultType="map">
 		SELECT
 		s.sports_equipment_no equipmentNo,
 		s.item_name itemName,
@@ -90,7 +88,7 @@
 	</select>
 
 	<insert id="insertEquipment"
-		parameterType="com.tree.gdhealth.vo.SportsEquipment">
+		parameterType="com.tree.gdhealth.dto.SportsEquipment">
 		INSERT INTO sports_equipment(
 		writer_employee_no,
 		item_name,
@@ -109,7 +107,7 @@
 	</insert>
 
 	<insert id="insertEquipmentImg"
-		parameterType="com.tree.gdhealth.vo.SportsEquipmentImg">
+		parameterType="com.tree.gdhealth.dto.SportsEquipmentImg">
 		INSERT INTO sports_equipment_img (
 		sports_equipment_no,
 		sports_equipment_img_origin_name,
@@ -126,7 +124,7 @@
 	</insert>
 
 	<update id="updateEquipment"
-		parameterType="com.tree.gdhealth.vo.SportsEquipment">
+		parameterType="com.tree.gdhealth.dto.SportsEquipment">
 		UPDATE sports_equipment
 		SET
 		item_name = #{itemName},
@@ -137,7 +135,7 @@
 	</update>
 
 	<update id="updateEquipmentImg"
-		parameterType="com.tree.gdhealth.vo.SportsEquipmentImg">
+		parameterType="com.tree.gdhealth.dto.SportsEquipmentImg">
 		UPDATE sports_equipment_img
 		SET
 		sports_equipment_img_origin_name = #{sportsEquipmentImgOriginName},
@@ -148,7 +146,7 @@
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
 
-	<update id="deactiveEquipment">
+	<update id="updateToDeactiveEquipment">
 		UPDATE sports_equipment
 		SET
 		active = 'N',
@@ -156,7 +154,7 @@
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
 
-	<update id="activeEquipment">
+	<update id="updateToActiveEquipment">
 		UPDATE sports_equipment
 		SET
 		active = 'Y',

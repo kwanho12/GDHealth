@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tree.gdhealth.vo.Customer;
+import com.tree.gdhealth.dto.Customer;
 
 import jakarta.servlet.http.HttpSession;
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.vo.Question;
+import com.tree.gdhealth.dto.Question;
 
 @Mapper
 public interface QuestionMapper {

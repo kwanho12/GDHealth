@@ -1,10 +1,11 @@
 package com.tree.gdhealth.sportsequipment;
 
+import com.tree.gdhealth.dto.SportsEquipment;
+import com.tree.gdhealth.dto.SportsEquipmentImg;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderAddRequest;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderInformation;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderRetrieveCriteria;
-import com.tree.gdhealth.vo.SportsEquipment;
-import com.tree.gdhealth.vo.SportsEquipmentImg;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

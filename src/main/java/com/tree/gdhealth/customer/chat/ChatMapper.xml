@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tree.gdhealth.customer.chat.ChatMapper">
+
+	<select id="selectChatList" resultType="com.tree.gdhealth.dto.ChatMessage">
+		SELECT
+		message_content messageContent,
+		customer_no customerNo,
+		employee_no employeeNo
+		FROM chat_message
+		WHERE chat_room_no = #{chatRoomNo}
+	</select>
+
+	<select id="selectIsRoomExists" resultType="boolean">
+		SELECT
+		CASE
+		WHEN COUNT(*) > 0 THEN true
+		ELSE false
+		END AS result
+		FROM chat_room
+		WHERE customer_no = #{customerNo}
+	</select>
+
+	<select id="selectRoomNo" parameterType="int">
+		SELECT
+		chat_room_no
+		FROM chat_room cr
+		INNER JOIN customer c
+		ON c.customer_no = cr.customer_no
+		WHERE c.customer_no=#{customerNo}
+	</select>
+
+	<insert id="insertRoom" parameterType="com.tree.gdhealth.dto.ChatRoom">
+		INSERT INTO chat_room(
+		customer_no
+		) VALUES(
+		#{customerNo}
+		)
+		<selectKey resultType="int" keyProperty="chatRoomNo" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<insert id="insertMessage" parameterType="com.tree.gdhealth.dto.ChatMessage">
+		INSERT INTO chat_message(
+		chat_room_no,
+		customer_no,
+		employee_no,
+		message_content
+		) VALUES (
+		#{chatRoomNo},
+		#{customerNo},
+		#{employeeNo},
+		#{messageContent}
+		)
+	</insert>
+
+</mapper>
