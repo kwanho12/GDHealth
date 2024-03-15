@@ -13,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tree.gdhealth.headoffice.emp.EmpMapper;
-import com.tree.gdhealth.vo.Employee;
-import com.tree.gdhealth.vo.EmployeeDetail;
-import com.tree.gdhealth.vo.EmployeeImg;
+import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.dto.EmployeeDetail;
+import com.tree.gdhealth.dto.EmployeeImg;
 
 /* 
  * Spring Test에서의 @Transactional은 테스트 시작 전에 트랜잭션을 시작하고, 

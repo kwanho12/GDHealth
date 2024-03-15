@@ -37,7 +37,7 @@ public class LoginController {
 		}
 		red.addFlashAttribute("msg", "로그인 되셨습니다.");
 		
-		session.removeAttribute("loginEmployee");
+//		session.removeAttribute("loginEmployee");
 
 		session.setAttribute("customerNo", customerNo);
 		session.setAttribute("customerId", customer.getCustomerId());

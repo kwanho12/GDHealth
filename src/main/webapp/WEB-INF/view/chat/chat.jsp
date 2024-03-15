@@ -129,13 +129,12 @@ input {
 	}
 
 	function wsEvt() {
-		ws.onopen = function(data) {
-			//소켓이 열리면 동작
-		}
-
+		
+		//소켓이 열리면 동작
+		ws.onopen = function(data) {}
+	
+		//메시지를 받으면 동작
 		ws.onmessage = function(data) {
-
-			//메시지를 받으면 동작
 			var msg = data.data;
 			console.log('message : ' + msg);
 

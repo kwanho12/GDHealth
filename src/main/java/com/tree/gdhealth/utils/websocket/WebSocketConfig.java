@@ -10,6 +10,8 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 import lombok.RequiredArgsConstructor;
 
 /**
+ * 웹소켓 설정 클래스
+ * 
  * @author 진관호
  */
 @RequiredArgsConstructor
@@ -20,13 +22,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	private final WebSocketHandler webSocketHandler;
 
 	/**
-	 * @apiNote HttpSessionHandshakeInterceptor를 사용하여 HttpSession에 저장 된 사용자id를
-	 *          WebSocketSession에서도 사용할 수 있게 하였습니다.
+	 * 웹소켓 핸들러를 등록합니다.
 	 */
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(webSocketHandler, "/chatting/{roomNo}")
 				.addInterceptors(new HttpSessionHandshakeInterceptor())
-				.setAllowedOrigins("http://localhost:80", "http://43.203.85.254", "http://52.78.98.70");
+				.setAllowedOrigins("http://localhost:80", "http://52.78.98.70");
 	}
 }

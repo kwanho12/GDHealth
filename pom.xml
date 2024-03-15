@@ -43,6 +43,7 @@
 			<version>1.1.1</version>
 		</dependency>
 		<!-- JSON -->
+		
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
@@ -113,7 +114,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<!--[정인호] 빌드툴이 java 경로 아래의 xml을 무시하는 경우가 있어서 추가  start-->
 		<resources>
 			<resource><!--.properties 인식시키기-->
 				<directory>src/main/resources</directory>
@@ -131,7 +131,6 @@
 				</includes>
 			</resource>
 		</resources>
-		<!--[정인호] 빌드툴이 java 경로 아래의 xml을 무시하는 경우가 있어서 추가  end-->
 	</build>
 
 </project>

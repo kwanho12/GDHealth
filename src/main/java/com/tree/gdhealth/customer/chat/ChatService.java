@@ -55,7 +55,6 @@ public class ChatService {
 	/**
 	 * 채팅방을 추가하고 1을 리턴합니다.
 	 * 
-	 * 
 	 * @param chatRoom 객체
 	 * @return 채팅방이 추가되었다면 1, 그렇지 않다면 0
 	 */
