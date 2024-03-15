@@ -38,12 +38,8 @@ Tool
 
 ## 📍 담당 기능
 - 공통 기능
-  - 페이징(Paging.java) 
-      - Builder 패턴으로 pageNumCut(한 번에 표시할 페이징 번호의 개수), rowPerPage(한 페이지에 나타낼 데이터 수), currentPage(현재 페이지), cnt(전체 데이터 수)를 받는 calculation()
-      - calculation()을 통해 값이 대입된 field를 model에 보내는 pagingAttributes()
-  - 파일 저장(ImageSave.java) 
-      - MultipartFile type을 매개변수로 받고 임의의 문자 + 파일의 확장자를 String type으로 return 하는 getFileName()
-      - MultipartFile, String(path), String(filename)을 매개변수로 받고 파일을 저장하는 saveFile()
+  - 본사 페이지네이션(HeadofficePagination.java) 
+  - 본사 페이지 파일 저장(HeadofficeImageSave.java) 
 <br>
 
 - 직원(본사)
@@ -109,18 +105,17 @@ Tool
 ## 📍 문제 / 해결
 1. 
    - 문제 : 프로그램을 추가할 때 파일이 추가되었는지 검증을 해야 하는데 스프링이 제공하는 validation API로는 MultipartFile type 검증이 어려웠습니다.
-   - 해결 : Custom Validator API를 만들어 프로그램 파일을 첨부하였는지 검증하였습니다. <br>
+   - 해결 : Custom Validator API를 만들어 프로그램 파일을 첨부하였는지 검증하였습니다.
 <br>
 
 2. 
    - 문제 : 한 번에 DB의 program_date table에 여러 개의 프로그램 날짜들을 추가하려고 할 때  Service Layer에서 프로그램 날짜 1개를 추가할 때마다 insert 작업을 한 번 하려고 하였으나 DB 성능 저하가 우려되었습니다.
    - 해결 : ProgramMapper.xml에서 foreach문을 사용하여 List&lt;VO&gt; type으로 한 번의 insert 작업으로 여러 개의 프로그램 날짜들을 추가하였습니다.
-   <br>
 <br>
 
 3. 
     - 문제 : 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증을 해야 하는데 스프링이 제공하는 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.
-    - 해결 : Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. <br>
+    - 해결 : Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. 
 <br>
 
 4. 
