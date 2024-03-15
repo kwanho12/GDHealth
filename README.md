@@ -104,8 +104,8 @@ Tool
 
 ## 📍 문제 / 해결
 1. 
-   - 문제 : 프로그램을 추가할 때 파일이 추가되었는지 검증을 해야 하는데 스프링이 제공하는 validation API로는 MultipartFile type 검증이 어려웠습니다.
-   - 해결 : Custom Validator API를 만들어 프로그램 파일을 첨부하였는지 검증하였습니다.
+   - 문제 : 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증을 해야 하는데 스프링이 제공하는 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.
+    - 해결 : Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. 
 <br>
 
 2. 
@@ -114,11 +114,6 @@ Tool
 <br>
 
 3. 
-    - 문제 : 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증을 해야 하는데 스프링이 제공하는 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.
-    - 해결 : Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. 
-<br>
-
-4. 
     - 문제 : 채팅 방에서 로그인된 고객을 특정해야 하는데 WebSocketSession 객체로는 각각의 고객에 대해 특정하기 어려웠습니다.
     - 해결 : HttpSessionHandshakeInterceptor을 이용하여 WebSocketHandler가 실행되기 전에 저장된 고객의 세센 값을 가져 와서 고객을 특정하는 것이 가능해졌습니다.
 
