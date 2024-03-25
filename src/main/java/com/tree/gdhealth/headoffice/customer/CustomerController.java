@@ -32,7 +32,6 @@ public class CustomerController {
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping
 	public String getCustomerList() {
-
 		return "headoffice/customerList";
 	}
 

@@ -57,7 +57,7 @@
        		        		
             <!--------------------- 회원 list end-------------------------->      
         </div>         
-           		<!--------------------- 페이징 start ----------------------------------->     
+           		<!--------------------- start pagination ----------------------------------->     
             <div style="text-align:center;">       	
 	             <ul class="pagination">
              	  <c:if test="${currentPage == 1}">
@@ -75,12 +75,12 @@
 					  	<li class="page-item"><a class="page-link pageBtn" data-page="${startPageNum - 1}" href="#">이전</a></li>
 					  </c:if>
 					  <c:forEach begin="${startPageNum}" end="${endPageNum}" var="pageNum">
-					  	<c:if test="${pageNum == currentPage}"> <!-- 페이징 버튼 색 변경o --> 
+					  	<c:if test="${pageNum == currentPage}"> <!-- 페이지네이션 버튼 색 변경o --> 
 					  		<li class="page-item active">
 						  		<a class="page-link">${pageNum}</a>
 						  	</li>
 					  	</c:if>
-					  	<c:if test="${pageNum != currentPage}"> <!-- 페이징 버튼 색 변경x --> 
+					  	<c:if test="${pageNum != currentPage}"> <!-- 페이지네이션 버튼 색 변경x --> 
 					  		<li class="page-item">
 						  		<a class="page-link pageBtn" data-page="${pageNum}" href="#">${pageNum}</a>
 						  	</li>
@@ -101,4 +101,4 @@
 					  </c:if>
 				</ul>	  
             </div>
-               <!----------------------- 페이징 end ----------------------------> 
+               <!----------------------- end pagination ----------------------------> 

@@ -125,7 +125,7 @@ public class EmpController {
 	 * @return 직원 추가 페이지
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/addEmp")
+	@GetMapping("/add")
 	public String addEmp() {
 		return "headoffice/addEmp";
 	}
@@ -143,7 +143,7 @@ public class EmpController {
 	 * @return 직원 목록 페이지로 리다이렉트
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@PostMapping("/addEmp")
+	@PostMapping("/add")
 	public String addEmp(@Validated Employee employee, BindingResult bindingResult1,
 			@Validated EmployeeDetail employeeDetail, BindingResult bindingResult2, @Validated EmployeeImg employeeImg,
 			BindingResult bindingResult3, HttpSession session, Model model) {
@@ -173,7 +173,7 @@ public class EmpController {
 	 * @return 직원의 상세 정보 페이지
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/empOne/{employeeId}")
+	@GetMapping("/{employeeId}")
 	public String getEmpOne(Model model, @PathVariable String employeeId) {
 
 		Map<String, Object> employeeOne = empService.getEmployeeOne(employeeId);

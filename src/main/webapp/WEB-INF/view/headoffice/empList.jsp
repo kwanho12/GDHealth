@@ -127,9 +127,9 @@
 		</div>
 		<!----------------------- 검색창 end ----------------------->
 
-		<!--------------------- 직원 list, 페이징 start-------------------------->
+		<!--------------------- start empList, patination-------------------------->
 		<div class="contacts-area mg-b-15" id="fragment"></div>
-		<!--------------------- 직원 list, 페이징 end-------------------------->
+		<!--------------------- end empList, patination-------------------------->
 
 	</div>
 
@@ -213,7 +213,6 @@
 				pageNum : pageNum
 			},
 			success : function(result){
-				console.log('페이징 성공!')
 				$('#fragment').html(result);
 			}			
 		});
@@ -231,7 +230,6 @@
 				keyword : keyword
 			},
 			success : function(result){
-				console.log('페이징 성공!')
 				$('#fragment').html(result);
 			}			
 		});
@@ -326,7 +324,7 @@
 	});
 	
 	// 동적으로 추가된 요소에 대해 이벤트 처리
-	// 페이징
+	// 페이지네이션
 	$(document).on('click', '.pageBtn', function(e){
 		e.preventDefault();
 		let pageNum = $(this).data('page');
@@ -336,7 +334,7 @@
 	});
 	
 	// 동적으로 추가된 요소에 대해 이벤트 처리
-	// search 후 페이징
+	// search 후 페이지네이션
 	$(document).on('click', '.searchPageBtn', function(e){
 		e.preventDefault();
 		let pageNum = $(this).data('page');

@@ -104,7 +104,7 @@ public class ProgramController {
 	 * @return 프로그램 추가 페이지
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/addProgram")
+	@GetMapping("/add")
 	public String addProgram() {
 		return "headoffice/addProgram";
 	}
@@ -149,7 +149,7 @@ public class ProgramController {
 	 * @return 프로그램 목록 페이지로 리다이렉트
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@PostMapping("/addProgram")
+	@PostMapping("/add")
 	public String addProgram(@Validated Program program, BindingResult bindingResult1,
 			@Validated(DatesGroup.class) ProgramDate programDate, BindingResult bindingResult2,
 			@Validated ProgramImg programImg, BindingResult bindingResult3, HttpSession session,
@@ -180,7 +180,7 @@ public class ProgramController {
 	 * @return 프로그램 상세 정보 페이지
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/programOne/{programNo}/{programDate}")
+	@GetMapping("/{programNo}/{programDate}")
 	public String getProgramOne(Model model, @PathVariable int programNo, @PathVariable String programDate) {
 
 		Map<String, Object> programOne = programService.getProgramOne(programNo, programDate);

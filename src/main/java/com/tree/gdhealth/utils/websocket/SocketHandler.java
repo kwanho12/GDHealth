@@ -1,9 +1,7 @@
 package com.tree.gdhealth.utils.websocket;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -34,38 +32,22 @@ public class SocketHandler extends TextWebSocketHandler {
 
 	private final ChatMapper customerChatMapper;
 	private final AdministratorChatMapper administratorChatMapper;
-	private List<HashMap<String, Object>> roomSessionsList = new ArrayList<>();
+	private ConcurrentHashMap<Integer, ConcurrentHashMap<String, WebSocketSession>> roomSessionsMap = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-		boolean isRoomExists = false;
 		String url = session.getUri().toString();
-		int urlRoomNo =  Integer.parseInt(url.split("/chatting/")[1]);
-		int roomIndex = -1;
-
-		if (!roomSessionsList.isEmpty()) {
-			for (int i = 0; i < roomSessionsList.size(); i++) {
-				int sessionRoomNo = (Integer) roomSessionsList.get(i).get("roomNo");
-
-				if (sessionRoomNo == urlRoomNo) {
-					isRoomExists = true;
-					roomIndex = i;
-					break;
-				}
-			}
-
-		}
+		int urlRoomNo = Integer.parseInt(url.split("/chatting/")[1]);
+		boolean isRoomExists = roomSessionsMap.get(urlRoomNo) != null ? true : false;
 
 		if (isRoomExists) {
-			HashMap<String, Object> map = roomSessionsList.get(roomIndex);
-			map.put(session.getId(), session);
+			roomSessionsMap.get(urlRoomNo).put(session.getId(), session);
 		} else {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put(session.getId(), session);
-			map.put("roomNo", urlRoomNo);
-			roomSessionsList.add(map);
+			ConcurrentHashMap<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
+			sessionMap.put(session.getId(), session);
+			roomSessionsMap.put(urlRoomNo, sessionMap);
 		}
 
 		LoginEmployee loginEmployee = (LoginEmployee) session.getAttributes().get("loginEmployee");
@@ -83,17 +65,17 @@ public class SocketHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 
 		JSONObject jsonObject = jsonToObjectParser(message.getPayload());
+
 		int messageRoomNo = Integer.parseInt((String) jsonObject.get("roomNo"));
-		HashMap<String, Object> roomMap = new HashMap<>();
+		String messageContent = (String) jsonObject.get("msg");
+		String status = (String) jsonObject.get("status");
+		int dbIndex = Integer.parseInt((String) jsonObject.get("indexNo"));
 
-		if (!roomSessionsList.isEmpty()) {
-			String messageContent = (String) jsonObject.get("msg");
-			String status = (String) jsonObject.get("status");
-			int dbIndex = Integer.parseInt((String) jsonObject.get("indexNo"));
-
+		if (!roomSessionsMap.isEmpty()) {
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setChatRoomNo(messageRoomNo);
 			chatMessage.setMessageContent(messageContent);
+
 			if (status.equals("customer")) {
 				chatMessage.setCustomerNo(dbIndex);
 				customerChatMapper.insertMessage(chatMessage);
@@ -102,45 +84,33 @@ public class SocketHandler extends TextWebSocketHandler {
 				administratorChatMapper.insertMessage(chatMessage);
 			}
 
-			for (HashMap<String, Object> map : roomSessionsList) {
-				int sessionListRoomNo = (Integer) map.get("roomNo");
-				if (sessionListRoomNo == messageRoomNo) {
-					roomMap = map;
-					break;
-				}
-			}
+			ConcurrentHashMap<String, WebSocketSession> sessionMap = roomSessionsMap.get(messageRoomNo);
 
-			for (String k : roomMap.keySet()) {
+			for (String k : sessionMap.keySet()) {
 
-				if ("roomNo".equals(k)) {
-					continue;
-				}
+				WebSocketSession webSocketSession = sessionMap.get(k);
 
-				WebSocketSession wss = (WebSocketSession) roomMap.get(k);
-
-				if (wss != null) {
+				if (webSocketSession != null) {
 					try {
-						wss.sendMessage(new TextMessage(jsonObject.toJSONString()));
+						webSocketSession.sendMessage(new TextMessage(jsonObject.toJSONString()));
 					} catch (IOException e) {
 						log.error("웹소켓 세션으로 메시지 전송 중 오류 발생 : {}", e.getMessage());
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		if (!roomSessionsList.isEmpty()) {
-			for (HashMap<String, Object> roomMap : roomSessionsList) {
-				roomMap.remove(session.getId());
+		if (!roomSessionsMap.isEmpty()) {
+			for (Integer key : roomSessionsMap.keySet()) {
+				roomSessionsMap.get(key).remove(session.getId());
+				if(roomSessionsMap.get(key).isEmpty()) {
+					roomSessionsMap.remove(key);
+				}
 			}
 		}
-
 	}
 
 	/**

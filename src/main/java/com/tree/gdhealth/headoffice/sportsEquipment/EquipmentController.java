@@ -100,7 +100,7 @@ public class EquipmentController {
 	 * @return 물품 추가 페이지
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@GetMapping("/addEquipment")
+	@GetMapping("/add")
 	public String addEquipment() {
 		return "headoffice/addEquipment";
 	}
@@ -114,10 +114,10 @@ public class EquipmentController {
 	 * @param sportsEquipmentImg 추가할 물품의 이미지 정보를 담은 SportsEquipmentImg 객체
 	 * @param bindingResult2     sportsEquipmentImg 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
 	 * @param empInfo            로그인한 직원의 정보를 담은 LoginEmployee 객체
-	 * @return
+	 * @return 물품 목록 페이지로 리다이렉트
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
-	@PostMapping("/addEquipment")
+	@PostMapping("/add")
 	public String addEquipment(@Validated SportsEquipment sportsEquipment, BindingResult bindingResult1,
 			@Validated SportsEquipmentImg sportsEquipmentImg, BindingResult bindingResult2, HttpSession session,
 			@SessionAttribute(name = "loginEmployee") LoginEmployee empInfo) {
@@ -192,7 +192,7 @@ public class EquipmentController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@ResponseBody
-	@GetMapping("/deactivate")
+	@PostMapping("/deactivate")
 	public int deactivateEquipment(int equipmentNo) {
 		return equipmentService.modifyDeactivation(equipmentNo);
 	}
@@ -204,7 +204,7 @@ public class EquipmentController {
 	 * @return 활성화 상태로 정상적으로 변경되었다면 1
 	 */
 	@ResponseBody
-	@GetMapping("/activate")
+	@PostMapping("/activate")
 	public int activateEquipment(int equipmentNo) {
 		return equipmentService.modifyActivation(equipmentNo);
 	}

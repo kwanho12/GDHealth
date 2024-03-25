@@ -19,7 +19,7 @@
                                 <p><span><i class="fa fa-clock"></i></span> <b>개설 날짜 :</b> ${m.programDate}</p>
                             </div>
                             <div class="product-buttons">
-                                <button type="button" class="button-default cart-btn" onclick="location.href='${pageContext.request.contextPath}/headoffice/program/programOne/${m.programNo}/${m.programDate}'">자세히 보기</button>
+                                <button type="button" class="button-default cart-btn" onclick="location.href='${pageContext.request.contextPath}/headoffice/program/${m.programNo}/${m.programDate}'">자세히 보기</button>
                             </div>
                         </div>
                   	    </div>
@@ -30,7 +30,7 @@
            </div>
            <!--------------------- 프로그램 list end-------------------------->
 	           	         
-           <!--------------------- 페이징 start -----------------------------------> 
+           <!--------------------- start pagination -----------------------------------> 
 	       	<div style="text-align:center;">       	
 	             <ul class="pagination">
 	             	  <c:if test="${currentPage == 1}">
@@ -50,12 +50,12 @@
 					  	</li>
 					  </c:if>
 					  <c:forEach begin="${startPageNum}" end="${endPageNum}" var="pageNum">
-					  	<c:if test="${pageNum == currentPage}"> <!-- 페이징 버튼 색 변경o --> 
+					  	<c:if test="${pageNum == currentPage}"> <!-- 페이지네이션 버튼 색 변경o --> 
 					  		<li class="page-item active">
 						  		<a class="page-link">${pageNum}</a>
 						  	</li>
 					    </c:if>
-					    <c:if test="${pageNum != currentPage}"> <!-- 페이징 버튼 색 변경x --> 
+					    <c:if test="${pageNum != currentPage}"> <!-- 페이지네이션 버튼 색 변경x --> 
 					  		<li class="page-item">
 						  		<a class="page-link searchPageBtn" data-page="${pageNum}" data-type="${type}" 
 					  						data-keyword="${keyword}" href="#">${pageNum}</a>
@@ -81,4 +81,4 @@
 					  </c:if>				  
 				</ul>	  
 	        </div>
-	       <!----------------------- 페이징 end ---------------------------->        
+	       <!----------------------- end pagination ---------------------------->        

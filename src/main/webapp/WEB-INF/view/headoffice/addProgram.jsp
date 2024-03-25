@@ -95,7 +95,7 @@
 		</div>
 
 		<!-- 프로그램 추가 화면 start-->
-		<form id="insertForm" method="post" action="${pageContext.request.contextPath}/headoffice/program/addProgram" enctype="multipart/form-data">
+		<form id="insertForm" method="post" action="${pageContext.request.contextPath}/headoffice/program/add" enctype="multipart/form-data">
 
 			<div class="row" id="font" style="padding: 15px;">
 

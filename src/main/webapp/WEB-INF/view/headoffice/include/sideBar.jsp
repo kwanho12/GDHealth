@@ -17,7 +17,7 @@
 								<a href="${pageContext.request.contextPath}/headoffice/emp"><span class="mini-sub-pro">직원 목록</span></a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/headoffice/emp/addEmp"><span class="mini-sub-pro">직원 추가</span></a>
+								<a href="${pageContext.request.contextPath}/headoffice/emp/add"><span class="mini-sub-pro">직원 추가</span></a>
 							</li>
 						</ul>
 					</li>
@@ -38,7 +38,7 @@
 								<a href="${pageContext.request.contextPath}/headoffice/program"><span class="mini-sub-pro">프로그램 목록</span></a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/headoffice/program/addProgram"><span class="mini-sub-pro">프로그램 추가</span></a>
+								<a href="${pageContext.request.contextPath}/headoffice/program/add"><span class="mini-sub-pro">프로그램 추가</span></a>
 							</li>
 						</ul>
 					</li>
@@ -81,7 +81,7 @@
 								<a href="${pageContext.request.contextPath}/headoffice/equipment"><span class="mini-sub-pro">물품 목록</span></a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/headoffice/equipment/addEquipment"><span class="mini-sub-pro">물품 추가</span></a>
+								<a href="${pageContext.request.contextPath}/headoffice/equipment/add"><span class="mini-sub-pro">물품 추가</span></a>
 							</li>
 						</ul>
 					</li>

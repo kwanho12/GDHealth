@@ -18,7 +18,7 @@
 			                     </div>
 			                     <div class="student-dtl">
 			                         <h2>
-			                         <a href="${pageContext.request.contextPath}/headoffice/emp/empOne/${m.empId}">
+			                         <a href="${pageContext.request.contextPath}/headoffice/emp/${m.empId}">
 			                         	${m.empName}
 			                         </a>		                         
 			                         </h2>
@@ -32,14 +32,14 @@
 			                  		</div>
 			              	    </div>
 			           	    </div>	           	    
-	           	    <c:if test="${(cnt%4 == 0) || (cnt == employeeCnt)}"> <!-- cnt가 4의 배수이거나 마지막 순서일 때 -->
+	           	    <c:if test="${(cnt%4 == 0) || (cnt == employeeCnt)}"> 
 	   			  	 	</div>
 	   			    </c:if>
            		</c:forEach>           		
                 <!--------------------- 회원 list end-------------------------->      
             </div>    
             
-       		<!--------------------- 페이징 start ----------------------------------->     
+       		<!--------------------- start pagination ----------------------------------->     
             <div style="text-align:center;">       	
 	             <ul class="pagination">   	
 	             	
@@ -64,12 +64,12 @@
 				 	
 				 	<!------- 페이지 번호 버튼 start ------->
 				    <c:forEach begin="${startPageNum}" end="${endPageNum}" var="pageNum">
-					  	<c:if test="${pageNum == currentPage}"> <!-- 페이징 버튼 색 변경o --> 
+					  	<c:if test="${pageNum == currentPage}"> <!-- 페이지네이션 버튼 색 변경o --> 
 					  		<li class="page-item active">
 						  		<a class="page-link">${pageNum}</a>
 						  	</li>
 					  	</c:if>
-					  	<c:if test="${pageNum != currentPage}"> <!-- 페이징 버튼 색 변경x --> 
+					  	<c:if test="${pageNum != currentPage}"> <!-- 페이지네이션 버튼 색 변경x --> 
 					  		<li class="page-item">
 						  		<a class="page-link pageBtn" href="#" data-page="${pageNum}">${pageNum}</a>
 						  	</li>
@@ -97,5 +97,5 @@
 					<!------- '끝' 버튼 end ------->
 							  
 				</ul>	 
-				<!----------------------- 페이징 end ---------------------------->     
+				<!----------------------- end pagination ---------------------------->     
             </div>

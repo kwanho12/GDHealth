@@ -130,10 +130,10 @@ input {
 
 	function wsEvt() {
 		
-		//소켓이 열리면 동작
+		// 소켓이 열리면 동작
 		ws.onopen = function(data) {}
 	
-		//메시지를 받으면 동작
+		// 메시지를 받으면 동작
 		ws.onmessage = function(data) {
 			var msg = data.data;
 			console.log('message : ' + msg);
@@ -142,16 +142,11 @@ input {
 
 				var d = JSON.parse(msg);
 
-				let today = new Date();
-				let hours = today.getHours(); // 시
-				let minutes = today.getMinutes(); // 분
-
 				if (d.type == "message") {
 					if (d.id == $("#id").val()) { // 본인이 입력한 채팅인지 확인
 						if (d.status == 'customer') {
 							$("#chatting").append(
-									"<p class='me'>" + d.id + " : " + d.msg
-											+ "</p>");
+									"<p class='me'>" + d.id + " : " + d.msg + "</p>");
 						} else {
 							$("#chatting").append(
 									"<p class='me'>본인 : " + d.msg + "</p>");
@@ -159,13 +154,11 @@ input {
 
 					} else if (d.status == "customer") {
 						$("#chatting").append(
-								"<p class='others'>" + d.id + " : " + d.msg
-										+ "</p>");
+								"<p class='others'>" + d.id + " : " + d.msg + "</p>");
 					} else if (d.status == "employee") {
 						$("#chatting").append(
 								"<p class='others'> 본사 : " + d.msg + "</p>");
 					}
-
 				}
 			}
 
@@ -190,10 +183,10 @@ input {
 		var option = {
 			type : "message",
 			id : id,
-			status : status,
-			indexNo : indexNo,
 			roomNo : $("#roomNo").val(),
-			msg : $("#sendMessage").val()
+			msg : $("#sendMessage").val(),
+			status : status,
+			indexNo : indexNo
 		}
 		ws.send(JSON.stringify(option));
 		$('#sendMessage').val("");

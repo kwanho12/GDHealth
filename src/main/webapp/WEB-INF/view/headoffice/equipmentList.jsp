@@ -126,9 +126,9 @@
 		</div>
 		<!-- 검색창 end -->
 
-		<!--------------------- 회원 list, 페이징 start-------------------------->
+		<!--------------------- start equipmentList, pagination -------------------------->
 		<div class="contacts-area mg-b-15" id="fragment"></div>
-		<!--------------------- 회원 list, 페이징 start-------------------------->
+		<!--------------------- end equipmentList, pagination-------------------------->
 
 	</div>
 
@@ -299,7 +299,7 @@
 	});
 	
 	// 동적으로 추가된 요소에 대해 이벤트 처리
-	// 페이징
+	// 페이지네이션
 	$(document).on('click', '.pageBtn', function(e){
 		e.preventDefault();
 		let pageNum = $(this).data('page');
@@ -309,7 +309,7 @@
 	});
 	
 	// 동적으로 추가된 요소에 대해 이벤트 처리
-	// search 후 페이징
+	// search 후 페이지네이션
 	$(document).on('click', '.searchPageBtn', function(e){
 		e.preventDefault();
 		let pageNum = $(this).data('page');
@@ -327,7 +327,7 @@
 		
 		$.ajax({
 			url : '${pageContext.request.contextPath}/headoffice/equipment/deactivate',
-			method : 'get',
+			method : 'post',
 			data : {
 				equipmentNo : equipmentNo
 			},
@@ -350,7 +350,7 @@
 		
 		$.ajax({
 			url : '${pageContext.request.contextPath}/headoffice/equipment/activate',
-			method : 'get',
+			method : 'post',
 			data : {
 				equipmentNo : equipmentNo
 			},
