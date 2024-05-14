@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.customer.mypage.MyPageMapper">
-<select id="info" parameterType="int" resultType="com.tree.gdhealth.dto.CustomerMyPage">
+<select id="info" parameterType="int" resultType="com.tree.gdhealth.domain.CustomerMyPage">
 	SELECT
 	c.customer_no customerNo,
 	c.customer_id customerId,
@@ -21,7 +21,7 @@ WHERE d.customer_no = #{customerNo}
 	
 </select>
 
-<select id="customerImgCk" parameterType="int" resultType="com.tree.gdhealth.dto.CustomerImg">
+<select id="customerImgCk" parameterType="int" resultType="com.tree.gdhealth.domain.CustomerImg">
 	SELECT *
 	FROM customer_img 
 	WHERE customer_no = #{customerNo}
@@ -51,14 +51,14 @@ WHERE d.customer_no = #{customerNo}
 	WHERE customer_no = #{customerNo} and active = "N"
 
 </select>
-<select id="customerDeleteCk" parameterType="com.tree.gdhealth.dto.Customer" resultType="INTEGER">
+<select id="customerDeleteCk" parameterType="com.tree.gdhealth.domain.Customer" resultType="INTEGER">
 	SELECT
 	customer_no
 	FROM customer
 	WHERE customer_id = #{customerId} AND customer_active = 'Y' AND customer_pw = PASSWORD(#{customerPw})
 </select>
 
-<update id="customerDetailDelete" parameterType="com.tree.gdhealth.dto.Customer">
+<update id="customerDetailDelete" parameterType="com.tree.gdhealth.domain.Customer">
 	UPDATE customer_detail
 	SET 
 		customer_name = '0',
@@ -72,7 +72,7 @@ WHERE d.customer_no = #{customerNo}
 		updatedate = NOW()
 	WHERE customer_no = #{customerNo}
 </update>
-<update id="customerImgDelete" parameterType="com.tree.gdhealth.dto.Customer">
+<update id="customerImgDelete" parameterType="com.tree.gdhealth.domain.Customer">
 	UPDATE customer_img
 	SET 
 		customer_img_origin_name = '0',
@@ -81,14 +81,14 @@ WHERE d.customer_no = #{customerNo}
 		customer_img_type = '0'
 	WHERE customer_no = #{customerNo}
 </update>
-<update id="customerDelete" parameterType="com.tree.gdhealth.dto.Customer">
+<update id="customerDelete" parameterType="com.tree.gdhealth.domain.Customer">
 	UPDATE customer
 	SET 
 		customer_pw = PASSWORD(1234),
 		customer_active = 'N'
 	WHERE customer_no = #{customerNo}
 </update>
-<update id="updateMyPage" parameterType="com.tree.gdhealth.dto.CustomerMyPage">
+<update id="updateMyPage" parameterType="com.tree.gdhealth.domain.CustomerMyPage">
 	UPDATE customer_detail
 	SET customer_height = #{customerHeight}, 
 		customer_weight = #{customerWeight},
@@ -99,19 +99,19 @@ WHERE d.customer_no = #{customerNo}
 		updatedate = NOW()
 	WHERE customer_no = #{customerNo}
 </update>
-<update id="updatePw" parameterType="com.tree.gdhealth.dto.Customer">
+<update id="updatePw" parameterType="com.tree.gdhealth.domain.Customer">
 	UPDATE customer
 	SET customer_pw = PASSWORD(#{customerPw})
 	WHERE customer_no = #{customerNo}
 </update>
-<select id="selectPhone" parameterType="com.tree.gdhealth.dto.CustomerDetail">
+<select id="selectPhone" parameterType="com.tree.gdhealth.domain.CustomerDetail">
 	SELECT customer_phone AS customerPhone
 	FROM customer_detail
 	WHERE customer_no = #{customerNo}
 </select>
 <select id="selectCustomerImg"
 		parameterType="int"
-		resultType="com.tree.gdhealth.dto.CustomerImg">
+		resultType="com.tree.gdhealth.domain.CustomerImg">
 		
 		SELECT 
 		customer_no AS customerNo,
@@ -133,7 +133,7 @@ WHERE customer_email = #{customerEmail}
 </select>
 <!--  -->
 <select id="updateEmailCk"
-		parameterType="com.tree.gdhealth.dto.CustomerMyPage"
+		parameterType="com.tree.gdhealth.domain.CustomerMyPage"
 		resultType="Integer">	
 		
 SELECT customer_no

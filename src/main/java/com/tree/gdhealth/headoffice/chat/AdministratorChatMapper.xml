@@ -11,7 +11,7 @@
 		ON cr.customer_no = c.customer_no
 	</select>
 
-	<select id="selectChatList" resultType="com.tree.gdhealth.dto.ChatMessage">
+	<select id="selectChatList" resultType="com.tree.gdhealth.domain.ChatMessage">
 		SELECT
 		message_content messageContent,
 		customer_no customerNo,
@@ -29,7 +29,7 @@
 		WHERE c.customer_id=#{customerId}
 	</select>
 
-	<insert id="insertMessage" parameterType="com.tree.gdhealth.dto.ChatMessage">
+	<insert id="insertMessage" parameterType="com.tree.gdhealth.domain.ChatMessage">
 		INSERT INTO chat_message(
 		chat_room_no,
 		customer_no,

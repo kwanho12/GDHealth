@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.dto.Program;
-import com.tree.gdhealth.dto.ProgramDate;
-import com.tree.gdhealth.dto.ProgramImg;
+import com.tree.gdhealth.domain.Program;
+import com.tree.gdhealth.domain.ProgramDate;
+import com.tree.gdhealth.domain.ProgramImg;
+import com.tree.gdhealth.headoffice.dto.AddProgramDto;
+import com.tree.gdhealth.headoffice.dto.UpdateProgramDto;
+import com.tree.gdhealth.utils.exception.DatesDuplicatedException;
 import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
@@ -46,7 +49,7 @@ public class ProgramService {
 
 		return programMapper.selectProgramList(map);
 	}
-	
+
 	/**
 	 * 전체 프로그램의 개수를 리턴합니다.
 	 * 
@@ -103,18 +106,16 @@ public class ProgramService {
 	 * @return 프로그램 상세 정보
 	 */
 	@Transactional(readOnly = true)
-	public Map<String, Object> getProgramOne(int programNo, String programDate) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("programNo", programNo);
-		map.put("programDate", programDate);
-
-		return programMapper.selectProgramOne(map);
+	public Map<String, Object> getProgramOne(int programNo, String date) {
+		ProgramDate programDate = new ProgramDate();
+		programDate.setProgramNo(programNo);
+		programDate.setProgramDate(date);
+		return programMapper.selectProgramOne(programDate);
 	}
 
 	/**
-	 * 데이터베이스에서 해당 날짜들을 검색하여 프로그램 날짜들의 중복 여부를 확인합니다. 
-	 * 입력한 날짜들이 모두 데이터베이스에 존재하지 않는다면 false를 리턴합니다.
+	 * 데이터베이스에서 해당 날짜들을 검색하여 프로그램 날짜들의 중복 여부를 확인합니다. 입력한 날짜들이 모두 데이터베이스에 존재하지 않는다면
+	 * false를 리턴합니다.
 	 * 
 	 * @param programDates 프로그램 날짜 목록
 	 * @return 입력한 날짜들 중 최소 1개가 이미 존재한다면 true, 존재하지 않는다면 false
@@ -125,8 +126,8 @@ public class ProgramService {
 	}
 
 	/**
-	 * 데이터베이스에서 해당 날짜를 검색하여 프로그램 날짜의 중복 여부를 확인합니다. 
-	 * 입력한 날짜가 데이터베이스에 존재하지 않는다면 false를 리턴합니다.
+	 * 데이터베이스에서 해당 날짜를 검색하여 프로그램 날짜의 중복 여부를 확인합니다. 입력한 날짜가 데이터베이스에 존재하지 않는다면 false를
+	 * 리턴합니다.
 	 * 
 	 * @param programDate 프로그램 날짜
 	 * @return 입력한 날짜가 이미 존재한다면 false, 존재하지 않는다면 true
@@ -137,23 +138,26 @@ public class ProgramService {
 	}
 
 	/**
-	 * 프로그램 정보를 데이터베이스에 삽입합니다. 
-	 * 중복된 프로그램 날짜가 있는 경우에는 RuntimeException을 발생시켜 Transactional 어노테이션이 작동하도록 합니다.
+	 * 프로그램 정보를 데이터베이스에 삽입합니다. 중복된 프로그램 날짜가 있는 경우에는 DatesDuplicatedException을 발생시켜
+	 * Transactional 어노테이션이 작동하도록 합니다.
 	 *
-	 * @param program     삽입할 프로그램의 정보를 담은 Program 객체
-	 * @param programDate 삽입할 프로그램의 날짜 정보를 담은 ProgramDate 객체
-	 * @param programImg  삽입할 프로그램의 이미지 정보를 담은 ProgramImg 객체
-	 * @param path        프로그램 이미지 파일을 저장할 경로
-	 * @throws RuntimeException 중복된 프로그램 날짜가 있는 경우 발생
+	 * @param addProgramDto 프로그램을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
+	 * @param path          프로그램 이미지 파일을 저장할 경로
+	 * @throws DatesDuplicatedException 중복된 프로그램 날짜가 있는 경우 발생
 	 */
-	public void addProgram(Program program, ProgramDate programDate, ProgramImg programImg, String path) {
+	public void addProgram(AddProgramDto addProgramDto, String path) {
 
+		Program program = new Program();
+		program.setEmployeeNo(addProgramDto.getEmployeeNo());
+		program.setProgramName(addProgramDto.getProgramName());
+		program.setProgramDetail(addProgramDto.getProgramDetail());
+		program.setProgramMaxCustomer(addProgramDto.getProgramMaxCustomer());
 		programMapper.insertProgram(program);
 
-		List<String> dates = programDate.getProgramDates();
+		List<String> dates = addProgramDto.getProgramDates();
 		Set<String> datesSet = new HashSet<>(dates);
 		if (dates.size() != datesSet.size()) {
-			throw new RuntimeException();
+			throw new DatesDuplicatedException();
 		}
 
 		List<ProgramDate> dateList = new ArrayList<>();
@@ -166,34 +170,36 @@ public class ProgramService {
 
 		programMapper.insertProgramDates(dateList);
 
-		addProgramImg(programImg.getProgramFile(), path, program.getProgramNo());
+		addProgramImg(addProgramDto.getProgramFile(), path, program.getProgramNo());
 	}
 
 	/**
 	 * 프로그램 정보를 수정합니다. 이미지 파일이 수정되었을 경우, 기존의 이미지 파일을 삭제하고 새로운 이미지 파일을 저장합니다.
 	 *
-	 * @param program     수정할 프로그램의 정보를 담은 Program 객체
-	 * @param programDate 수정할 프로그램의 날짜 정보를 담은 ProgramDate 객체
-	 * @param programImg  수정할 프로그램의 이미지 정보를 담은 ProgramImg 객체
-	 * @param newPath     새로운 이미지 파일을 저장할 경로
-	 * @param oldPath     기존 이미지 파일의 경로
+	 * @param updateProgramDto 프로그램을 수정하기 위해 필요한 데이터를 전송하기 위한 객체
+	 * @param newPath          새로운 이미지 파일을 저장할 경로
+	 * @param oldPath          기존 이미지 파일의 경로
 	 */
-	public void modifyProgram(Program program, ProgramDate programDate, ProgramImg programImg, String newPath,
-			String oldPath) {
+	public void modifyProgram(UpdateProgramDto updateProgramDto, String newPath, String oldPath) {
 
+		Program program = new Program();
+		program.setProgramName(updateProgramDto.getProgramName());
+		program.setProgramDetail(updateProgramDto.getProgramDetail());
+		program.setProgramMaxCustomer(updateProgramDto.getProgramMaxCustomer());
+		program.setProgramNo(updateProgramDto.getProgramNo());
 		programMapper.updateProgram(program);
+
+		ProgramDate programDate = new ProgramDate();
+		programDate.setProgramDate(updateProgramDto.getProgramDate());
+		programDate.setProgramNo(updateProgramDto.getProgramNo());
+		programDate.setOriginDate(updateProgramDto.getOriginDate());
 		programMapper.updateProgramDate(programDate);
 
-		MultipartFile programFile = programImg.getProgramFile();
+		MultipartFile programFile = updateProgramDto.getProgramFile();
 
 		if (!programFile.isEmpty()) {
-
-			File file = new File(oldPath);
-			file.delete();
-
-			int programNo = program.getProgramNo();
-
-			modifyProgramImg(programFile, newPath, programNo);
+			new File(oldPath).delete();
+			modifyProgramImg(programFile, newPath, program.getProgramNo());
 		}
 	}
 
@@ -216,33 +222,32 @@ public class ProgramService {
 	public int modifyActivation(int programNo) {
 		return programMapper.updateToActiveProgram(programNo);
 	}
-	
+
 	/**
 	 * 프로그램에 이미지 파일을 추가합니다.
 	 * 
 	 * @param programFile 추가할 이미지 파일
-	 * @param path 이미지 파일을 저장할 경로
-	 * @param programNo 이미지가 속한 프로그램의 번호
+	 * @param path        이미지 파일을 저장할 경로
+	 * @param programNo   이미지가 속한 프로그램의 번호
 	 */
 	public void addProgramImg(MultipartFile programFile, String path, int programNo) {
 		addOrModifyProgramImg(programFile, path, programNo, true);
 	}
-	
+
 	/**
 	 * 프로그램의 이미지 파일을 수정합니다.
 	 * 
 	 * @param programFile 수정할 새 이미지 파일
-	 * @param path 수정된 이미지 파일을 저장할 경로
-	 * @param programNo 이미지가 속한 프로그램의 번호
+	 * @param path        수정된 이미지 파일을 저장할 경로
+	 * @param programNo   이미지가 속한 프로그램의 번호
 	 */
 	public void modifyProgramImg(MultipartFile programFile, String path, int programNo) {
 		addOrModifyProgramImg(programFile, path, programNo, false);
 	}
 
-
 	/**
-	 * 프로그램 이미지 파일을 데이터베이스에 삽입하거나 수정합니다. 
-	 * 주어진 프로그램 번호를 기준으로 이미지 정보를 데이터베이스에 삽입하거나 수정 후, 해당 이미지 파일을 지정된 경로에 저장합니다.
+	 * 프로그램 이미지 파일을 데이터베이스에 삽입하거나 수정합니다. 주어진 프로그램 번호를 기준으로 이미지 정보를 데이터베이스에 삽입하거나 수정
+	 * 후, 해당 이미지 파일을 지정된 경로에 저장합니다.
 	 *
 	 * @param programFile 프로그램 이미지 파일을 나타내는 MultipartFile 객체
 	 * @param path        이미지 파일을 저장할 경로
@@ -266,7 +271,7 @@ public class ProgramService {
 
 		imgSave.saveFile(programFile, path, filename);
 	}
-	
+
 	/**
 	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
 	 *
@@ -275,15 +280,11 @@ public class ProgramService {
 	 * @return 페이지네이션 정보
 	 */
 	public HeadofficePagination getPagination(int pageNum, int programCnt) {
-		
-		HeadofficePagination pagination = HeadofficePagination.builder()
-				.numberOfPaginationToShow(10)
-				.rowPerPage(8)
-				.currentPageNum(pageNum)
-				.rowCnt(programCnt)
-				.build();
+
+		HeadofficePagination pagination = HeadofficePagination.builder().numberOfPaginationToShow(10).rowPerPage(8)
+				.currentPageNum(pageNum).rowCnt(programCnt).build();
 		pagination.calculateProperties();
-		
+
 		return pagination;
 	}
 

@@ -2,9 +2,9 @@ package com.tree.gdhealth.headoffice.program;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Program;
-import com.tree.gdhealth.dto.ProgramDate;
-import com.tree.gdhealth.dto.ProgramImg;
+import com.tree.gdhealth.domain.Program;
+import com.tree.gdhealth.domain.ProgramDate;
+import com.tree.gdhealth.domain.ProgramImg;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public interface ProgramMapper {
 
 	boolean selectResultOfDateOneCheck(String date);
 
-	Map<String, Object> selectProgramOne(Map<String, Object> map);
+	Map<String, Object> selectProgramOne(ProgramDate programDate);
 
 	int insertProgram(Program program);
 

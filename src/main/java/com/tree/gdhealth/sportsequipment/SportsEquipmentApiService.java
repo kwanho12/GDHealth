@@ -1,7 +1,7 @@
 package com.tree.gdhealth.sportsequipment;
 
-import com.tree.gdhealth.dto.SportsEquipment;
-import com.tree.gdhealth.dto.SportsEquipmentImg;
+import com.tree.gdhealth.domain.SportsEquipment;
+import com.tree.gdhealth.domain.SportsEquipmentImg;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderAddRequest;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderInformation;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderRetrieveCriteria;

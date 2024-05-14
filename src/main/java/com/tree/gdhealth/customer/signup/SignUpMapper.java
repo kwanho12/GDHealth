@@ -2,8 +2,8 @@ package com.tree.gdhealth.customer.signup;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Customer;
-import com.tree.gdhealth.dto.CustomerSignUp;
+import com.tree.gdhealth.domain.Customer;
+import com.tree.gdhealth.domain.CustomerSignUp;
 
 @Mapper
 public interface SignUpMapper {

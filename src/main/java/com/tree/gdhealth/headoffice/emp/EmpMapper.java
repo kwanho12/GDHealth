@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Employee;
-import com.tree.gdhealth.dto.EmployeeDetail;
-import com.tree.gdhealth.dto.EmployeeImg;
+import com.tree.gdhealth.domain.Employee;
+import com.tree.gdhealth.domain.EmployeeDetail;
+import com.tree.gdhealth.domain.EmployeeImg;
 
 /**
  * @author 진관호

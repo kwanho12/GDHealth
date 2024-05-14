@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.customer.signup.SignUpMapper">
-<insert id="customerIn" parameterType="com.tree.gdhealth.dto.CustomerSignUp">
+<insert id="customerIn" parameterType="com.tree.gdhealth.domain.CustomerSignUp">
 	INSERT INTO customer(
 		customer_id,
 		customer_pw
@@ -10,7 +10,7 @@
 		PASSWORD(#{customerPw})
 	)
 </insert>
-<insert id="customerDetailIn" parameterType="com.tree.gdhealth.dto.CustomerSignUp">
+<insert id="customerDetailIn" parameterType="com.tree.gdhealth.domain.CustomerSignUp">
 	INSERT INTO customer_detail(
 		customer_no,
 		customer_name,
@@ -33,7 +33,7 @@
 		#{customerEmail}
 	)
 </insert>
-<insert id="customerImgIn" parameterType="com.tree.gdhealth.dto.CustomerSignUp">
+<insert id="customerImgIn" parameterType="com.tree.gdhealth.domain.CustomerSignUp">
 	INSERT INTO customer_img(
 		customer_no,
 		customer_img_origin_name,

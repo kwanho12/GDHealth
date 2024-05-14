@@ -7,8 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.tree.gdhealth.dto.ChatMessage;
+import com.tree.gdhealth.domain.ChatMessage;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 
@@ -25,18 +26,15 @@ public class AdministratorChatController {
 	private final AdministratorChatService chatService;
 
 	/**
-	 * 고객들의 채팅방 목록 페이지로 이동합니다.
+	 * 회원들의 채팅방 목록 페이지로 이동합니다.
 	 * 
 	 * @return 본사 직원의 채팅방 목록 페이지
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/roomList")
 	public String getRoomList(Model model) {
-
-		List<Map<String, Object>> roomList = chatService.getRoomList();
-		model.addAttribute("roomList", roomList);
-
-		return "chat/room";
+		model.addAttribute("roomList", chatService.getRoomList());
+		return "chat/roomList";
 	}
 
 	/**
@@ -47,18 +45,16 @@ public class AdministratorChatController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/headofficeRoom")
-	public String accessChatRoom(Model model, String customerId) {
+	public String accessChatRoom(Model model, @RequestParam String customerId) {
 
-		int roomNo = chatService.getRoomNo(customerId);
-
-		List<ChatMessage> messageList = chatService.getChatList(roomNo);
+		List<ChatMessage> messageList = chatService.getChatList(chatService.getRoomNo(customerId));
 
 		model.addAttribute("customerId", customerId);
 		model.addAttribute("status", "employee");
-		model.addAttribute("roomNo", roomNo);
+		model.addAttribute("roomNo", chatService.getRoomNo(customerId));
 		model.addAttribute("messageList", messageList);
 
-		return "chat/chat";
+		return "chat/chatRoom";
 	}
 
 }

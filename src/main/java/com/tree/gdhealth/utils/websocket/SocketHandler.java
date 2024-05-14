@@ -13,7 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.tree.gdhealth.customer.chat.ChatMapper;
-import com.tree.gdhealth.dto.ChatMessage;
+import com.tree.gdhealth.domain.ChatMessage;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.headoffice.chat.AdministratorChatMapper;
 
@@ -106,7 +106,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		if (!roomSessionsMap.isEmpty()) {
 			for (Integer key : roomSessionsMap.keySet()) {
 				roomSessionsMap.get(key).remove(session.getId());
-				if(roomSessionsMap.get(key).isEmpty()) {
+				if (roomSessionsMap.get(key).isEmpty()) {
 					roomSessionsMap.remove(key);
 				}
 			}

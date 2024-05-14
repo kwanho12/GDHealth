@@ -1,6 +1,6 @@
 package com.tree.gdhealth.sportsequipment;
 
-import com.tree.gdhealth.dto.SportsEquipment;
+import com.tree.gdhealth.domain.SportsEquipment;
 import com.tree.gdhealth.utils.ResponseEntityGenerator;
 
 import lombok.RequiredArgsConstructor;

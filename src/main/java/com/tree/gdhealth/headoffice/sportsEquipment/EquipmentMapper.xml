@@ -88,7 +88,7 @@
 	</select>
 
 	<insert id="insertEquipment"
-		parameterType="com.tree.gdhealth.dto.SportsEquipment">
+		parameterType="com.tree.gdhealth.domain.SportsEquipment">
 		INSERT INTO sports_equipment(
 		writer_employee_no,
 		item_name,
@@ -107,7 +107,7 @@
 	</insert>
 
 	<insert id="insertEquipmentImg"
-		parameterType="com.tree.gdhealth.dto.SportsEquipmentImg">
+		parameterType="com.tree.gdhealth.domain.SportsEquipmentImg">
 		INSERT INTO sports_equipment_img (
 		sports_equipment_no,
 		sports_equipment_img_origin_name,
@@ -124,7 +124,7 @@
 	</insert>
 
 	<update id="updateEquipment"
-		parameterType="com.tree.gdhealth.dto.SportsEquipment">
+		parameterType="com.tree.gdhealth.domain.SportsEquipment">
 		UPDATE sports_equipment
 		SET
 		item_name = #{itemName},
@@ -135,7 +135,7 @@
 	</update>
 
 	<update id="updateEquipmentImg"
-		parameterType="com.tree.gdhealth.dto.SportsEquipmentImg">
+		parameterType="com.tree.gdhealth.domain.SportsEquipmentImg">
 		UPDATE sports_equipment_img
 		SET
 		sports_equipment_img_origin_name = #{sportsEquipmentImgOriginName},

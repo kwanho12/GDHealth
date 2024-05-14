@@ -2,10 +2,10 @@ package com.tree.gdhealth.customer.mypage;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Customer;
-import com.tree.gdhealth.dto.CustomerDetail;
-import com.tree.gdhealth.dto.CustomerImg;
-import com.tree.gdhealth.dto.CustomerMyPage;
+import com.tree.gdhealth.domain.Customer;
+import com.tree.gdhealth.domain.CustomerDetail;
+import com.tree.gdhealth.domain.CustomerImg;
+import com.tree.gdhealth.domain.CustomerMyPage;
 
 @Mapper
 public interface MyPageMapper {

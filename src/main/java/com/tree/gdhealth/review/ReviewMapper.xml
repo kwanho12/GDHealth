@@ -4,7 +4,7 @@
 <!-- 리스트 -->
 	<select id="reviewList"
 	parameterType="java.util.Map"
-	resultType="com.tree.gdhealth.dto.Review">
+	resultType="com.tree.gdhealth.domain.Review">
 	
 	SELECT
 		r.review_no AS reviewNo,
@@ -39,7 +39,7 @@
 <!-- 상세 -->
 	<select id="reviewOne"
 	parameterType="int"
-	resultType="com.tree.gdhealth.dto.Review">
+	resultType="com.tree.gdhealth.domain.Review">
 	
 	SELECT 
 		r.review_no AS reviewNo,
@@ -58,7 +58,7 @@
 	</select>
 	
 <!-- 삽입 -->
-	<insert id="addReview" parameterType="com.tree.gdhealth.dto.Review">
+	<insert id="addReview" parameterType="com.tree.gdhealth.domain.Review">
     INSERT INTO review (
         customer_no,
         program_reservation_no,
@@ -79,7 +79,7 @@
 		
 <!-- 수정 -->
 	<update id="updateReview"
-	parameterType="com.tree.gdhealth.dto.Review">
+	parameterType="com.tree.gdhealth.domain.Review">
 	
 	UPDATE review
 	SET review_title = #{reviewTitle}, review_content = #{reviewContent}
@@ -88,7 +88,7 @@
 
 <!-- 삭제 -->
 	<delete id="deleteReview"
-	parameterType="com.tree.gdhealth.dto.Review">
+	parameterType="com.tree.gdhealth.domain.Review">
 	DELETE 
 	FROM review
 	WHERE review_no = #{reviewNo}

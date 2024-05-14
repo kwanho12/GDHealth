@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.tree.gdhealth.dto.ChatMessage;
-import com.tree.gdhealth.dto.ChatRoom;
+import com.tree.gdhealth.domain.ChatMessage;
+import com.tree.gdhealth.domain.ChatRoom;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 
@@ -37,18 +37,18 @@ public class ChatController {
 	 */
 	@Auth(AUTHORITY = Authority.CUSTOMER_ONLY)
 	@GetMapping("/customerRoom")
-	public String accessChatRoom(Model model, ChatRoom chatRoom, @SessionAttribute("customerNo") int customerNo) {
+	public String accessChatRoom(Model model, @SessionAttribute("customerNo") int customerNo) {
 
-		boolean isRoomExists = chatService.checkRoomExists(customerNo);
 		int roomNo;
+		boolean isRoomExists = chatService.checkRoomExists(customerNo);
+		
 		if (!isRoomExists) {
+			ChatRoom chatRoom = new ChatRoom();
 			chatRoom.setCustomerNo(customerNo);
 			chatService.insertRoom(chatRoom);
-
 			roomNo = chatRoom.getChatRoomNo();
 		} else {
 			roomNo = chatService.getRoomNo(customerNo);
-
 			List<ChatMessage> messageList = chatService.getChatList(roomNo);
 			model.addAttribute("messageList", messageList);
 		}
@@ -56,7 +56,7 @@ public class ChatController {
 		model.addAttribute("status", "customer");
 		model.addAttribute("roomNo", roomNo);
 
-		return "chat/chat";
+		return "chat/chatRoom";
 	}
 
 }

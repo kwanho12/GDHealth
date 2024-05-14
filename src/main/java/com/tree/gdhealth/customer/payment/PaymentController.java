@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.tree.gdhealth.dto.Membership;
+import com.tree.gdhealth.domain.Membership;
 import com.tree.gdhealth.headoffice.membership.MembershipService;
 
 import jakarta.servlet.http.HttpSession;

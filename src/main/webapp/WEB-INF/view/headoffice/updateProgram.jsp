@@ -108,7 +108,9 @@
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
 									<form action="${pageContext.request.contextPath}/headoffice/program/update" id="updateForm" method="post" enctype="multipart/form-data">
-										<input type="hidden" value="${programOne.programDate}" name="originDate"> <input type="hidden" value="${programOne.programNo}" name="programNo"> <input type="hidden" value="${programOne.filename}" name="filename">
+										<input type="hidden" value="${programOne.programDate}" name="originDate"> 
+										<input type="hidden" value="${programOne.programNo}" name="programNo"> 
+										<input type="hidden" value="${programOne.filename}" name="filename">
 										<div class="latest-blog-single blog-single-full-view">
 											<div class="blog-details blog-sig-details">
 												<div class="blog-details" style="text-align: center;">
@@ -117,7 +119,9 @@
 												</div>
 
 												<div class="details-blog-dt blog-sig-details-dt courses-info mobile-sm-d-n">
-													<span> <b>수용 인원 :</b> <input type="number" min="1" max="100" maxlength="3" oninput="maxLengthCheck(this)" value="${programOne.maxCustomer}" name="programMaxCustomer" id="programMaxCustomer" style="width: 60px;"> <b style="margin-left: 20px;">개설 날짜 :</b> <input type="text" value="${programOne.programDate}" name="programDate" id="programDate" style="width: 100px; background-color: white;" readonly>
+													<span> <b>수용 인원 :</b> <input type="number" min="1" max="100" maxlength="3" oninput="maxLengthCheck(this)" value="${programOne.maxCustomer}" name="programMaxCustomer" id="programMaxCustomer" style="width: 60px;">
+													 <b style="margin-left: 20px;">개설 날짜 :</b> 
+													<input type="text" value="${programOne.programDate}" name="programDate" id="programDate" style="width: 100px; background-color: white;" readonly>
 													</span>
 												</div>
 												<div style="text-align: center;">

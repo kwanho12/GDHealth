@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.ChatMessage;
-import com.tree.gdhealth.dto.ChatRoom;
+import com.tree.gdhealth.domain.ChatMessage;
+import com.tree.gdhealth.domain.ChatRoom;
 
 /**
  * @author 진관호

@@ -8,16 +8,19 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tree.gdhealth.dto.SportsEquipment;
-import com.tree.gdhealth.dto.SportsEquipmentImg;
 import com.tree.gdhealth.employee.login.LoginEmployee;
+import com.tree.gdhealth.headoffice.dto.AddSportsEquipmentDto;
+import com.tree.gdhealth.headoffice.dto.PageDto;
+import com.tree.gdhealth.headoffice.dto.UpdateSportsEquipmentDto;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -49,15 +52,15 @@ public class EquipmentController {
 	/**
 	 * 페이지네이션 후의 물품 목록 영역을 리턴합니다.
 	 * 
-	 * @param pageNum 이동할 페이지 번호
+	 * @param pageDto 페이지네이션과 관련한 데이터를 전송하기 위한 객체
 	 * @return 페이지네이션 후의 물품 목록
 	 * @apiNote 페이지 전체가 아닌 물품의 목록을 나타내는 영역만 리턴합니다.
 	 */
 	@GetMapping("/pagination")
-	public String getPagination(Model model, int pageNum) {
+	public String getPagination(Model model, @ModelAttribute PageDto pageDto) {
 
-		int equipmentCnt = equipmentService.getEquipmentCnt();
-		HeadofficePagination pagination = equipmentService.getPagination(pageNum, equipmentCnt);
+		HeadofficePagination pagination = equipmentService.getPagination(pageDto.getPageNum(),
+				equipmentService.getEquipmentCnt());
 
 		List<Map<String, Object>> equipmentList = equipmentService.getEquipmentList(pagination.getBeginRow(),
 				pagination.getRowPerPage());
@@ -71,25 +74,23 @@ public class EquipmentController {
 	/**
 	 * 검색 결과가 반영된 페이지네이션 후의 물품 목록 영역을 리턴합니다.
 	 * 
-	 * @param type    검색할 keyword의 속성(itemName,note...)
-	 * @param keyword 검색 내용
-	 * @param pageNum 이동할 페이지 번호
+	 * @param pageDto 페이지네이션과 관련한 데이터를 전송하기 위한 객체
 	 * @return 페이지네이션 후의 물품 목록
 	 * @apiNote 페이지 전체가 아닌 물품의 목록을 나타내는 영역만 리턴합니다.
 	 */
 	@GetMapping("/searchPagination")
-	public String getPagination(Model model, String type, String keyword, int pageNum) {
+	public String getSearchPagination(Model model, @ModelAttribute PageDto pageDto) {
 
-		int searchCnt = equipmentService.getEquipmentCnt(type, keyword);
-		HeadofficePagination pagination = equipmentService.getPagination(pageNum, searchCnt);
+		HeadofficePagination pagination = equipmentService.getPagination(pageDto.getPageNum(),
+				equipmentService.getEquipmentCnt(pageDto.getType(), pageDto.getKeyword()));
 
 		List<Map<String, Object>> searchList = equipmentService.getEquipmentList(pagination.getBeginRow(),
-				pagination.getRowPerPage(), type, keyword);
+				pagination.getRowPerPage(), pageDto.getType(), pageDto.getKeyword());
 
 		pagination.addModelAttributes(model, pagination);
 		model.addAttribute("equipmentList", searchList);
-		model.addAttribute("type", type);
-		model.addAttribute("keyword", keyword);
+		model.addAttribute("type", pageDto.getType());
+		model.addAttribute("keyword", pageDto.getKeyword());
 
 		return "headoffice/fragment/searchEquipmentList";
 	}
@@ -106,34 +107,26 @@ public class EquipmentController {
 	}
 
 	/**
-	 * 물품을 성공적으로 추가했을 경우 물품 목록 페이지로 이동합니다. 
-	 * 유효성 검사 실패로 인해 추가가 중단된 경우 다시 물품 추가 페이지로 이동합니다.
+	 * 물품을 성공적으로 추가했을 경우 물품 목록 페이지로 이동합니다. 유효성 검사 실패로 인해 추가가 중단된 경우 다시 물품 추가 페이지로
+	 * 이동합니다.
 	 * 
-	 * @param sportsEquipment    추가할 물품의 정보를 담은 SportsEquipment 객체
-	 * @param bindingResult1     sportsEquipment 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
-	 * @param sportsEquipmentImg 추가할 물품의 이미지 정보를 담은 SportsEquipmentImg 객체
-	 * @param bindingResult2     sportsEquipmentImg 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
-	 * @param empInfo            로그인한 직원의 정보를 담은 LoginEmployee 객체
+	 * @param addSportsEquipmentDto 물품을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
+	 * @param empInfo               로그인한 직원의 정보를 담은 LoginEmployee 객체
 	 * @return 물품 목록 페이지로 리다이렉트
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/add")
-	public String addEquipment(@Validated SportsEquipment sportsEquipment, BindingResult bindingResult1,
-			@Validated SportsEquipmentImg sportsEquipmentImg, BindingResult bindingResult2, HttpSession session,
+	public String addEquipment(@Validated @ModelAttribute AddSportsEquipmentDto addSportsEquipmentDto,
+			BindingResult bindingResult, HttpSession session,
 			@SessionAttribute(name = "loginEmployee") LoginEmployee empInfo) {
 
-		if (bindingResult1.hasErrors()) {
-			return "headoffice/addEquipment";
-		} else if (bindingResult2.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			return "headoffice/addEquipment";
 		}
 
+		addSportsEquipmentDto.setEmployeeNo(empInfo.getEmployeeNo());
 		String path = session.getServletContext().getRealPath("/upload/equipment");
-
-		int writerNo = empInfo.getEmployeeNo();
-		sportsEquipment.setEmployeeNo(writerNo);
-
-		equipmentService.addEquipment(sportsEquipment, sportsEquipmentImg, path);
+		equipmentService.addEquipment(addSportsEquipmentDto, path);
 
 		return "redirect:/headoffice/equipment";
 	}
@@ -146,40 +139,33 @@ public class EquipmentController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/update/{equipmentNo}")
-	public String modifyEquipment(@PathVariable int equipmentNo, Model model) {
-
-		Map<String, Object> equipmentOne = equipmentService.getEquipmentOne(equipmentNo);
-		model.addAttribute("equipmentOne", equipmentOne);
-
+	public String modifyEquipment(Model model, @PathVariable int equipmentNo) {
+		model.addAttribute("equipmentOne", equipmentService.getEquipmentOne(equipmentNo));
 		return "headoffice/updateEquipment";
 	}
 
 	/**
-	 * 물품 업데이트를 성공했을 경우 물품 목록 페이지로 리다이렉트합니다. 
-	 * 유효성 검사 실패로 인해 업데이트가 중단된 경우 다시 물품 업데이트 페이지로 리다이렉트합니다.
+	 * 물품 업데이트를 성공했을 경우 물품 목록 페이지로 리다이렉트합니다. 유효성 검사 실패로 인해 업데이트가 중단된 경우 다시 물품 업데이트
+	 * 페이지로 리다이렉트합니다.
 	 * 
-	 * @param equipment          업데이트할 물품의 정보를 담은 SportsEquipment 객체
-	 * @param bindingResult      equipment 매개변수에 대한 유효성 검사 결과를 담은 BindingResult 객체
-	 * @param sportsEquipmentImg 업데이트할 물품의 이미지 정보를 담은 SportsEquipmentImg 객체
+	 * @param updateSportsEquipmentDto 물품을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
 	 * @return 물품 목록 페이지로 리다이렉트
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/update")
-	public String modifyEquipment(@Validated SportsEquipment equipment, BindingResult bindingResult,
-			SportsEquipmentImg sportsEquipmentImg, HttpSession session, RedirectAttributes redirectAttributes) {
-
-		int equipmentNo = equipment.getSportsEquipmentNo();
+	public String modifyEquipment(@Validated @ModelAttribute UpdateSportsEquipmentDto updateSportsEquipmentDto,
+			BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
 
 		if (bindingResult.hasErrors()) {
-			redirectAttributes.addAttribute("equipmentNo", equipmentNo);
+			redirectAttributes.addAttribute("equipmentNo", updateSportsEquipmentDto.getSportsEquipmentNo());
 			return "redirect:/headoffice/equipment/update/{equipmentNo}";
 		}
 
 		String oldPath = session.getServletContext()
-				.getRealPath("/upload/equipment/" + sportsEquipmentImg.getSportsEquipmentImgFileName());
+				.getRealPath("/upload/equipment/" + updateSportsEquipmentDto.getSportsEquipmentImgFileName());
 		String newPath = session.getServletContext().getRealPath("/upload/equipment");
 
-		equipmentService.modifyEquipment(equipment, sportsEquipmentImg, newPath, oldPath);
+		equipmentService.modifyEquipment(updateSportsEquipmentDto, newPath, oldPath);
 
 		return "redirect:/headoffice/equipment";
 	}
@@ -193,7 +179,7 @@ public class EquipmentController {
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@ResponseBody
 	@PostMapping("/deactivate")
-	public int deactivateEquipment(int equipmentNo) {
+	public int deactivateEquipment(@RequestParam int equipmentNo) {
 		return equipmentService.modifyDeactivation(equipmentNo);
 	}
 
@@ -205,7 +191,7 @@ public class EquipmentController {
 	 */
 	@ResponseBody
 	@PostMapping("/activate")
-	public int activateEquipment(int equipmentNo) {
+	public int activateEquipment(@RequestParam int equipmentNo) {
 		return equipmentService.modifyActivation(equipmentNo);
 	}
 

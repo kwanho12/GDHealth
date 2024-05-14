@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.customer.chat.ChatMapper">
 
-	<select id="selectChatList" resultType="com.tree.gdhealth.dto.ChatMessage">
+	<select id="selectChatList" resultType="com.tree.gdhealth.domain.ChatMessage">
 		SELECT
 		message_content messageContent,
 		customer_no customerNo,
@@ -30,7 +30,7 @@
 		WHERE c.customer_no=#{customerNo}
 	</select>
 
-	<insert id="insertRoom" parameterType="com.tree.gdhealth.dto.ChatRoom">
+	<insert id="insertRoom" parameterType="com.tree.gdhealth.domain.ChatRoom">
 		INSERT INTO chat_room(
 		customer_no
 		) VALUES(
@@ -41,7 +41,7 @@
 		</selectKey>
 	</insert>
 
-	<insert id="insertMessage" parameterType="com.tree.gdhealth.dto.ChatMessage">
+	<insert id="insertMessage" parameterType="com.tree.gdhealth.domain.ChatMessage">
 		INSERT INTO chat_message(
 		chat_room_no,
 		customer_no,

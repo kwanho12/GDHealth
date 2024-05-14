@@ -100,7 +100,7 @@
 		WHERE pr.program_date_no = #{programDateNo} AND p.customer_no = #{customerNo}
 	</select>
 	
-	<select id="branchList" resultType="com.tree.gdhealth.dto.Branch">
+	<select id="branchList" resultType="com.tree.gdhealth.domain.Branch">
 		SELECT branch_name branchName,
 			   branch_no branchNo
 		FROM branch

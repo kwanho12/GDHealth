@@ -2,7 +2,7 @@ package com.tree.gdhealth.customer.login;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Customer;
+import com.tree.gdhealth.domain.Customer;
 
 @Mapper
 public interface LoginMapper {

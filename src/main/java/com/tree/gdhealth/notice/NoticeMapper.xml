@@ -4,7 +4,7 @@
 <!-- 공지 리스트 -->
    <select id="noticeList"
    parameterType="java.util.Map"
-   resultType="com.tree.gdhealth.dto.Notice">
+   resultType="com.tree.gdhealth.domain.Notice">
    
    SELECT 
        n.notice_no AS noticeNo,
@@ -23,7 +23,7 @@
 <!-- 공지 상세보기 -->
    <select id="noticeOne"
    parameterType="int"
-   resultType="com.tree.gdhealth.dto.Notice">
+   resultType="com.tree.gdhealth.domain.Notice">
       
    SELECT
       n.notice_no AS noticeNo,
@@ -39,7 +39,7 @@
    </select>
 <!-- 공지 추가 -->
    <insert id="addNotice"
-   parameterType="com.tree.gdhealth.dto.Notice">
+   parameterType="com.tree.gdhealth.domain.Notice">
    
    INSERT INTO notice (
       employee_no,
@@ -54,7 +54,7 @@
    
 <!-- 공지 수정 -->
    <update id="updateNotice"
-   parameterType="com.tree.gdhealth.dto.Notice">
+   parameterType="com.tree.gdhealth.domain.Notice">
    
    UPDATE notice
    SET notice_title = #{noticeTitle}, notice_content = #{noticeContent}, updatedate = NOW()
@@ -63,7 +63,7 @@
 
 <!-- 공지 삭제 -->
    <delete id="deleteNotice"
-   parameterType="com.tree.gdhealth.dto.Notice">
+   parameterType="com.tree.gdhealth.domain.Notice">
    
    DELETE 
    FROM notice

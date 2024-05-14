@@ -6,7 +6,7 @@ import com.tree.gdhealth.program.ProgramApiService;
 import com.tree.gdhealth.program.dto.BranchProgramDate;
 import com.tree.gdhealth.sportsequipment.SportsEquipmentApiService;
 import com.tree.gdhealth.sportsequipment.dto.*;
-import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.domain.Employee;
 import com.tree.gdhealth.employee.api.EmployeeApiService;
 import com.tree.gdhealth.employee.login.EmpLoginService;
 import com.tree.gdhealth.employee.login.LoginEmployee;

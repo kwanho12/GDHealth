@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tree.gdhealth.dto.Customer;
-import com.tree.gdhealth.dto.CustomerSignUp;
+import com.tree.gdhealth.domain.Customer;
+import com.tree.gdhealth.domain.CustomerSignUp;
 
 import jakarta.servlet.http.HttpSession;
 

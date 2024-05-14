@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
@@ -43,10 +44,9 @@ public class CustomerController {
 	 * @apiNote 페이지 전체가 아닌 회원의 목록을 나타내는 영역만 리턴합니다.
 	 */
 	@GetMapping("/pagination")
-	public String getPagination(Model model, int pageNum) {
+	public String getPagination(Model model, @RequestParam int pageNum) {
 
-		int customerCnt = customerService.getCustomerCnt();
-		HeadofficePagination pagination = customerService.getPagination(pageNum, customerCnt);
+		HeadofficePagination pagination = customerService.getPagination(pageNum, customerService.getCustomerCnt());
 
 		List<Map<String, Object>> customerList = customerService.getCustomerList(pagination.getBeginRow(),
 				pagination.getRowPerPage());
@@ -67,10 +67,11 @@ public class CustomerController {
 	 * @apiNote 페이지 전체가 아닌 회원의 목록을 나타내는 영역만 리턴합니다.
 	 */
 	@GetMapping("/searchPagination")
-	public String getPagination(Model model, String type, String keyword, int pageNum) {
+	public String getPagination(Model model, @RequestParam String type, @RequestParam String keyword,
+			@RequestParam int pageNum) {
 
-		int searchCnt = customerService.getCustomerCnt(type, keyword);
-		HeadofficePagination pagination = customerService.getPagination(pageNum, searchCnt);
+		HeadofficePagination pagination = customerService.getPagination(pageNum,
+				customerService.getCustomerCnt(type, keyword));
 
 		List<Map<String, Object>> searchList = customerService.getCustomerList(pagination.getBeginRow(),
 				pagination.getRowPerPage(), type, keyword);

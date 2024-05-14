@@ -108,7 +108,8 @@
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
 									<h3 style="margin-bottom: 50px;">물품 수정하기</h3>
 									<form action="${pageContext.request.contextPath}/headoffice/equipment/update" id="updateForm" method="post" enctype="multipart/form-data">
-										<input type="hidden" value="${equipmentOne.equipmentNo}" name="sportsEquipmentNo"> <input type="hidden" value="${equipmentOne.filename}" name="sportsEquipmentImgFileName">
+										<input type="hidden" value="${equipmentOne.equipmentNo}" name="sportsEquipmentNo"> 
+										<input type="hidden" value="${equipmentOne.filename}" name="sportsEquipmentImgFileName">
 										<div class="row">
 											<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 												<div class="address-hr">

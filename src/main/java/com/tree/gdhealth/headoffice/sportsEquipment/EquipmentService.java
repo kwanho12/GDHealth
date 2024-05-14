@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.dto.SportsEquipment;
-import com.tree.gdhealth.dto.SportsEquipmentImg;
+import com.tree.gdhealth.domain.SportsEquipment;
+import com.tree.gdhealth.domain.SportsEquipmentImg;
+import com.tree.gdhealth.headoffice.dto.AddSportsEquipmentDto;
+import com.tree.gdhealth.headoffice.dto.UpdateSportsEquipmentDto;
 import com.tree.gdhealth.utils.enumtype.ImageType;
 import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -126,45 +128,47 @@ public class EquipmentService {
 	/**
 	 * 물품 정보를 데이터베이스에 삽입합니다.
 	 * 
-	 * @param sportsEquipment    추가할 물품의 정보를 담은 SportsEquipment 객체
-	 * @param sportsEquipmentImg 추가할 물품의 이미지 정보를 담은 SportsEquipmentImg 객체
-	 * @param path               물품 이미지 파일을 저장할 경로
+	 * @param addSportsEquipmentDto 물품을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
+	 * @param path                  물품 이미지 파일을 저장할 경로
 	 * @apiNote 물품의 메모(note)가 null인 경우 빈 문자열로 설정하여 데이터베이스에 저장합니다.
 	 */
-	public void addEquipment(SportsEquipment sportsEquipment, SportsEquipmentImg sportsEquipmentImg, String path) {
+	public void addEquipment(AddSportsEquipmentDto addSportsEquipmentDto, String path) {
 
-		if (sportsEquipment.getNote() == null) {
-			sportsEquipment.setNote("");
+		if (addSportsEquipmentDto.getNote() == null) {
+			addSportsEquipmentDto.setNote("");
 		}
 
+		SportsEquipment sportsEquipment = new SportsEquipment();
+		sportsEquipment.setEmployeeNo(addSportsEquipmentDto.getEmployeeNo());
+		sportsEquipment.setItemName(addSportsEquipmentDto.getItemName());
+		sportsEquipment.setItemPrice(addSportsEquipmentDto.getItemPrice());
+		sportsEquipment.setNote(addSportsEquipmentDto.getNote());
 		equipmentMapper.insertEquipment(sportsEquipment);
 
-		int equipmentNo = sportsEquipment.getSportsEquipmentNo();
-
-		MultipartFile equipmentFile = sportsEquipmentImg.getEquipmentFile();
-		addOrModifyEquipmentImg(equipmentFile, path, equipmentNo, true);
+		MultipartFile equipmentFile = addSportsEquipmentDto.getEquipmentFile();
+		addOrModifyEquipmentImg(equipmentFile, path, sportsEquipment.getSportsEquipmentNo(), true);
 	}
 
 	/**
 	 * 물품 정보를 수정합니다. 이미지 파일이 수정되었을 경우, 기존의 이미지 파일을 삭제하고 새로운 이미지 파일을 저장합니다.
 	 * 
-	 * @param sportsEquipment    수정할 물픔의 정보를 담은 SportsEquipment 객체
-	 * @param sportsEquipmentImg 수정할 물품의 이미지 정보를 담은 SportsEquipmentImg 객체
-	 * @param newPath            새로운 이미지 파일을 저장할 경로
-	 * @param oldPath            기존 이미지 파일의 경로
+	 * @param addSportsEquipmentDto 물품을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
+	 * @param newPath               새로운 이미지 파일을 저장할 경로
+	 * @param oldPath               기존 이미지 파일의 경로
 	 */
-	public void modifyEquipment(SportsEquipment sportsEquipment, SportsEquipmentImg sportsEquipmentImg, String newPath,
-			String oldPath) {
+	public void modifyEquipment(UpdateSportsEquipmentDto updateSportsEquipmentDto, String newPath, String oldPath) {
 
+		SportsEquipment sportsEquipment = new SportsEquipment();
+		sportsEquipment.setItemName(updateSportsEquipmentDto.getItemName());
+		sportsEquipment.setItemPrice(updateSportsEquipmentDto.getItemPrice());
+		sportsEquipment.setNote(updateSportsEquipmentDto.getNote());
+		sportsEquipment.setSportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo());
 		equipmentMapper.updateEquipment(sportsEquipment);
 
-		MultipartFile equipmentFile = sportsEquipmentImg.getEquipmentFile();
+		MultipartFile equipmentFile = updateSportsEquipmentDto.getEquipmentFile();
 		if (!equipmentFile.isEmpty()) {
-			File file = new File(oldPath);
-			file.delete();
-
-			int equipmentNo = sportsEquipment.getSportsEquipmentNo();
-			addOrModifyEquipmentImg(equipmentFile, newPath, equipmentNo, false);
+			new File(oldPath).delete();
+			addOrModifyEquipmentImg(equipmentFile, newPath, updateSportsEquipmentDto.getSportsEquipmentNo(), false);
 		}
 	}
 
@@ -185,17 +189,14 @@ public class EquipmentService {
 		img.setSportsEquipmentNo(equipmentNo);
 		img.setSportsEquipmentImgOriginName(equipmentFile.getOriginalFilename());
 		img.setSportsEquipmentImgSize(equipmentFile.getSize());
-		ImageType imgType = ImageType.fromText(equipmentFile.getContentType());
-		img.setSportsEquipmentImgType(imgType);
-
-		String filename = imgSave.getFilename(equipmentFile);
-		img.setSportsEquipmentImgFileName(filename);
+		img.setSportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()));
+		img.setSportsEquipmentImgFileName(imgSave.getFilename(equipmentFile));
 
 		int result = isInsert ? equipmentMapper.insertEquipmentImg(img) : equipmentMapper.updateEquipmentImg(img);
 
-		imgSave.saveFile(equipmentFile, path, filename);
+		imgSave.saveFile(equipmentFile, path, imgSave.getFilename(equipmentFile));
 	}
-	
+
 	/**
 	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
 	 *
@@ -204,17 +205,14 @@ public class EquipmentService {
 	 * @return 페이지네이션 정보
 	 */
 	public HeadofficePagination getPagination(int pageNum, int equipmentCnt) {
-		
+
 		HeadofficePagination pagination = HeadofficePagination.builder()
 				.numberOfPaginationToShow(10)
 				.rowPerPage(8)
 				.currentPageNum(pageNum)
-				.rowCnt(equipmentCnt)
-				.build();
+				.rowCnt(equipmentCnt).build();
 		pagination.calculateProperties();
-		
+
 		return pagination;
 	}
-
-
 }

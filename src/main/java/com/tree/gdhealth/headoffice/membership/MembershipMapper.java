@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Membership;
+import com.tree.gdhealth.domain.Membership;
 
 @Mapper
 public interface MembershipMapper {

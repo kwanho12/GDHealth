@@ -1,6 +1,6 @@
 package com.tree.gdhealth.utils.typehandler;
 
-import com.tree.gdhealth.dto.SportsEquipmentImg;
+import com.tree.gdhealth.domain.SportsEquipmentImg;
 import com.tree.gdhealth.utils.enumtype.ImageType;
 
 import org.apache.ibatis.type.JdbcType;

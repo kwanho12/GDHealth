@@ -113,7 +113,7 @@
 		WHERE e.employee_id = #{employeeId}
 	</select>
 
-	<insert id="insertEmployee" parameterType="com.tree.gdhealth.dto.Employee">
+	<insert id="insertEmployee" parameterType="com.tree.gdhealth.domain.Employee">
 		INSERT INTO employee(
 		branch_no,
 		employee_id,
@@ -129,7 +129,7 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<insert id="insertEmployeeDetail" parameterType="com.tree.gdhealth.dto.EmployeeDetail">
+	<insert id="insertEmployeeDetail" parameterType="com.tree.gdhealth.domain.EmployeeDetail">
 		INSERT INTO employee_detail(
 		employee_no,
 		employee_name,
@@ -144,7 +144,7 @@
 		#{employeeGender}
 		)
 	</insert>
-	<insert id="insertEmployeeImg" parameterType="com.tree.gdhealth.dto.EmployeeImg">
+	<insert id="insertEmployeeImg" parameterType="com.tree.gdhealth.domain.EmployeeImg">
 		INSERT INTO employee_img(
 		employee_no,
 		employee_img_origin_name,

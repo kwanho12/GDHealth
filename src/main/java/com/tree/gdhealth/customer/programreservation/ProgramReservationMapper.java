@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Branch;
+import com.tree.gdhealth.domain.Branch;
 
 @Mapper
 public interface ProgramReservationMapper {

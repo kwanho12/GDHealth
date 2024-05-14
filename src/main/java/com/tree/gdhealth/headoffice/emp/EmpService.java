@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tree.gdhealth.dto.Employee;
-import com.tree.gdhealth.dto.EmployeeDetail;
-import com.tree.gdhealth.dto.EmployeeImg;
+import com.tree.gdhealth.domain.Employee;
+import com.tree.gdhealth.domain.EmployeeDetail;
+import com.tree.gdhealth.domain.EmployeeImg;
+import com.tree.gdhealth.headoffice.dto.AddEmpDto;
 import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
@@ -109,12 +110,11 @@ public class EmpService {
 	 */
 	@Transactional(readOnly = true)
 	public Map<String, Object> getEmployeeOne(String employeeId) {
-		return  empMapper.selectEmployeeOne(employeeId);
+		return empMapper.selectEmployeeOne(employeeId);
 	}
 
 	/**
-	 * 데이터베이스에서 해당 id를 검색하여 직원 id의 중복 여부를 확인합니다.
-	 * 입력한 id가 존재하지 않는다면 0을 리턴합니다.
+	 * 데이터베이스에서 해당 id를 검색하여 직원 id의 중복 여부를 확인합니다. 입력한 id가 존재하지 않는다면 0을 리턴합니다.
 	 * 
 	 * @param employeeId
 	 * @return 입력한 id가 존재하지 않는다면 0, 이미 존재한다면 1
@@ -132,14 +132,24 @@ public class EmpService {
 	 * @param employeeImg    삽입할 직원의 이미지 정보를 담은 EmployeeImg 객체
 	 * @param path           직원 이미지 파일을 저장할 경로
 	 */
-	public void addEmployee(Employee employee, EmployeeDetail employeeDetail, EmployeeImg employeeImg, String path) {
+	public void addEmployee(AddEmpDto addEmpDto, String path) {
 
+		Employee employee = new Employee();
+		employee.setBranchNo(addEmpDto.getBranchNo());
+		employee.setEmployeeId(addEmpDto.getEmployeeId());
+		employee.setEmployeePw(addEmpDto.getEmployeePw());
+		employee.setEmployeePosition(addEmpDto.getEmployeePosition());
 		empMapper.insertEmployee(employee);
 
+		EmployeeDetail employeeDetail = new EmployeeDetail();
 		employeeDetail.setEmployeeNo(employee.getEmployeeNo());
+		employeeDetail.setEmployeeName(addEmpDto.getEmployeeName());
+		employeeDetail.setEmployeePhone(addEmpDto.getEmployeePhone());
+		employeeDetail.setEmployeeEmail(addEmpDto.getEmployeeEmail());
+		employeeDetail.setEmployeeGender(addEmpDto.getEmployeeGender());
 		empMapper.insertEmployeeDetail(employeeDetail);
 
-		MultipartFile employeeFile = employeeImg.getEmployeeFile();
+		MultipartFile employeeFile = addEmpDto.getEmployeeFile();
 		addEmpImg(employeeFile, path, employee.getEmployeeNo());
 	}
 
@@ -167,7 +177,7 @@ public class EmpService {
 
 		imgSave.saveFile(employeeFile, path, filename);
 	}
-	
+
 	/**
 	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
 	 *
@@ -176,16 +186,11 @@ public class EmpService {
 	 * @return 페이지네이션 정보
 	 */
 	public HeadofficePagination getPagination(int pageNum, int employeeCnt) {
-		
-		HeadofficePagination pagination = HeadofficePagination.builder()
-				.numberOfPaginationToShow(10)
-				.rowPerPage(8)
-				.currentPageNum(pageNum)
-				.rowCnt(employeeCnt)
-				.build();
+
+		HeadofficePagination pagination = HeadofficePagination.builder().numberOfPaginationToShow(10).rowPerPage(8)
+				.currentPageNum(pageNum).rowCnt(employeeCnt).build();
 		pagination.calculateProperties();
-		
+
 		return pagination;
 	}
-
 }

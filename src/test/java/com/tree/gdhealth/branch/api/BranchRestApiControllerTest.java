@@ -12,7 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.tree.gdhealth.dto.Branch;
+import com.tree.gdhealth.domain.Branch;
 
 import java.net.URI;
 import java.util.List;

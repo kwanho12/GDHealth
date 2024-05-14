@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.ChatMessage;
+import com.tree.gdhealth.domain.ChatMessage;
 
 /**
  * @author 진관호

@@ -3,7 +3,7 @@ package com.tree.gdhealth.branch;
 import com.tree.gdhealth.program.dto.BranchProgramCalendar;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderAddRequest;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderInformation;
-import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.domain.Employee;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderRetrieveCriteria;
 import com.tree.gdhealth.utils.auth.Auth;

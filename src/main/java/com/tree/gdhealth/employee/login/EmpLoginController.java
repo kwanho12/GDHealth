@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tree.gdhealth.customer.login.LoginService;
-import com.tree.gdhealth.dto.Employee;
+import com.tree.gdhealth.domain.Employee;
 
 import jakarta.servlet.http.HttpSession;
 

@@ -56,7 +56,7 @@
 				<div class="center">아이디</div>
 				<div class="Id">${info.customerId}</div>	
 				<div class="center" style="margin-top: 80px;">이름</div>
-				<div class=name">${info.customerName}</div>
+				<div class="name">${info.customerName}</div>
 			</div>
 			</div>
 			<div class="item">

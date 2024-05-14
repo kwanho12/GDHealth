@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tree.gdhealth.answer.AnswerService;
 import com.tree.gdhealth.customer.franchisebranch.FranchiseBranchService;
-import com.tree.gdhealth.dto.Answer;
-import com.tree.gdhealth.dto.Branch;
-import com.tree.gdhealth.dto.Notice;
-import com.tree.gdhealth.dto.Question;
+import com.tree.gdhealth.domain.Answer;
+import com.tree.gdhealth.domain.Branch;
+import com.tree.gdhealth.domain.Notice;
+import com.tree.gdhealth.domain.Question;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 
 import jakarta.servlet.http.HttpSession;

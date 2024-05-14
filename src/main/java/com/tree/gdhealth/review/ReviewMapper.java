@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tree.gdhealth.dto.Review;
+import com.tree.gdhealth.domain.Review;
 
 @Mapper
 public interface ReviewMapper {

@@ -1,8 +1,8 @@
 package com.tree.gdhealth.sportsequipment.vo;
 
-import com.tree.gdhealth.dto.SportsEquipment;
-import com.tree.gdhealth.dto.SportsEquipmentImg;
-import com.tree.gdhealth.dto.SportsEquipmentOrder;
+import com.tree.gdhealth.domain.SportsEquipment;
+import com.tree.gdhealth.domain.SportsEquipmentImg;
+import com.tree.gdhealth.domain.SportsEquipmentOrder;
 import com.tree.gdhealth.utils.enumtype.ImageType;
 import com.tree.gdhealth.utils.enumtype.OrderStatus;
 
