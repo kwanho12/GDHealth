@@ -12,13 +12,16 @@ import com.tree.gdhealth.domain.ChatMessage;
  */
 @Mapper
 public interface AdministratorChatMapper {
+	
+	List<ChatMessage> selectChatList(int chatRoomNo);
+	
+	int selectRoomNo(String customerId);
+	
+	int insertMessage(ChatMessage chatMessage);
 
 	List<Map<String, Object>> selectRoomList();
 
-	List<ChatMessage> selectChatList(int chatRoomNo);
 
-	int selectRoomNo(String customerId);
 
-	int insertMessage(ChatMessage chatMessage);
 
 }

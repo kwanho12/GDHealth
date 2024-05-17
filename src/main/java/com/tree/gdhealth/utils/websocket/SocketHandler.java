@@ -1,6 +1,7 @@
 package com.tree.gdhealth.utils.websocket;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.simple.JSONObject;
@@ -12,10 +13,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.tree.gdhealth.customer.chat.ChatMapper;
 import com.tree.gdhealth.domain.ChatMessage;
 import com.tree.gdhealth.employee.login.LoginEmployee;
-import com.tree.gdhealth.headoffice.chat.AdministratorChatMapper;
+import com.tree.gdhealth.utils.BatchChatService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
 
-	private final ChatMapper customerChatMapper;
-	private final AdministratorChatMapper administratorChatMapper;
-	private ConcurrentHashMap<Integer, ConcurrentHashMap<String, WebSocketSession>> roomSessionsMap = new ConcurrentHashMap<>();
+	private final BatchChatService batchChatService;
+
+	private Map<Integer, ConcurrentHashMap<String, WebSocketSession>> roomSessionsMap = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+	public void afterConnectionEstablished(WebSocketSession session) throws IOException {
 
 		String url = session.getUri().toString();
 		int urlRoomNo = Integer.parseInt(url.split("/chatting/")[1]);
@@ -51,10 +51,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 
 		LoginEmployee loginEmployee = (LoginEmployee) session.getAttributes().get("loginEmployee");
-		JSONObject obj = new JSONObject();
 
 		String employeeId = (loginEmployee != null) ? loginEmployee.getEmployeeId() : null;
 		String customerId = (String) session.getAttributes().get("customerId");
+
+		JSONObject obj = new JSONObject();
 		obj.put("type", "getId");
 		obj.put("id", (customerId != null) ? customerId : employeeId);
 
@@ -62,7 +63,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
 
 		JSONObject jsonObject = jsonToObjectParser(message.getPayload());
 
@@ -76,28 +77,13 @@ public class SocketHandler extends TextWebSocketHandler {
 			chatMessage.setChatRoomNo(messageRoomNo);
 			chatMessage.setMessageContent(messageContent);
 
-			if (status.equals("customer")) {
-				chatMessage.setCustomerNo(dbIndex);
-				customerChatMapper.insertMessage(chatMessage);
-			} else {
-				chatMessage.setEmployeeNo(dbIndex);
-				administratorChatMapper.insertMessage(chatMessage);
-			}
+			boolean isCustomer = status.equals("customer");
+			chatMessage.setCustomerNo(isCustomer ? dbIndex : null);
+			chatMessage.setEmployeeNo(isCustomer ? null : dbIndex);
 
-			ConcurrentHashMap<String, WebSocketSession> sessionMap = roomSessionsMap.get(messageRoomNo);
-
-			for (String k : sessionMap.keySet()) {
-
-				WebSocketSession webSocketSession = sessionMap.get(k);
-
-				if (webSocketSession != null) {
-					try {
-						webSocketSession.sendMessage(new TextMessage(jsonObject.toJSONString()));
-					} catch (IOException e) {
-						log.error("웹소켓 세션으로 메시지 전송 중 오류 발생 : {}", e.getMessage());
-					}
-				}
-			}
+			batchChatService.addMessageToBuffer(chatMessage);
+			
+			sendChatMessages(jsonObject, roomSessionsMap.get(messageRoomNo));
 		}
 	}
 
@@ -114,12 +100,35 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 
 	/**
+	 * 채팅 메시지를 세션에 전송합니다.
+	 *
+	 * @param jsonObject 전송할 메시지의 JSON 객체
+	 * @param sessionMap 메시지를 보낼 세션 맵
+	 * @throws IOException 웹소켓 세션으로 메시지 전송 중 발생한 예외
+	 */
+	private void sendChatMessages(JSONObject jsonObject, ConcurrentHashMap<String, WebSocketSession> sessionMap)
+			throws IOException {
+		for (String k : sessionMap.keySet()) {
+
+			WebSocketSession webSocketSession = sessionMap.get(k);
+
+			if (webSocketSession != null) {
+				try {
+					webSocketSession.sendMessage(new TextMessage(jsonObject.toJSONString()));
+				} catch (IOException e) {
+					log.error("웹소켓 세션으로 메시지 전송 중 오류 발생 : {}", e.getMessage());
+				}
+			}
+		}
+	}
+
+	/**
 	 * JSON 문자열을 JSONObject로 파싱하여 리턴합니다.
 	 * 
 	 * @param jsonStr JSON 형태의 문자열
 	 * @return JSON 문자열을 JSONObject로 파싱한 객체
 	 */
-	private static JSONObject jsonToObjectParser(String jsonStr) {
+	private JSONObject jsonToObjectParser(String jsonStr) {
 		JSONParser parser = new JSONParser();
 		JSONObject obj = null;
 		try {

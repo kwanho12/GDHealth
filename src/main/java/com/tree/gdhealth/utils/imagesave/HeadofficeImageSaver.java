@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tree.gdhealth.utils.exception.ExtensionNotMatchException;
+
 /**
  * 이미지 파일과 관련된 작업을 수행하는 유틸리티 클래스
  * 
@@ -28,7 +30,7 @@ public class HeadofficeImageSaver {
 
 		if (!(fileNameExtension.equals(".png") || fileNameExtension.equals(".jpg") || fileNameExtension.equals(".jpeg")
 				|| fileNameExtension.equals(".gif") || fileNameExtension.equals(".webp"))) {
-			throw new RuntimeException();
+			throw new ExtensionNotMatchException("이미지 형식의 확장자가 아닙니다.");
 		}
 
 		return uuidName + fileNameExtension;

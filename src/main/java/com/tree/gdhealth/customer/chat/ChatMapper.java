@@ -14,13 +14,14 @@ import com.tree.gdhealth.domain.ChatRoom;
 public interface ChatMapper {
 
 	List<ChatMessage> selectChatList(int chatRoomNo);
+	
+	int selectRoomNo(int customerNo);
+	
+	int insertMessage(ChatMessage chatMessage);
 
 	boolean selectIsRoomExists(int customerNo);
 
-	int selectRoomNo(int customerNo);
-
 	int insertRoom(ChatRoom chatRoom);
 
-	int insertMessage(ChatMessage chatMessage);
 
 }

@@ -37,11 +37,11 @@ public class ChatController {
 	 */
 	@Auth(AUTHORITY = Authority.CUSTOMER_ONLY)
 	@GetMapping("/customerRoom")
-	public String accessChatRoom(Model model, @SessionAttribute("customerNo") int customerNo) {
+	public String accessCustomerChatRoom(Model model, @SessionAttribute("customerNo") int customerNo) {
 
 		int roomNo;
 		boolean isRoomExists = chatService.checkRoomExists(customerNo);
-		
+
 		if (!isRoomExists) {
 			ChatRoom chatRoom = new ChatRoom();
 			chatRoom.setCustomerNo(customerNo);

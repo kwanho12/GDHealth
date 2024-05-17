@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- author 정인호-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tree.gdhealth.sportsequipment.dto.SportEquipmentMapperTest">
+<mapper namespace="com.tree.gdhealth.sportsequipment.domain.SportEquipmentMapperTest">
 
-    <insert id="insertSportsEquipment" parameterType="com.tree.gdhealth.dto.SportsEquipment" useGeneratedKeys="true" keyProperty="sportsEquipmentNo">
+    <insert id="insertSportsEquipment" parameterType="com.tree.gdhealth.domain.SportsEquipment" useGeneratedKeys="true" keyProperty="sportsEquipmentNo">
         INSERT INTO sports_equipment
             (item_name, item_price, note)
         VALUES
             (#{itemName},#{itemPrice},#{note})
     </insert>
-    <insert id="insertSportsEquipmentOrder" parameterType="com.tree.gdhealth.dto.SportsEquipmentOrder" useGeneratedKeys="true" keyColumn="order_no" keyProperty="orderNo">
+    <insert id="insertSportsEquipmentOrder" parameterType="com.tree.gdhealth.domain.SportsEquipmentOrder" useGeneratedKeys="true" keyColumn="order_no" keyProperty="orderNo">
         INSERT INTO sports_equipment_order
             (employee_orderer, branch_no, sports_equipment_no, quantity, total_price, employee_approver, order_status)
         VALUES
             (#{employeeOrderer},#{branchNo},#{sportsEquipmentNo},#{quantity},#{totalPrice},#{employeeApprover},#{orderStatus})
     </insert>
-    <insert id="insertSportsEquipmentImg" parameterType="com.tree.gdhealth.dto.SportsEquipmentImg" useGeneratedKeys="true" keyColumn="sports_equipment_img_no" keyProperty="sportsEquipmentImgNo">
+    <insert id="insertSportsEquipmentImg" parameterType="com.tree.gdhealth.domain.SportsEquipmentImg" useGeneratedKeys="true" keyColumn="sports_equipment_img_no" keyProperty="sportsEquipmentImgNo">
         INSERT INTO sports_equipment_img
             (sports_equipment_no, sports_equipment_img_origin_name, sports_equipment_img_file_name, sports_equipment_img_size, sports_equipment_img_type)
         VALUES
             (#{sportsEquipmentNo},#{sportsEquipmentImgOriginName},#{sportsEquipmentImgFileName},#{sportsEquipmentImgSize},#{sportsEquipmentImgType})
     </insert>
 
-    <select id="findSportsEquipmentByNo" parameterType="int" resultType="com.tree.gdhealth.dto.SportsEquipment">
+    <select id="findSportsEquipmentByNo" parameterType="int" resultType="com.tree.gdhealth.domain.SportsEquipment">
         SELECT sports_equipment_no sportsEquipmentNo,
                item_name itemName,
                item_price itemPrice,
@@ -32,7 +32,7 @@
         FROM sports_equipment
         WHERE sports_equipment_no = #{sportsEquipmentNo}
     </select>
-    <select id="findSportsEquipmentOrderByNo" parameterType="int" resultType="com.tree.gdhealth.dto.SportsEquipmentOrder">
+    <select id="findSportsEquipmentOrderByNo" parameterType="int" resultType="com.tree.gdhealth.domain.SportsEquipmentOrder">
         SELECT order_no orderNo,
                employee_orderer employeeOrderer,
                branch_no branchNo,
@@ -47,7 +47,7 @@
         WHERE order_no = #{orderNo}
     </select>
     <select id="findSportsEquipmentImgByNo" parameterType="int"
-            resultType="com.tree.gdhealth.dto.SportsEquipmentImg">
+            resultType="com.tree.gdhealth.domain.SportsEquipmentImg">
         SELECT sports_equipment_img_no sportsEquipmentImgNo,
                sports_equipment_no sportsEquipmentNo,
                sports_equipment_img_origin_name sportsEquipmentImgOriginName,
