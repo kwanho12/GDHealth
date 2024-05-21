@@ -11,7 +11,7 @@ import com.tree.gdhealth.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 회원의 채팅 service
+ * 회원의 채팅 service laver
  * 
  * @author 진관호
  */
