@@ -48,5 +48,14 @@ public class AdministratorChatService {
 	public int getRoomNo(String customerId) {
 		return chatMapper.selectRoomNo(customerId);
 	}
+	
+	/**
+	 * 채팅 메시지를 저장합니다.
+	 * 
+	 * @param chatMessage 메시지를 DB에 저장하기 위한 객체
+	 */
+	public void saveMessage(ChatMessage chatMessage) {
+		chatMapper.insertMessage(chatMessage);
+	}
 
 }

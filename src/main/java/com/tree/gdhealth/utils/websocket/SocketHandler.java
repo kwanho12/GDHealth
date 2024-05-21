@@ -13,9 +13,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.tree.gdhealth.customer.chat.ChatService;
 import com.tree.gdhealth.domain.ChatMessage;
 import com.tree.gdhealth.employee.login.LoginEmployee;
-import com.tree.gdhealth.utils.BatchChatService;
+import com.tree.gdhealth.headoffice.chat.AdministratorChatService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
 
-	private final BatchChatService batchChatService;
+	private final AdministratorChatService adminChatService;
+	private final ChatService customerChatService;
 
 	private Map<Integer, ConcurrentHashMap<String, WebSocketSession>> roomSessionsMap = new ConcurrentHashMap<>();
 
@@ -77,25 +79,37 @@ public class SocketHandler extends TextWebSocketHandler {
 			chatMessage.setChatRoomNo(messageRoomNo);
 			chatMessage.setMessageContent(messageContent);
 
-			boolean isCustomer = status.equals("customer");
-			chatMessage.setCustomerNo(isCustomer ? dbIndex : null);
-			chatMessage.setEmployeeNo(isCustomer ? null : dbIndex);
-
-			batchChatService.addMessageToBuffer(chatMessage);
-			
+			saveChatMessage(status, dbIndex, chatMessage);
 			sendChatMessages(jsonObject, roomSessionsMap.get(messageRoomNo));
 		}
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		if (!roomSessionsMap.isEmpty()) {
-			for (Integer key : roomSessionsMap.keySet()) {
-				roomSessionsMap.get(key).remove(session.getId());
-				if (roomSessionsMap.get(key).isEmpty()) {
-					roomSessionsMap.remove(key);
-				}
+		roomSessionsMap.forEach((key, sessionMap) -> {
+			sessionMap.remove(session.getId());
+			if (sessionMap.isEmpty()) {
+				roomSessionsMap.remove(key);
 			}
+		});
+	}
+
+	/**
+	 * 상태에 따라 채팅 메시지를 적절한 서비스에 저장합니다.
+	 *
+	 * @param status      메시지가 고객으로부터 온 것인지 직원으로부터 온 것인지를 나타내는 상태
+	 * @param dbIndex     고객 또는 직원의 데이터베이스 인덱스
+	 * @param chatMessage 저장할 {@code ChatMessage} 객체
+	 */
+	private void saveChatMessage(String status, int dbIndex, ChatMessage chatMessage) {
+		boolean isCustomer = status.equals("customer");
+		chatMessage.setCustomerNo(isCustomer ? dbIndex : null);
+		chatMessage.setEmployeeNo(isCustomer ? null : dbIndex);
+
+		if (chatMessage.getCustomerNo() != null) {
+			customerChatService.saveMessage(chatMessage);
+		} else {
+			adminChatService.saveMessage(chatMessage);
 		}
 	}
 
@@ -108,18 +122,13 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	private void sendChatMessages(JSONObject jsonObject, ConcurrentHashMap<String, WebSocketSession> sessionMap)
 			throws IOException {
-		for (String k : sessionMap.keySet()) {
-
-			WebSocketSession webSocketSession = sessionMap.get(k);
-
-			if (webSocketSession != null) {
-				try {
-					webSocketSession.sendMessage(new TextMessage(jsonObject.toJSONString()));
-				} catch (IOException e) {
-					log.error("웹소켓 세션으로 메시지 전송 중 오류 발생 : {}", e.getMessage());
-				}
+		sessionMap.values().forEach(session -> {
+			try {
+				session.sendMessage(new TextMessage(jsonObject.toJSONString()));
+			} catch (IOException e) {
+				log.error("웹소켓 세션으로 메시지 전송 중 오류 발생 : {}", e.getMessage());
 			}
-		}
+		});
 	}
 
 	/**

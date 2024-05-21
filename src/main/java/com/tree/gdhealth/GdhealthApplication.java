@@ -6,8 +6,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-@ServletComponentScan 
-@SpringBootApplication 
+@ServletComponentScan
+@SpringBootApplication
 public class GdhealthApplication {
 
 	public static void main(String[] args) {

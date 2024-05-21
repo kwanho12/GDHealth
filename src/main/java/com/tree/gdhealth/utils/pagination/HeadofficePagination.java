@@ -100,7 +100,7 @@ public class HeadofficePagination {
 	 * @param pagination  페이지네이션 정보를 담고 있는 HeadofficePagination 객체
 	 */
 	public void addModelAttributes(Model model, HeadofficePagination pagination) {
-
+		
 		model.addAttribute("lastPage", pagination.getLastPageNum());
 		model.addAttribute("currentPage", pagination.getCurrentPageNum());
 
@@ -109,7 +109,6 @@ public class HeadofficePagination {
 
 		model.addAttribute("prev", pagination.isPrev());
 		model.addAttribute("next", pagination.isNext());
-
 	}
 
 }

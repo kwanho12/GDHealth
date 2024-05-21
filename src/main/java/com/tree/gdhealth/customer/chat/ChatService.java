@@ -61,5 +61,14 @@ public class ChatService {
 	public int insertRoom(ChatRoom chatRoom) {
 		return chatMapper.insertRoom(chatRoom);
 	}
+	
+	/**
+	 * 채팅 메시지를 저장합니다.
+	 * 
+	 * @param chatMessage 메시지를 DB에 저장하기 위한 객체
+	 */
+	public void saveMessage(ChatMessage chatMessage) {
+		chatMapper.insertMessage(chatMessage);
+	}
 
 }
