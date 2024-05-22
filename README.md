@@ -1,4 +1,4 @@
-# GD HEALTH
+# GD Health
 ![image](README/headoffice.png)
 >헬스클럽 운영/관리 플랫폼입니다. <br>
 팀원들과 프로젝트 주제에 대해 상의하던 중, 헬스 프랜차이즈 지점별로 고객들을 관리하고 본사에서 총괄하는
