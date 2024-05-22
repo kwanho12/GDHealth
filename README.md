@@ -107,16 +107,14 @@ Tool
 ## 📍 개선 사항
    - 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증해야 하는데 스프링이 제공하는 기본 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.<br>
     → Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. [📌 코드 확인](https://github.com/kwanho12/GDHealth/blob/develop/src/main/java/com/tree/gdhealth/utils/customvalidation/ListPattern.java)
-    <br> 
-<br>
+    <br><br>
 
-   - SocketHandler에서 채팅방 번호와 session에 대한 정보를 저장하는 roomSessionMap 변수는 여러 스레드에서 공유되는 자원이므로 여러 사용자의 웹 소켓 세션들이 동시에 읽고 쓰려고 할 때 동시성 문제가 발생할 수 있습니다.
-    <br>
+   - SocketHandler에서 채팅방 번호와 session에 대한 정보를 저장하는 roomSessionMap 변수는 여러 스레드에서 공유되는 자원이므로 여러 사용자의 웹 소켓 세션들이 동시에 읽고 쓰려고 할 때 동시성 문제가 발생할 수 있습니다.<br>
     ![image](README/roomSessionMap1.png)
     → roomSessionMap의 객체를 HashMap에서 동시성을 위해 설계된 컬렉션인 ConcurrentHashMap으로 변경하였습니다.<br>
     ![image](README/roomSessionMap2.png)
-    <br>
-<br>
+    <br><br>
+
    - 한 번에 DB의 program_date table에 여러 개의 프로그램 날짜들을 추가하려고 할 때 Service Layer에서 프로그램 날짜 1개를 추가할 때마다 insert 작업을 한 번 하려고 하였으나 DB 성능 저하가 우려되었습니다.
     <br>
     → ProgramMapper.xml에서 for each문을 사용하여 List&lt;Domain&gt; type으로 한 번의 insert 작업으로 여러 개의 프로그램 날짜들을 추가하였습니다. [📌 코드 확인](https://github.com/kwanho12/GDHealth/blob/develop/src/main/java/com/tree/gdhealth/headoffice/program/ProgramMapper.xml#L144)
