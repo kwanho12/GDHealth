@@ -2,8 +2,11 @@ package com.tree.gdhealth.utils.pagination;
 
 import org.springframework.ui.Model;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 본사 페이지에서 페이지네이션 기능을 제공하는 유틸리티 클래스
@@ -12,6 +15,8 @@ import lombok.Getter;
  */
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HeadofficePagination {
 
 	/**

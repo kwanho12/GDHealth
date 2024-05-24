@@ -163,19 +163,16 @@ public class EmpService {
 	public void addEmpImg(MultipartFile employeeFile, String path, int employeeNo) {
 
 		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
-
 		EmployeeImg img = new EmployeeImg();
 		img.setEmployeeNo(employeeNo);
 		img.setEmployeeImgOriginName(employeeFile.getOriginalFilename());
 		img.setEmployeeImgSize(employeeFile.getSize());
 		img.setEmployeeImgType(employeeFile.getContentType());
-
-		String filename = imgSave.getFilename(employeeFile);
-		img.setEmployeeImgFilename(filename);
+		img.setEmployeeImgFilename(imgSave.getFilename(employeeFile));
 
 		empMapper.insertEmployeeImg(img);
 
-		imgSave.saveFile(employeeFile, path, filename);
+		imgSave.saveFile(employeeFile, path);
 	}
 
 	/**

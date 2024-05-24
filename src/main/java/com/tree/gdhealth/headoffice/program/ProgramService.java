@@ -255,21 +255,18 @@ public class ProgramService {
 	 * @param isInsert    이미지 정보를 삽입할지 수정할지 여부를 나타내는 boolean 값
 	 */
 	public void addOrModifyProgramImg(MultipartFile programFile, String path, int programNo, boolean isAdd) {
-
+		
 		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
-
 		ProgramImg img = new ProgramImg();
 		img.setProgramNo(programNo);
 		img.setOriginName(programFile.getOriginalFilename());
 		img.setProgramImgSize(programFile.getSize());
 		img.setProgramImgType(programFile.getContentType());
-
-		String filename = imgSave.getFilename(programFile);
-		img.setFilename(filename);
+		img.setFilename(imgSave.getFilename(programFile));
 
 		int result = isAdd ? programMapper.insertProgramImg(img) : programMapper.updateProgramImg(img);
 
-		imgSave.saveFile(programFile, path, filename);
+		imgSave.saveFile(programFile, path);
 	}
 
 	/**
@@ -281,8 +278,12 @@ public class ProgramService {
 	 */
 	public HeadofficePagination getPagination(int pageNum, int programCnt) {
 
-		HeadofficePagination pagination = HeadofficePagination.builder().numberOfPaginationToShow(10).rowPerPage(8)
-				.currentPageNum(pageNum).rowCnt(programCnt).build();
+		HeadofficePagination pagination = HeadofficePagination.builder()
+			.numberOfPaginationToShow(10)
+			.rowPerPage(8)
+			.currentPageNum(pageNum)
+			.rowCnt(programCnt)
+			.build();
 		pagination.calculateProperties();
 
 		return pagination;

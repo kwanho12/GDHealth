@@ -194,7 +194,7 @@ public class EquipmentService {
 
 		int result = isInsert ? equipmentMapper.insertEquipmentImg(img) : equipmentMapper.updateEquipmentImg(img);
 
-		imgSave.saveFile(equipmentFile, path, imgSave.getFilename(equipmentFile));
+		imgSave.saveFile(equipmentFile, path);
 	}
 
 	/**

@@ -14,9 +14,29 @@ import com.tree.gdhealth.utils.exception.ExtensionNotMatchException;
  * @author 진관호
  */
 public class HeadofficeImageSaver {
-
+	
 	/**
-	 * {@link MultipartFile} 객체로부터 고유한 파일 이름을 생성하여 반환합니다.
+	 * MultipartFile을 지정된 경로에 저장합니다.
+	 * 
+	 * @param multipartFile 저장할 MultipartFile 객체
+	 * @param path          저장할 경로
+	 * @param filename      저장할 파일 이름
+	 * @throws RuntimeException 파일 저장에 실패한 경우
+	 */
+	public void saveFile(MultipartFile multipartFile, String path) {
+		
+		String filename = getFilename(multipartFile);
+
+		File file = new File(path + "/" + filename);
+		try {
+			multipartFile.transferTo(file);
+		} catch (IllegalStateException | IOException e) {
+			throw new RuntimeException();
+		}
+	}
+	
+	/**
+	 * {@link MultipartFile} 객체로부터 고유한 파일 이름을 생성하여 리턴합니다.
 	 * 
 	 * @param multipartFile MultipartFile 객체
 	 * @return 고유한 파일 이름
@@ -34,23 +54,5 @@ public class HeadofficeImageSaver {
 		}
 
 		return uuidName + fileNameExtension;
-	}
-
-	/**
-	 * MultipartFile을 지정된 경로에 저장합니다.
-	 * 
-	 * @param multipartFile 저장할 MultipartFile 객체
-	 * @param path          저장할 경로
-	 * @param filename      저장할 파일 이름
-	 * @throws RuntimeException 파일 저장에 실패한 경우
-	 */
-	public void saveFile(MultipartFile multipartFile, String path, String filename) {
-
-		File file = new File(path + "/" + filename);
-		try {
-			multipartFile.transferTo(file);
-		} catch (IllegalStateException | IOException e) {
-			throw new RuntimeException();
-		}
 	}
 }
