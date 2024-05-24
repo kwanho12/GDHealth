@@ -105,8 +105,8 @@ Tool
 <br><br>
 
 ## 📍 개선 사항
-   - 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지에 대한 검증해야 하는데 스프링이 제공하는 기본 validation API로는 List 내의 각각의 요소에 대해서 검증하기 어려웠습니다.<br>
-    → Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. [📌 코드 확인](https://github.com/kwanho12/GDHealth/blob/develop/src/main/java/com/tree/gdhealth/utils/customvalidation/ListPattern.java)
+   - 프로그램을 추가할 때 날짜의 형식과 오늘 이후의 날짜인지, 날짜의 형식이 올바른지에 대해 검증해야 하는데 스프링이 제공하는 기본 validation API로는 검증에 한계가 있었습니다.<br>
+    → Custom Validator API를 만들어 List type에 대해 validation을 하여 선택한 프로그램 날짜들의 형식이 올바른지, 오늘 이후의 날짜인지 검증하였습니다. [📌 코드 확인](https://github.com/kwanho12/GDHealth/tree/develop/src/main/java/com/tree/gdhealth/utils/customvalidation)
     <br><br>
 
    - SocketHandler에서 채팅방 번호와 session에 대한 정보를 저장하는 roomSessionMap 변수는 여러 스레드에서 공유되는 자원이므로 여러 사용자의 웹 소켓 세션들이 동시에 읽고 쓰려고 할 때 동시성 문제가 발생할 수 있습니다.<br>
