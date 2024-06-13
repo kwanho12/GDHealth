@@ -65,7 +65,13 @@ public class EquipmentController {
 		List<Map<String, Object>> equipmentList = equipmentService.getEquipmentList(pagination.getBeginRow(),
 				pagination.getRowPerPage());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("equipmentList", equipmentList);
 
 		return "headoffice/fragment/equipmentList";
@@ -87,7 +93,13 @@ public class EquipmentController {
 		List<Map<String, Object>> searchList = equipmentService.getEquipmentList(pagination.getBeginRow(),
 				pagination.getRowPerPage(), pageDto.getType(), pageDto.getKeyword());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("equipmentList", searchList);
 		model.addAttribute("type", pageDto.getType());
 		model.addAttribute("keyword", pageDto.getKeyword());

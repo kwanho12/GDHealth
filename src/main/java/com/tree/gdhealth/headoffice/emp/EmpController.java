@@ -58,7 +58,13 @@ public class EmpController {
 
 		HeadofficePagination pagination = empService.getPagination(pageDto.getPageNum(), empService.getEmployeeCnt());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("empList", empService.getEmployeeList(pagination.getBeginRow(), pagination.getRowPerPage()));
 
 		return "headoffice/fragment/empList";
@@ -80,7 +86,13 @@ public class EmpController {
 		List<Map<String, Object>> searchList = empService.getEmployeeList(pagination.getBeginRow(),
 				pagination.getRowPerPage(), pageDto.getType(), pageDto.getKeyword());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("empList", searchList);
 		model.addAttribute("type", pageDto.getType());
 		model.addAttribute("keyword", pageDto.getKeyword());

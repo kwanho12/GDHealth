@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Answer {
-	private Integer answerNo;
+	private Long answerNo;
 	private int questionNo;
 	private int employeeNo;
 	private String employeeId;

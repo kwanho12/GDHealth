@@ -126,7 +126,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			try {
 				session.sendMessage(new TextMessage(jsonObject.toJSONString()));
 			} catch (IOException e) {
-				log.error("웹소켓 세션으로 메시지 전송 중 오류 발생 : {}", e.getMessage());
+				log.error("웹소켓 세션으로 메시지 전송 중 오류 발생", e);
 			}
 		});
 	}
@@ -143,7 +143,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		try {
 			obj = (JSONObject) parser.parse(jsonStr);
 		} catch (ParseException e) {
-			log.error("JSON parsing 중 오류 발생 : {}", e.getMessage());
+			log.error("JSON parsing 중 오류 발생", e);
 		}
 		return obj;
 	}

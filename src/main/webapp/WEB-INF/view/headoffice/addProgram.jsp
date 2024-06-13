@@ -329,142 +329,138 @@
 		return (new Set(array)).size !== array.length;
 	}
 
-	$(document)
-			.on(
-					'click',
-					'#insertBtn',
-					function() {
+	$(document).on('click','#insertBtn',
+		function() {
 
-						if ($('#programName').val().trim() == '') {
-							alert('프로그램 제목을 입력하세요.');
-							$('#programName').val('');
-							$('#programName').focus();
-							return;
-						}
+			if ($('#programName').val().trim() == '') {
+				alert('프로그램 제목을 입력하세요.');
+				$('#programName').val('');
+				$('#programName').focus();
+				return;
+			}
 
-						if ($('#programName').val().length < 3) {
-							alert('프로그램 제목은 최소 3자 이상 입력하여야 합니다.');
-							$('#programName').focus();
-							return;
-						}
+			if ($('#programName').val().length < 3) {
+				alert('프로그램 제목은 최소 3자 이상 입력하여야 합니다.');
+				$('#programName').focus();
+				return;
+			}
+	
+			if ($('#programDetail').val().trim() == '') {
+				alert('내용을 입력하세요.');
+				$('#programDetail').val('');
+				$('#programDetail').focus();
+				return;
+			}
 
-						if ($('#programDetail').val().trim() == '') {
-							alert('내용을 입력하세요.');
-							$('#programDetail').val('');
-							$('#programDetail').focus();
-							return;
-						}
+			if ($('#programDetail').val().length < 5) {
+				alert('내용은 최소 5자 이상 입력하여야 합니다.');
+				$('#programDetail').focus();
+				return;
+			}
 
-						if ($('#programDetail').val().length < 5) {
-							alert('내용은 최소 5자 이상 입력하여야 합니다.');
-							$('#programDetail').focus();
-							return;
-						}
+			if ($('#programMaxCustomer').val() == '') {
+				alert('수용 인원을 입력하세요.');
+				$('#programMaxCustomer').val('');
+				$('#programMaxCustomer').focus();
+				return;
+			}
 
-						if ($('#programMaxCustomer').val() == '') {
-							alert('수용 인원을 입력하세요.');
-							$('#programMaxCustomer').val('');
-							$('#programMaxCustomer').focus();
-							return;
-						}
+			if (Number($('#programMaxCustomer').val()) > 100
+					|| Number($('#programMaxCustomer').val()) < 1) {
+				alert('입력 가능한 수용 인원은 1~100명입니다.');
+				$('#programMaxCustomer').val('');
+				$('#programMaxCustomer').focus();
+				return;
+			}
 
-						if (Number($('#programMaxCustomer').val()) > 100
-								|| Number($('#programMaxCustomer').val()) < 1) {
-							alert('입력 가능한 수용 인원은 1~100명입니다.');
-							$('#programMaxCustomer').val('');
-							$('#programMaxCustomer').focus();
-							return;
-						}
+			if ($('#programFile').val().length == 0) {
+				alert('프로그램 사진을 첨부하세요.');
+				$('#programFile').focus();
+				return;
+			}
 
-						if ($('#programFile').val().length == 0) {
-							alert('프로그램 사진을 첨부하세요.');
-							$('#programFile').focus();
-							return;
-						}
+			var fileInput = $('#programFile')[0];
+			var file = fileInput.files[0];
 
-						var fileInput = $('#programFile')[0];
-						var file = fileInput.files[0];
+			if (!isImageFile(file)) {
+				alert('사진은 이미지 파일만 첨부 가능합니다.');
+				$('#programFile').focus();
+				return;
+			}
 
-						if (!isImageFile(file)) {
-							alert('사진은 이미지 파일만 첨부 가능합니다.');
-							$('#programFile').focus();
-							return;
-						}
+			if ($('#programDate1').val().length == 0) {
+				alert('개설 날짜를 입력하세요.');
+				$('#programDate1').focus();
+				return;
+			}
 
-						if ($('#programDate1').val().length == 0) {
-							alert('개설 날짜를 입력하세요.');
-							$('#programDate1').focus();
-							return;
-						}
+			let isFormatValid = true;
 
-						let isFormatValid = true;
+			// id가 dateArea인 div태그 내의 모든 input 태그에 대해 날짜 형식 검증
+			$('#dateArea input[type="text"]').each(function() {
+				if (!validateDateFormat($(this))) {
+					isFormatValid = false;
+					return;
+				}
+			});
 
-						// id가 dateArea인 div태그 내의 모든 input 태그에 대해 날짜 형식 검증
-						$('#dateArea input[type="text"]').each(function() {
-							if (!validateDateFormat($(this))) {
-								isFormatValid = false;
+			if (!isFormatValid) {
+				alert('형식이 올바르지 않은 개설 날짜 입력창이 있습니다. 날짜를 선택하거나 "-"를 눌러 입력창을 삭제하세요.');
+				return;
+			}
+
+			let isFutureDateValid = true;
+
+			// id가 dateArea인 div태그 내의 모든 input 태그에 대해 오늘 날짜 혹은 그 이후인지 검증
+			$('#dateArea input[type="text"]').each(function() {
+				if (!validateFuture($(this).val())) {
+					isFutureDateValid = false;
+					return;
+				}
+			});
+
+			if (!isFutureDateValid) {
+				alert('날짜는 오늘 혹은 그 이후로만 설정 가능합니다.');
+				return;
+			}
+
+			// 추가하는 개설날짜 중에 중복된 개설날짜가 있는지 확인하는 함수
+			let values = [];
+			$('#dateArea input[type="text"]').each(function() {
+				values.push($(this).val());
+			});
+
+			console.log('values : ' + values);
+
+			if (hasDuplicates(values)) {
+				alert('개설 날짜가 서로 동일하지 않게 입력하세요.');
+				return;
+			}
+
+			// 선택한 개설 날짜가 DB에 이미 존재하는지 확인
+			$.ajax({
+						url : '${pageContext.request.contextPath}/headoffice/program/checkDates',
+						method : 'post',
+						data : JSON.stringify(values),
+						dataType : 'json', // 서버에서 받을 데이터의 타입 
+						contentType : 'application/json', // 서버로 보내는 데이터의 타입
+						success : function(result) {
+							if (result == true) {
+								alert('선택한 개설 날짜에 이미 다른 프로그램이 등록되어 있습니다. 날짜를 변경해주세요.')
 								return;
+							} else {
+								alert('추가 완료되었습니다.');
+								$('#insertForm').submit();
 							}
-						});
 
-						if (!isFormatValid) {
-							alert('형식이 올바르지 않은 개설 날짜 입력창이 있습니다. 날짜를 선택하거나 "-"를 눌러 입력창을 삭제하세요.');
-							return;
+						},
+						error : function(err) {
+							console.log('datesCheck 오류');
+							console.log(err);
 						}
-
-						let isFutureDateValid = true;
-
-						// id가 dateArea인 div태그 내의 모든 input 태그에 대해 오늘 날짜 혹은 그 이후인지 검증
-						$('#dateArea input[type="text"]').each(function() {
-							if (!validateFuture($(this).val())) {
-								isFutureDateValid = false;
-								return;
-							}
-						});
-
-						if (!isFutureDateValid) {
-							alert('날짜는 오늘 혹은 그 이후로만 설정 가능합니다.');
-							return;
-						}
-
-						// 추가하는 개설날짜 중에 중복된 개설날짜가 있는지 확인하는 함수
-						let values = [];
-						$('#dateArea input[type="text"]').each(function() {
-							values.push($(this).val());
-						});
-
-						console.log('values : ' + values);
-
-						if (hasDuplicates(values)) {
-							alert('개설 날짜가 서로 동일하지 않게 입력하세요.');
-							return;
-						}
-
-						// 선택한 개설 날짜가 DB에 이미 존재하는지 확인
-						$
-								.ajax({
-									url : '${pageContext.request.contextPath}/headoffice/program/checkDates',
-									method : 'post',
-									data : JSON.stringify(values),
-									dataType : 'json', // 서버에서 받을 데이터의 타입 
-									contentType : 'application/json', // 서버로 보내는 데이터의 타입
-									success : function(result) {
-										if (result == true) {
-											alert('선택한 개설 날짜에 이미 다른 프로그램이 등록되어 있습니다. 날짜를 변경해주세요.')
-											return;
-										} else {
-											alert('추가 완료되었습니다.');
-											$('#insertForm').submit();
-										}
-
-									},
-									error : function(err) {
-										console.log('datesCheck 오류');
-										console.log(err);
-									}
-								});
-
 					});
+
+			});	
 </script>
 
 </html>

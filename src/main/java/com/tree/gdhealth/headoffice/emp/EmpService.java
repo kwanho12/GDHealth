@@ -134,19 +134,21 @@ public class EmpService {
 	 */
 	public void addEmployee(AddEmpDto addEmpDto, String path) {
 
-		Employee employee = new Employee();
-		employee.setBranchNo(addEmpDto.getBranchNo());
-		employee.setEmployeeId(addEmpDto.getEmployeeId());
-		employee.setEmployeePw(addEmpDto.getEmployeePw());
-		employee.setEmployeePosition(addEmpDto.getEmployeePosition());
+		Employee employee = Employee.builder()
+								.branchNo(addEmpDto.getBranchNo())
+								.employeeId(addEmpDto.getEmployeeId())
+								.employeePw(addEmpDto.getEmployeePw())
+								.employeePosition(addEmpDto.getEmployeePosition())
+								.build();
 		empMapper.insertEmployee(employee);
 
-		EmployeeDetail employeeDetail = new EmployeeDetail();
-		employeeDetail.setEmployeeNo(employee.getEmployeeNo());
-		employeeDetail.setEmployeeName(addEmpDto.getEmployeeName());
-		employeeDetail.setEmployeePhone(addEmpDto.getEmployeePhone());
-		employeeDetail.setEmployeeEmail(addEmpDto.getEmployeeEmail());
-		employeeDetail.setEmployeeGender(addEmpDto.getEmployeeGender());
+		EmployeeDetail employeeDetail = EmployeeDetail.builder()
+											.employeeNo(employee.getEmployeeNo())
+											.employeeName(addEmpDto.getEmployeeName())
+											.employeePhone(addEmpDto.getEmployeePhone())
+											.employeeEmail(addEmpDto.getEmployeeEmail())
+											.employeeGender(addEmpDto.getEmployeeGender())
+											.build();
 		empMapper.insertEmployeeDetail(employeeDetail);
 
 		MultipartFile employeeFile = addEmpDto.getEmployeeFile();
@@ -162,17 +164,21 @@ public class EmpService {
 	 */
 	public void addEmpImg(MultipartFile employeeFile, String path, int employeeNo) {
 
-		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
-		EmployeeImg img = new EmployeeImg();
-		img.setEmployeeNo(employeeNo);
-		img.setEmployeeImgOriginName(employeeFile.getOriginalFilename());
-		img.setEmployeeImgSize(employeeFile.getSize());
-		img.setEmployeeImgType(employeeFile.getContentType());
-		img.setEmployeeImgFilename(imgSave.getFilename(employeeFile));
-
+		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
+		
+		String originalName = employeeFile.getOriginalFilename();
+		String fileName = imgSaver.getFileName(originalName);
+		
+		EmployeeImg img = EmployeeImg.builder()
+							.employeeNo(employeeNo)
+							.employeeImgOriginName(originalName)
+							.employeeImgSize(employeeFile.getSize())
+							.employeeImgType(employeeFile.getContentType())
+							.employeeImgFilename(fileName)
+							.build();
 		empMapper.insertEmployeeImg(img);
 
-		imgSave.saveFile(employeeFile, path);
+		imgSaver.saveFile(employeeFile, path, fileName);
 	}
 
 	/**
@@ -184,10 +190,14 @@ public class EmpService {
 	 */
 	public HeadofficePagination getPagination(int pageNum, int employeeCnt) {
 
-		HeadofficePagination pagination = HeadofficePagination.builder().numberOfPaginationToShow(10).rowPerPage(8)
-				.currentPageNum(pageNum).rowCnt(employeeCnt).build();
+		HeadofficePagination pagination = HeadofficePagination.builder()
+											.numberOfPaginationToShow(10)
+											.rowPerPage(8)
+											.currentPageNum(pageNum)
+											.rowCnt(employeeCnt)
+											.build();
 		pagination.calculateProperties();
-
+		
 		return pagination;
 	}
 }

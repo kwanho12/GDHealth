@@ -67,7 +67,13 @@ public class ProgramController {
 		List<Map<String, Object>> programList = programService.getProgramList(pagination.getBeginRow(),
 				pagination.getRowPerPage());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("programList", programList);
 
 		return "headoffice/fragment/programList";
@@ -89,7 +95,13 @@ public class ProgramController {
 		List<Map<String, Object>> searchList = programService.getProgramList(pagination.getBeginRow(),
 				pagination.getRowPerPage(), pageDto.getType(), pageDto.getKeyword());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("programList", searchList);
 		model.addAttribute("type", pageDto.getType());
 		model.addAttribute("keyword", pageDto.getKeyword());
@@ -146,7 +158,7 @@ public class ProgramController {
 	@PostMapping("/add")
 	public String addProgram(@Validated @ModelAttribute AddProgramDto addProgramDto, BindingResult bindingResult,
 			HttpSession session, @SessionAttribute(name = "loginEmployee") LoginEmployee empInfo) {
-
+		
 		if (bindingResult.hasErrors()) {
 			return "headoffice/addProgram";
 		}
@@ -246,4 +258,5 @@ public class ProgramController {
 		programService.modifyActivation(programNo);
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
 	}
+	
 }

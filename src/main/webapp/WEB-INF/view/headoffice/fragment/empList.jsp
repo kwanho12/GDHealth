@@ -18,7 +18,7 @@
 			                     </div>
 			                     <div class="student-dtl">
 			                         <h2>
-			                         <a href="${pageContext.request.contextPath}/headoffice/emp/${m.empId}">
+			                         <a href="${pageContext.request.contextPath}/headoffice/emp/${m.empId}">			                         	
 			                         	${m.empName}
 			                         </a>		                         
 			                         </h2>

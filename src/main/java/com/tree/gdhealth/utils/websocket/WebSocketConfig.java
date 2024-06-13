@@ -28,6 +28,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(webSocketHandler, "/chatting/{roomNo}")
 				.addInterceptors(new HttpSessionHandshakeInterceptor())
-				.setAllowedOrigins("http://localhost:80", "http://52.78.98.70");
+				.setAllowedOrigins("http://localhost:80");
 	}
 }

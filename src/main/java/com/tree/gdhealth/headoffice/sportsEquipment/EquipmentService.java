@@ -138,15 +138,31 @@ public class EquipmentService {
 			addSportsEquipmentDto.setNote("");
 		}
 
-		SportsEquipment sportsEquipment = new SportsEquipment();
-		sportsEquipment.setEmployeeNo(addSportsEquipmentDto.getEmployeeNo());
-		sportsEquipment.setItemName(addSportsEquipmentDto.getItemName());
-		sportsEquipment.setItemPrice(addSportsEquipmentDto.getItemPrice());
-		sportsEquipment.setNote(addSportsEquipmentDto.getNote());
+		SportsEquipment sportsEquipment = SportsEquipment.builder()
+											.employeeNo(addSportsEquipmentDto.getEmployeeNo())
+											.itemName(addSportsEquipmentDto.getItemName())
+											.itemPrice(addSportsEquipmentDto.getItemPrice())
+											.note(addSportsEquipmentDto.getNote())
+											.build();
 		equipmentMapper.insertEquipment(sportsEquipment);
 
 		MultipartFile equipmentFile = addSportsEquipmentDto.getEquipmentFile();
-		addOrModifyEquipmentImg(equipmentFile, path, sportsEquipment.getSportsEquipmentNo(), true);
+				
+		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
+		
+		String originalName = equipmentFile.getOriginalFilename();
+		String fileName = imgSaver.getFileName(originalName);
+
+		SportsEquipmentImg img = SportsEquipmentImg.builder()
+									.sportsEquipmentNo(sportsEquipment.getSportsEquipmentNo())
+									.sportsEquipmentImgOriginName(originalName)
+									.sportsEquipmentImgSize(equipmentFile.getSize())
+									.sportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()))
+									.sportsEquipmentImgFileName(fileName)
+									.build();
+		equipmentMapper.insertEquipmentImg(img);
+
+		imgSaver.saveFile(equipmentFile, path, fileName);
 	}
 
 	/**
@@ -158,45 +174,37 @@ public class EquipmentService {
 	 */
 	public void modifyEquipment(UpdateSportsEquipmentDto updateSportsEquipmentDto, String newPath, String oldPath) {
 
-		SportsEquipment sportsEquipment = new SportsEquipment();
-		sportsEquipment.setItemName(updateSportsEquipmentDto.getItemName());
-		sportsEquipment.setItemPrice(updateSportsEquipmentDto.getItemPrice());
-		sportsEquipment.setNote(updateSportsEquipmentDto.getNote());
-		sportsEquipment.setSportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo());
+		SportsEquipment sportsEquipment = SportsEquipment.builder()
+											.itemName(updateSportsEquipmentDto.getItemName())
+											.itemPrice(updateSportsEquipmentDto.getItemPrice())
+											.note(updateSportsEquipmentDto.getNote())
+											.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
+											.build();
 		equipmentMapper.updateEquipment(sportsEquipment);
 
 		MultipartFile equipmentFile = updateSportsEquipmentDto.getEquipmentFile();
 		if (!equipmentFile.isEmpty()) {
+			
 			new File(oldPath).delete();
-			addOrModifyEquipmentImg(equipmentFile, newPath, updateSportsEquipmentDto.getSportsEquipmentNo(), false);
+					
+			HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
+			
+			String originalName = equipmentFile.getOriginalFilename();
+			String fileName = imgSaver.getFileName(originalName);
+
+			SportsEquipmentImg img = SportsEquipmentImg.builder()
+										.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
+										.sportsEquipmentImgOriginName(originalName)
+										.sportsEquipmentImgSize(equipmentFile.getSize())
+										.sportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()))
+										.sportsEquipmentImgFileName(fileName)
+										.build();
+			equipmentMapper.updateEquipmentImg(img);
+
+			imgSaver.saveFile(equipmentFile, newPath, fileName);
 		}
 	}
-
-	/**
-	 * 물품 이미지 파일을 데이터베이스에 삽입하거나 수정합니다. 주어진 물품 번호를 기준으로 이미지 정보를 데이터베이스에 삽입하거나 수정 후,
-	 * 해당 이미지 파일을 지정된 경로에 저장합니다.
-	 * 
-	 * @param equipmentFile 물품 이미지 파일을 나타내는 MultipartFile 객체
-	 * @param path          이미지 파일을 저장할 경로
-	 * @param equipmentNo   이미지가 속하는 물품의 번호
-	 * @param isInsert      이미지 정보를 삽입할지 수정할지 여부를 나타내는 boolean 값
-	 */
-	public void addOrModifyEquipmentImg(MultipartFile equipmentFile, String path, int equipmentNo, boolean isInsert) {
-
-		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
-
-		SportsEquipmentImg img = new SportsEquipmentImg();
-		img.setSportsEquipmentNo(equipmentNo);
-		img.setSportsEquipmentImgOriginName(equipmentFile.getOriginalFilename());
-		img.setSportsEquipmentImgSize(equipmentFile.getSize());
-		img.setSportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()));
-		img.setSportsEquipmentImgFileName(imgSave.getFilename(equipmentFile));
-
-		int result = isInsert ? equipmentMapper.insertEquipmentImg(img) : equipmentMapper.updateEquipmentImg(img);
-
-		imgSave.saveFile(equipmentFile, path);
-	}
-
+	
 	/**
 	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
 	 *
@@ -215,4 +223,5 @@ public class EquipmentService {
 
 		return pagination;
 	}
+
 }

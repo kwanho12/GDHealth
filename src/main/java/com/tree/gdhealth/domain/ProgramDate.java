@@ -1,8 +1,12 @@
 package com.tree.gdhealth.domain;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
+@Builder
+@AllArgsConstructor
 public class ProgramDate {
 	private int programDateNo;
 	private int programNo;

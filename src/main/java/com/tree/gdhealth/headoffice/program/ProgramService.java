@@ -107,9 +107,10 @@ public class ProgramService {
 	 */
 	@Transactional(readOnly = true)
 	public Map<String, Object> getProgramOne(int programNo, String date) {
-		ProgramDate programDate = new ProgramDate();
-		programDate.setProgramNo(programNo);
-		programDate.setProgramDate(date);
+		ProgramDate programDate = ProgramDate.builder()
+									.programNo(programNo)
+									.programDate(date)
+									.build();
 		return programMapper.selectProgramOne(programDate);
 	}
 
@@ -146,28 +147,29 @@ public class ProgramService {
 	 * @throws DatesDuplicatedException 중복된 프로그램 날짜가 있는 경우 발생
 	 */
 	public void addProgram(AddProgramDto addProgramDto, String path) {
-
-		Program program = new Program();
-		program.setEmployeeNo(addProgramDto.getEmployeeNo());
-		program.setProgramName(addProgramDto.getProgramName());
-		program.setProgramDetail(addProgramDto.getProgramDetail());
-		program.setProgramMaxCustomer(addProgramDto.getProgramMaxCustomer());
+		
+		Program program = Program.builder()
+							.employeeNo(addProgramDto.getEmployeeNo())
+							.programName(addProgramDto.getProgramName())
+							.programDetail(addProgramDto.getProgramDetail())
+							.programMaxCustomer(addProgramDto.getProgramMaxCustomer())
+							.build();
 		programMapper.insertProgram(program);
 
 		List<String> dates = addProgramDto.getProgramDates();
 		Set<String> datesSet = new HashSet<>(dates);
 		if (dates.size() != datesSet.size()) {
-			throw new DatesDuplicatedException();
+			throw new DatesDuplicatedException("중복된 프로그램 날짜가 존재합니다.");
 		}
 
 		List<ProgramDate> dateList = new ArrayList<>();
 		for (String date : dates) {
-			ProgramDate dateOne = new ProgramDate();
-			dateOne.setProgramNo(program.getProgramNo());
-			dateOne.setProgramDate(date);
+			ProgramDate dateOne = ProgramDate.builder()
+									.programNo(program.getProgramNo())
+									.programDate(date)
+									.build();
 			dateList.add(dateOne);
 		}
-
 		programMapper.insertProgramDates(dateList);
 
 		addProgramImg(addProgramDto.getProgramFile(), path, program.getProgramNo());
@@ -182,21 +184,22 @@ public class ProgramService {
 	 */
 	public void modifyProgram(UpdateProgramDto updateProgramDto, String newPath, String oldPath) {
 
-		Program program = new Program();
-		program.setProgramName(updateProgramDto.getProgramName());
-		program.setProgramDetail(updateProgramDto.getProgramDetail());
-		program.setProgramMaxCustomer(updateProgramDto.getProgramMaxCustomer());
-		program.setProgramNo(updateProgramDto.getProgramNo());
+		Program program = Program.builder()
+							.programName(updateProgramDto.getProgramName())
+							.programDetail(updateProgramDto.getProgramDetail())
+							.programMaxCustomer(updateProgramDto.getProgramMaxCustomer())
+							.programNo(updateProgramDto.getProgramNo())
+							.build();
 		programMapper.updateProgram(program);
 
-		ProgramDate programDate = new ProgramDate();
-		programDate.setProgramDate(updateProgramDto.getProgramDate());
-		programDate.setProgramNo(updateProgramDto.getProgramNo());
-		programDate.setOriginDate(updateProgramDto.getOriginDate());
+		ProgramDate programDate = ProgramDate.builder()
+									.programDate(updateProgramDto.getProgramDate())
+									.programNo(updateProgramDto.getProgramNo())
+									.originDate(updateProgramDto.getOriginDate())
+									.build();
 		programMapper.updateProgramDate(programDate);
 
 		MultipartFile programFile = updateProgramDto.getProgramFile();
-
 		if (!programFile.isEmpty()) {
 			new File(oldPath).delete();
 			modifyProgramImg(programFile, newPath, program.getProgramNo());
@@ -222,53 +225,7 @@ public class ProgramService {
 	public int modifyActivation(int programNo) {
 		return programMapper.updateToActiveProgram(programNo);
 	}
-
-	/**
-	 * 프로그램에 이미지 파일을 추가합니다.
-	 * 
-	 * @param programFile 추가할 이미지 파일
-	 * @param path        이미지 파일을 저장할 경로
-	 * @param programNo   이미지가 속한 프로그램의 번호
-	 */
-	public void addProgramImg(MultipartFile programFile, String path, int programNo) {
-		addOrModifyProgramImg(programFile, path, programNo, true);
-	}
-
-	/**
-	 * 프로그램의 이미지 파일을 수정합니다.
-	 * 
-	 * @param programFile 수정할 새 이미지 파일
-	 * @param path        수정된 이미지 파일을 저장할 경로
-	 * @param programNo   이미지가 속한 프로그램의 번호
-	 */
-	public void modifyProgramImg(MultipartFile programFile, String path, int programNo) {
-		addOrModifyProgramImg(programFile, path, programNo, false);
-	}
-
-	/**
-	 * 프로그램 이미지 파일을 데이터베이스에 삽입하거나 수정합니다. 주어진 프로그램 번호를 기준으로 이미지 정보를 데이터베이스에 삽입하거나 수정
-	 * 후, 해당 이미지 파일을 지정된 경로에 저장합니다.
-	 *
-	 * @param programFile 프로그램 이미지 파일을 나타내는 MultipartFile 객체
-	 * @param path        이미지 파일을 저장할 경로
-	 * @param programNo   이미지가 속하는 프로그램의 번호
-	 * @param isInsert    이미지 정보를 삽입할지 수정할지 여부를 나타내는 boolean 값
-	 */
-	public void addOrModifyProgramImg(MultipartFile programFile, String path, int programNo, boolean isAdd) {
-		
-		HeadofficeImageSaver imgSave = new HeadofficeImageSaver();
-		ProgramImg img = new ProgramImg();
-		img.setProgramNo(programNo);
-		img.setOriginName(programFile.getOriginalFilename());
-		img.setProgramImgSize(programFile.getSize());
-		img.setProgramImgType(programFile.getContentType());
-		img.setFilename(imgSave.getFilename(programFile));
-
-		int result = isAdd ? programMapper.insertProgramImg(img) : programMapper.updateProgramImg(img);
-
-		imgSave.saveFile(programFile, path);
-	}
-
+	
 	/**
 	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
 	 *
@@ -279,14 +236,65 @@ public class ProgramService {
 	public HeadofficePagination getPagination(int pageNum, int programCnt) {
 
 		HeadofficePagination pagination = HeadofficePagination.builder()
-			.numberOfPaginationToShow(10)
-			.rowPerPage(8)
-			.currentPageNum(pageNum)
-			.rowCnt(programCnt)
-			.build();
+											.numberOfPaginationToShow(10)
+											.rowPerPage(8)
+											.currentPageNum(pageNum)
+											.rowCnt(programCnt)
+											.build();
 		pagination.calculateProperties();
 
 		return pagination;
 	}
 
+	/**
+	 * 프로그램에 이미지 파일을 추가합니다.
+	 * 
+	 * @param programFile 추가할 이미지 파일
+	 * @param path        이미지 파일을 저장할 경로
+	 * @param programNo   이미지가 속한 프로그램의 번호
+	 */
+	private void addProgramImg(MultipartFile programFile, String path, int programNo) {
+		
+		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
+		
+		String originalName = programFile.getOriginalFilename();
+		String fileName = imgSaver.getFileName(originalName);
+		
+		ProgramImg img = ProgramImg.builder()
+							.programNo(programNo)
+							.originName(originalName)
+							.programImgSize(programFile.getSize())
+							.programImgType(programFile.getContentType())
+							.filename(fileName)
+							.build();
+		programMapper.insertProgramImg(img);
+		
+		imgSaver.saveFile(programFile, path, fileName);
+	}
+
+	/**
+	 * 프로그램의 이미지 파일을 수정합니다.
+	 * 
+	 * @param programFile 수정할 새 이미지 파일
+	 * @param path        수정된 이미지 파일을 저장할 경로
+	 * @param programNo   이미지가 속한 프로그램의 번호
+	 */
+	private void modifyProgramImg(MultipartFile programFile, String path, int programNo) {
+		
+		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
+		
+		String originalName = programFile.getOriginalFilename();
+		String fileName = imgSaver.getFileName(originalName);
+		
+		ProgramImg img = ProgramImg.builder()
+							.programNo(programNo)
+							.originName(originalName)
+							.programImgSize(programFile.getSize())
+							.programImgType(programFile.getContentType())
+							.filename(fileName)
+							.build();
+		programMapper.updateProgramImg(img);
+
+		imgSaver.saveFile(programFile, path, fileName);
+	}
 }

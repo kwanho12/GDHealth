@@ -3,15 +3,13 @@ package com.tree.gdhealth.domain;
 import com.tree.gdhealth.utils.enumtype.ImageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class SportsEquipmentImg {
 
 	private int sportsEquipmentImgNo;

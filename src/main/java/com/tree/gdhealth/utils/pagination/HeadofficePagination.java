@@ -1,12 +1,8 @@
 package com.tree.gdhealth.utils.pagination;
 
-import org.springframework.ui.Model;
-
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * 본사 페이지에서 페이지네이션 기능을 제공하는 유틸리티 클래스
@@ -16,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HeadofficePagination {
 
 	/**
@@ -97,23 +92,6 @@ public class HeadofficePagination {
 		next = endPageNum * rowPerPage >= rowCnt ? false : true;
 
 		beginRow = (currentPageNum - 1) * rowPerPage;
-	}
-
-	/**
-	 * 페이지네이션의 공통 속성을 Model 객체에 추가합니다.
-	 *
-	 * @param pagination  페이지네이션 정보를 담고 있는 HeadofficePagination 객체
-	 */
-	public void addModelAttributes(Model model, HeadofficePagination pagination) {
-		
-		model.addAttribute("lastPage", pagination.getLastPageNum());
-		model.addAttribute("currentPage", pagination.getCurrentPageNum());
-
-		model.addAttribute("startPageNum", pagination.getStartPageNum());
-		model.addAttribute("endPageNum", pagination.getEndPageNum());
-
-		model.addAttribute("prev", pagination.isPrev());
-		model.addAttribute("next", pagination.isNext());
 	}
 
 }

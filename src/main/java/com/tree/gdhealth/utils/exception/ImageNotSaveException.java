@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import lombok.NoArgsConstructor;
 
 /**
- * 프로그램을 찾을 수 없는 경우에 발생하는 예외 클래스
+ * 이미지를 저장하지 못할 경우에 발생하는 예외 클래스
  * 
  * @author 진관호
  */
-@NoArgsConstructor
 @SuppressWarnings("serial")
+@NoArgsConstructor
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class ProgramNotFoundException extends RuntimeException{
-	public ProgramNotFoundException(String message){
+public class ImageNotSaveException extends RuntimeException{
+	public ImageNotSaveException(String message) {
 		super(message);
 	}
 }

@@ -51,7 +51,13 @@ public class CustomerController {
 		List<Map<String, Object>> customerList = customerService.getCustomerList(pagination.getBeginRow(),
 				pagination.getRowPerPage());
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("customerList", customerList);
 
 		return "headoffice/fragment/customerList";
@@ -76,7 +82,13 @@ public class CustomerController {
 		List<Map<String, Object>> searchList = customerService.getCustomerList(pagination.getBeginRow(),
 				pagination.getRowPerPage(), type, keyword);
 
-		pagination.addModelAttributes(model, pagination);
+		model.addAttribute("lastPage", pagination.getLastPageNum());
+		model.addAttribute("currentPage", pagination.getCurrentPageNum());
+		model.addAttribute("startPageNum", pagination.getStartPageNum());
+		model.addAttribute("endPageNum", pagination.getEndPageNum());
+		model.addAttribute("prev", pagination.isPrev());
+		model.addAttribute("next", pagination.isNext());
+		
 		model.addAttribute("customerList", searchList);
 		model.addAttribute("type", type);
 		model.addAttribute("keyword", keyword);

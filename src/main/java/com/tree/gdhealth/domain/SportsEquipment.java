@@ -2,15 +2,13 @@ package com.tree.gdhealth.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class SportsEquipment {
 	
     private int sportsEquipmentNo;
