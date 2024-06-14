@@ -1,4 +1,4 @@
-package com.tree.gdhealth.headoffice.dto;
+package com.tree.gdhealth.dto;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 public class AddProgramDto {
 	
-	private int employeeNo;
+	private Integer employeeNo;
 	
 	@Size(min = 3, max = 40, message = "프로그램 제목은 3~40자로 입력 가능합니다.")
 	private String programName;

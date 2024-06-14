@@ -1,7 +1,6 @@
 package com.tree.gdhealth.headoffice.sportsEquipment;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,8 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tree.gdhealth.domain.SportsEquipment;
 import com.tree.gdhealth.domain.SportsEquipmentImg;
-import com.tree.gdhealth.headoffice.dto.AddSportsEquipmentDto;
-import com.tree.gdhealth.headoffice.dto.UpdateSportsEquipmentDto;
+import com.tree.gdhealth.dto.AddSportsEquipmentServiceDto;
+import com.tree.gdhealth.dto.PaginationDto;
+import com.tree.gdhealth.dto.UpdateSportsEquipmentServiceDto;
 import com.tree.gdhealth.utils.enumtype.ImageType;
 import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -37,13 +37,11 @@ public class EquipmentService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("beginRow", beginRow);
-		map.put("rowPerPage", rowPerPage);
-
-		return equipmentMapper.selectEquipmentList(map);
+	public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage) {	
+		PaginationDto paginationDto = new PaginationDto();
+		paginationDto.setBeginRow(beginRow);
+		paginationDto.setRowPerPage(rowPerPage);
+		return equipmentMapper.selectEquipmentList(paginationDto);
 	}
 
 	/**
@@ -67,14 +65,12 @@ public class EquipmentService {
 	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage, String type, String keyword) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("beginRow", beginRow);
-		map.put("rowPerPage", rowPerPage);
-		map.put("type", type);
-		map.put("keyword", keyword);
-
-		return equipmentMapper.selectEquipmentList(map);
+		PaginationDto paginationDto = new PaginationDto();
+		paginationDto.setBeginRow(beginRow);
+		paginationDto.setRowPerPage(rowPerPage);
+		paginationDto.setType(type);
+		paginationDto.setKeyword(keyword);
+		return equipmentMapper.selectEquipmentList(paginationDto);
 	}
 
 	/**
@@ -86,12 +82,7 @@ public class EquipmentService {
 	 */
 	@Transactional(readOnly = true)
 	public int getEquipmentCnt(String type, String keyword) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("type", type);
-		map.put("keyword", keyword);
-
-		return equipmentMapper.selectSearchCnt(map);
+		return equipmentMapper.selectSearchCnt(type, keyword);
 	}
 
 	/**
@@ -132,21 +123,21 @@ public class EquipmentService {
 	 * @param path                  물품 이미지 파일을 저장할 경로
 	 * @apiNote 물품의 메모(note)가 null인 경우 빈 문자열로 설정하여 데이터베이스에 저장합니다.
 	 */
-	public void addEquipment(AddSportsEquipmentDto addSportsEquipmentDto, String path) {
+	public void addEquipment(AddSportsEquipmentServiceDto addSportsEquipmenServicetDto, String path) {
 
-		if (addSportsEquipmentDto.getNote() == null) {
-			addSportsEquipmentDto.setNote("");
+		if (addSportsEquipmenServicetDto.getNote() == null) {
+			addSportsEquipmenServicetDto.setNote("");
 		}
 
 		SportsEquipment sportsEquipment = SportsEquipment.builder()
-											.employeeNo(addSportsEquipmentDto.getEmployeeNo())
-											.itemName(addSportsEquipmentDto.getItemName())
-											.itemPrice(addSportsEquipmentDto.getItemPrice())
-											.note(addSportsEquipmentDto.getNote())
+											.employeeNo(addSportsEquipmenServicetDto.getEmployeeNo())
+											.itemName(addSportsEquipmenServicetDto.getItemName())
+											.itemPrice(addSportsEquipmenServicetDto.getItemPrice())
+											.note(addSportsEquipmenServicetDto.getNote())
 											.build();
 		equipmentMapper.insertEquipment(sportsEquipment);
 
-		MultipartFile equipmentFile = addSportsEquipmentDto.getEquipmentFile();
+		MultipartFile equipmentFile = addSportsEquipmenServicetDto.getEquipmentFile();
 				
 		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
 		
@@ -172,17 +163,17 @@ public class EquipmentService {
 	 * @param newPath               새로운 이미지 파일을 저장할 경로
 	 * @param oldPath               기존 이미지 파일의 경로
 	 */
-	public void modifyEquipment(UpdateSportsEquipmentDto updateSportsEquipmentDto, String newPath, String oldPath) {
+	public void modifyEquipment(UpdateSportsEquipmentServiceDto updateSportsEquipmentServiceDto, String newPath, String oldPath) {
 
 		SportsEquipment sportsEquipment = SportsEquipment.builder()
-											.itemName(updateSportsEquipmentDto.getItemName())
-											.itemPrice(updateSportsEquipmentDto.getItemPrice())
-											.note(updateSportsEquipmentDto.getNote())
-											.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
+											.itemName(updateSportsEquipmentServiceDto.getItemName())
+											.itemPrice(updateSportsEquipmentServiceDto.getItemPrice())
+											.note(updateSportsEquipmentServiceDto.getNote())
+											.sportsEquipmentNo(updateSportsEquipmentServiceDto.getSportsEquipmentNo())
 											.build();
 		equipmentMapper.updateEquipment(sportsEquipment);
 
-		MultipartFile equipmentFile = updateSportsEquipmentDto.getEquipmentFile();
+		MultipartFile equipmentFile = updateSportsEquipmentServiceDto.getEquipmentFile();
 		if (!equipmentFile.isEmpty()) {
 			
 			new File(oldPath).delete();
@@ -193,7 +184,7 @@ public class EquipmentService {
 			String fileName = imgSaver.getFileName(originalName);
 
 			SportsEquipmentImg img = SportsEquipmentImg.builder()
-										.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
+										.sportsEquipmentNo(updateSportsEquipmentServiceDto.getSportsEquipmentNo())
 										.sportsEquipmentImgOriginName(originalName)
 										.sportsEquipmentImgSize(equipmentFile.getSize())
 										.sportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()))

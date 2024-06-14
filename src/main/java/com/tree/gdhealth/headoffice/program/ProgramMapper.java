@@ -1,10 +1,12 @@
 package com.tree.gdhealth.headoffice.program;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.tree.gdhealth.domain.Program;
 import com.tree.gdhealth.domain.ProgramDate;
 import com.tree.gdhealth.domain.ProgramImg;
+import com.tree.gdhealth.dto.PaginationDto;
 
 import java.util.List;
 import java.util.Map;
@@ -15,11 +17,11 @@ import java.util.Map;
 @Mapper
 public interface ProgramMapper {
 
-	List<Map<String, Object>> selectProgramList(Map<String, Object> map);
+	List<Map<String, Object>> selectProgramList(PaginationDto paginationDto);
 
 	int selectProgramCnt();
 
-	int selectSearchCnt(Map<String, Object> map);
+	int selectSearchCnt(@Param("type") String type, @Param("keyword") String keyword);
 
 	boolean selectResultOfDatesCheck(List<String> dateList);
 

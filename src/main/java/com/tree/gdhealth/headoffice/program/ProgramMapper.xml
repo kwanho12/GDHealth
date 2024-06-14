@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.tree.gdhealth.headoffice.program.ProgramMapper">
 
-	<select id="selectProgramList" parameterType="Map" resultType="Map">
+	<select id="selectProgramList" resultType="Map">
 		SELECT
 		ed.employee_name empName,
 		p.program_no programNo,

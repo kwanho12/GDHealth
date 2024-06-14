@@ -1,11 +1,11 @@
-package com.tree.gdhealth.domain;
+package com.tree.gdhealth.dto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@Builder
-public class ChatRoom {
+@Setter
+public class ChatRoomServiceDto {
 	private int chatRoomNo;
 	private int customerNo;
 	private String createdate;

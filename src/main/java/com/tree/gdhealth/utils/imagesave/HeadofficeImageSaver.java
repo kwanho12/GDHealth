@@ -15,9 +15,16 @@ import com.tree.gdhealth.utils.exception.ImageNotSaveException;
  * @author 진관호
  */
 public class HeadofficeImageSaver {
+	
+	private static final String PNG = ".png";
+	private static final String JPG = ".jpg";
+	private static final String JPEG = ".jpeg";
+	private static final String GIF = ".gif";
+	private static final String WEBP = ".webp";
+	private static final String TIF = ".tif";
 
 	/**
-	 * {@link MultipartFile} 객체로부터 고유한 파일 이름을 생성하여 리턴합니다.
+	 * 원본 이미지명으로부터 확장자명을 추출하여 고유한 이미지명을 리턴합니다.
 	 * 
 	 * @param originalName 원본 이미지명
 	 * @return 고유한 파일 이름
@@ -28,8 +35,8 @@ public class HeadofficeImageSaver {
 		String uniqueName = UUID.randomUUID().toString();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
 
-		if (!(extension.equals(".png") || extension.equals(".jpg") || extension.equals(".jpeg")
-				|| extension.equals(".gif") || extension.equals(".webp"))) {
+		if (!(extension.equals(PNG) || extension.equals(JPG) || extension.equals(JPEG)
+				|| extension.equals(GIF) || extension.equals(WEBP) || extension.equals(TIF))) {
 			throw new ExtensionNotMatchException("이미지 형식의 확장자가 아닙니다.");
 		}
 

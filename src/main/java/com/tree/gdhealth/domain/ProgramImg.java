@@ -1,15 +1,13 @@
 package com.tree.gdhealth.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class ProgramImg {
-	private int programImgNo;
-	private int programNo;
+	private Integer programImgNo;
+	private Integer programNo;
 	private String originName;
 	private String filename;
 	private long programImgSize;

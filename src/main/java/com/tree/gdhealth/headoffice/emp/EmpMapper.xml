@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.headoffice.emp.EmpMapper">
 
-	<select id="selectEmployeeList" parameterType="map" resultType="map">
+	<select id="selectEmployeeList" resultType="map">
 		SELECT
 		e.employee_id empId,
 		ed.employee_name empName,

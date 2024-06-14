@@ -1,15 +1,13 @@
 package com.tree.gdhealth.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class EmployeeImg {
-	private int employeeImgNo;
-	private int employeeNo;
+	private Integer employeeImgNo;
+	private Integer employeeNo;
 	private String employeeImgOriginName;
 	private String employeeImgFilename;
 	private long employeeImgSize;

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  */
 @SuppressWarnings("serial")
 @NoArgsConstructor
-@ResponseStatus(HttpStatus.NOT_FOUND)
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class ImageNotSaveException extends RuntimeException{
 	public ImageNotSaveException(String message) {
 		super(message);

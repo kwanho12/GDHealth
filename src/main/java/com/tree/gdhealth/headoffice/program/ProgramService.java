@@ -2,7 +2,6 @@ package com.tree.gdhealth.headoffice.program;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tree.gdhealth.domain.Program;
 import com.tree.gdhealth.domain.ProgramDate;
 import com.tree.gdhealth.domain.ProgramImg;
-import com.tree.gdhealth.headoffice.dto.AddProgramDto;
-import com.tree.gdhealth.headoffice.dto.UpdateProgramDto;
+import com.tree.gdhealth.dto.AddProgramServiceDto;
+import com.tree.gdhealth.dto.PaginationDto;
+import com.tree.gdhealth.dto.UpdateProgramServiceDto;
 import com.tree.gdhealth.utils.exception.DatesDuplicatedException;
 import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -42,12 +42,10 @@ public class ProgramService {
 	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getProgramList(int beginRow, int rowPerPage) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("beginRow", beginRow);
-		map.put("rowPerPage", rowPerPage);
-
-		return programMapper.selectProgramList(map);
+		PaginationDto paginationDto = new PaginationDto();
+		paginationDto.setBeginRow(beginRow);
+		paginationDto.setRowPerPage(rowPerPage);
+		return programMapper.selectProgramList(paginationDto);
 	}
 
 	/**
@@ -71,14 +69,12 @@ public class ProgramService {
 	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getProgramList(int beginRow, int rowPerPage, String type, String keyword) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("beginRow", beginRow);
-		map.put("rowPerPage", rowPerPage);
-		map.put("type", type);
-		map.put("keyword", keyword);
-
-		return programMapper.selectProgramList(map);
+		PaginationDto paginationDto = new PaginationDto();
+		paginationDto.setBeginRow(beginRow);
+		paginationDto.setRowPerPage(rowPerPage);
+		paginationDto.setType(type);
+		paginationDto.setKeyword(keyword);
+		return programMapper.selectProgramList(paginationDto);
 	}
 
 	/**
@@ -90,12 +86,7 @@ public class ProgramService {
 	 */
 	@Transactional(readOnly = true)
 	public int getProgramCnt(String type, String keyword) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("type", type);
-		map.put("keyword", keyword);
-
-		return programMapper.selectSearchCnt(map);
+		return programMapper.selectSearchCnt(type, keyword);
 	}
 
 	/**
@@ -106,7 +97,7 @@ public class ProgramService {
 	 * @return 프로그램 상세 정보
 	 */
 	@Transactional(readOnly = true)
-	public Map<String, Object> getProgramOne(int programNo, String date) {
+	public Map<String, Object> getProgramOne(Integer programNo, String date) {
 		ProgramDate programDate = ProgramDate.builder()
 									.programNo(programNo)
 									.programDate(date)
@@ -144,22 +135,22 @@ public class ProgramService {
 	 *
 	 * @param addProgramDto 프로그램을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
 	 * @param path          프로그램 이미지 파일을 저장할 경로
-	 * @throws DatesDuplicatedException 중복된 프로그램 날짜가 있는 경우 발생
+	 * @throws DatesDuplicatedException 선택한 날짜들 중에서 중복된 프로그램 날짜가 있는 경우 발생
 	 */
-	public void addProgram(AddProgramDto addProgramDto, String path) {
+	public void addProgram(AddProgramServiceDto addProgramServiceDto, String path) {
 		
 		Program program = Program.builder()
-							.employeeNo(addProgramDto.getEmployeeNo())
-							.programName(addProgramDto.getProgramName())
-							.programDetail(addProgramDto.getProgramDetail())
-							.programMaxCustomer(addProgramDto.getProgramMaxCustomer())
+							.employeeNo(addProgramServiceDto.getEmployeeNo())
+							.programName(addProgramServiceDto.getProgramName())
+							.programDetail(addProgramServiceDto.getProgramDetail())
+							.programMaxCustomer(addProgramServiceDto.getProgramMaxCustomer())
 							.build();
 		programMapper.insertProgram(program);
 
-		List<String> dates = addProgramDto.getProgramDates();
+		List<String> dates = addProgramServiceDto.getProgramDates();
 		Set<String> datesSet = new HashSet<>(dates);
 		if (dates.size() != datesSet.size()) {
-			throw new DatesDuplicatedException("중복된 프로그램 날짜가 존재합니다.");
+			throw new DatesDuplicatedException("선택한 날짜들 중에서 중복된 프로그램 날짜가 존재합니다.");
 		}
 
 		List<ProgramDate> dateList = new ArrayList<>();
@@ -172,7 +163,7 @@ public class ProgramService {
 		}
 		programMapper.insertProgramDates(dateList);
 
-		addProgramImg(addProgramDto.getProgramFile(), path, program.getProgramNo());
+		addProgramImg(addProgramServiceDto.getProgramFile(), path, program.getProgramNo());
 	}
 
 	/**
@@ -182,24 +173,24 @@ public class ProgramService {
 	 * @param newPath          새로운 이미지 파일을 저장할 경로
 	 * @param oldPath          기존 이미지 파일의 경로
 	 */
-	public void modifyProgram(UpdateProgramDto updateProgramDto, String newPath, String oldPath) {
+	public void modifyProgram(UpdateProgramServiceDto updateProgramServiceDto, String newPath, String oldPath) {
 
 		Program program = Program.builder()
-							.programName(updateProgramDto.getProgramName())
-							.programDetail(updateProgramDto.getProgramDetail())
-							.programMaxCustomer(updateProgramDto.getProgramMaxCustomer())
-							.programNo(updateProgramDto.getProgramNo())
+							.programName(updateProgramServiceDto.getProgramName())
+							.programDetail(updateProgramServiceDto.getProgramDetail())
+							.programMaxCustomer(updateProgramServiceDto.getProgramMaxCustomer())
+							.programNo(updateProgramServiceDto.getProgramNo())
 							.build();
 		programMapper.updateProgram(program);
 
 		ProgramDate programDate = ProgramDate.builder()
-									.programDate(updateProgramDto.getProgramDate())
-									.programNo(updateProgramDto.getProgramNo())
-									.originDate(updateProgramDto.getOriginDate())
+									.programDate(updateProgramServiceDto.getProgramDate())
+									.programNo(updateProgramServiceDto.getProgramNo())
+									.originDate(updateProgramServiceDto.getOriginDate())
 									.build();
 		programMapper.updateProgramDate(programDate);
 
-		MultipartFile programFile = updateProgramDto.getProgramFile();
+		MultipartFile programFile = updateProgramServiceDto.getProgramFile();
 		if (!programFile.isEmpty()) {
 			new File(oldPath).delete();
 			modifyProgramImg(programFile, newPath, program.getProgramNo());
@@ -253,7 +244,7 @@ public class ProgramService {
 	 * @param path        이미지 파일을 저장할 경로
 	 * @param programNo   이미지가 속한 프로그램의 번호
 	 */
-	private void addProgramImg(MultipartFile programFile, String path, int programNo) {
+	private void addProgramImg(MultipartFile programFile, String path, Integer programNo) {
 		
 		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
 		
@@ -279,7 +270,7 @@ public class ProgramService {
 	 * @param path        수정된 이미지 파일을 저장할 경로
 	 * @param programNo   이미지가 속한 프로그램의 번호
 	 */
-	private void modifyProgramImg(MultipartFile programFile, String path, int programNo) {
+	private void modifyProgramImg(MultipartFile programFile, String path, Integer programNo) {
 		
 		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
 		

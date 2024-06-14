@@ -1,4 +1,4 @@
-package com.tree.gdhealth.headoffice.dto;
+package com.tree.gdhealth.dto;
 
 import lombok.Getter;
 import lombok.Setter;

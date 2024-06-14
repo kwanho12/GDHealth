@@ -1,4 +1,4 @@
-package com.tree.gdhealth.headoffice.dto;
+package com.tree.gdhealth.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

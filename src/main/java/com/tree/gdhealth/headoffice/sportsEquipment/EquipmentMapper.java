@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.tree.gdhealth.domain.SportsEquipment;
 import com.tree.gdhealth.domain.SportsEquipmentImg;
+import com.tree.gdhealth.dto.PaginationDto;
 
 /**
  * @author 진관호
@@ -14,11 +16,11 @@ import com.tree.gdhealth.domain.SportsEquipmentImg;
 @Mapper
 public interface EquipmentMapper {
 
-	List<Map<String, Object>> selectEquipmentList(Map<String, Object> map);
+	List<Map<String, Object>> selectEquipmentList(PaginationDto paginationDto);
 
 	int selectEquipmentCnt();
 
-	int selectSearchCnt(Map<String, Object> map);
+	int selectSearchCnt(@Param("type") String type, @Param("keyword") String keyword);
 
 	Map<String, Object> selectEquipmentOne(int equipmentNo);
 

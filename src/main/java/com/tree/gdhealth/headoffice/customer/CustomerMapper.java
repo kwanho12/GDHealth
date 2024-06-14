@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.tree.gdhealth.dto.PaginationDto;
 
 /**
  * @author 진관호
@@ -11,10 +14,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CustomerMapper {
 
-	List<Map<String, Object>> selectCustomerList(Map<String, Object> map);
+	List<Map<String, Object>> selectCustomerList(PaginationDto paginationDto);
 
 	int selectCustomerCnt();
 
-	int selectSearchCnt(Map<String, Object> map);
+	int selectSearchCnt(@Param("type") String type, @Param("keyword") String keyword);
 
 }

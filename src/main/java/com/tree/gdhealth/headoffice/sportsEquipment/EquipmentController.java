@@ -17,20 +17,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tree.gdhealth.dto.AddSportsEquipmentDto;
+import com.tree.gdhealth.dto.AddSportsEquipmentServiceDto;
+import com.tree.gdhealth.dto.PageDto;
+import com.tree.gdhealth.dto.UpdateSportsEquipmentDto;
+import com.tree.gdhealth.dto.UpdateSportsEquipmentServiceDto;
 import com.tree.gdhealth.employee.login.LoginEmployee;
-import com.tree.gdhealth.headoffice.dto.AddSportsEquipmentDto;
-import com.tree.gdhealth.headoffice.dto.PageDto;
-import com.tree.gdhealth.headoffice.dto.UpdateSportsEquipmentDto;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 진관호
  */
+@Slf4j
 @RequestMapping("/headoffice/equipment")
 @RequiredArgsConstructor
 @Controller
@@ -133,12 +137,15 @@ public class EquipmentController {
 			@SessionAttribute(name = "loginEmployee") LoginEmployee empInfo) {
 
 		if (bindingResult.hasErrors()) {
+			log.error("errors = {}", bindingResult);
 			return "headoffice/addEquipment";
 		}
 
 		addSportsEquipmentDto.setEmployeeNo(empInfo.getEmployeeNo());
 		String path = session.getServletContext().getRealPath("/upload/equipment");
-		equipmentService.addEquipment(addSportsEquipmentDto, path);
+		
+		AddSportsEquipmentServiceDto serviceDto = toSportsEquipmentServiceDto(addSportsEquipmentDto);
+		equipmentService.addEquipment(serviceDto, path);
 
 		return "redirect:/headoffice/equipment";
 	}
@@ -151,7 +158,7 @@ public class EquipmentController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/update/{equipmentNo}")
-	public String modifyEquipment(Model model, @PathVariable int equipmentNo) {
+	public String modifyEquipment(Model model, @PathVariable Integer equipmentNo) {
 		model.addAttribute("equipmentOne", equipmentService.getEquipmentOne(equipmentNo));
 		return "headoffice/updateEquipment";
 	}
@@ -169,6 +176,7 @@ public class EquipmentController {
 			BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
 
 		if (bindingResult.hasErrors()) {
+			log.error("errors = {}", bindingResult);
 			redirectAttributes.addAttribute("equipmentNo", updateSportsEquipmentDto.getSportsEquipmentNo());
 			return "redirect:/headoffice/equipment/update/{equipmentNo}";
 		}
@@ -177,7 +185,8 @@ public class EquipmentController {
 				.getRealPath("/upload/equipment/" + updateSportsEquipmentDto.getSportsEquipmentImgFileName());
 		String newPath = session.getServletContext().getRealPath("/upload/equipment");
 
-		equipmentService.modifyEquipment(updateSportsEquipmentDto, newPath, oldPath);
+		UpdateSportsEquipmentServiceDto serviceDto = toUpdateSportsEquipmentServiceDto(updateSportsEquipmentDto);
+		equipmentService.modifyEquipment(serviceDto, newPath, oldPath);
 
 		return "redirect:/headoffice/equipment";
 	}
@@ -191,7 +200,7 @@ public class EquipmentController {
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@ResponseBody
 	@PostMapping("/deactivate")
-	public int deactivateEquipment(@RequestParam int equipmentNo) {
+	public int deactivateEquipment(@RequestParam Integer equipmentNo) {
 		return equipmentService.modifyDeactivation(equipmentNo);
 	}
 
@@ -203,8 +212,29 @@ public class EquipmentController {
 	 */
 	@ResponseBody
 	@PostMapping("/activate")
-	public int activateEquipment(@RequestParam int equipmentNo) {
+	public int activateEquipment(@RequestParam Integer equipmentNo) {
 		return equipmentService.modifyActivation(equipmentNo);
+	}
+	
+	private AddSportsEquipmentServiceDto toSportsEquipmentServiceDto(AddSportsEquipmentDto dto) {
+		AddSportsEquipmentServiceDto serviceDto = new AddSportsEquipmentServiceDto();
+		serviceDto.setEmployeeNo(dto.getEmployeeNo());
+		serviceDto.setItemName(dto.getItemName());
+		serviceDto.setNote(dto.getNote());
+		serviceDto.setItemPrice(dto.getItemPrice());
+		serviceDto.setEquipmentFile(dto.getEquipmentFile());
+		return serviceDto;
+	}
+	
+	private UpdateSportsEquipmentServiceDto toUpdateSportsEquipmentServiceDto(UpdateSportsEquipmentDto dto) {
+		UpdateSportsEquipmentServiceDto serviceDto = new UpdateSportsEquipmentServiceDto();
+		serviceDto.setSportsEquipmentNo(dto.getSportsEquipmentNo());
+		serviceDto.setSportsEquipmentImgFileName(dto.getSportsEquipmentImgFileName());
+		serviceDto.setItemName(dto.getItemName());
+		serviceDto.setItemPrice(dto.getItemPrice());
+		serviceDto.setEquipmentFile(dto.getEquipmentFile());
+		serviceDto.setNote(dto.getNote());
+		return serviceDto;
 	}
 
 }

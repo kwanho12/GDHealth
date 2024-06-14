@@ -1,4 +1,4 @@
-package com.tree.gdhealth.headoffice.dto;
+package com.tree.gdhealth.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class AddSportsEquipmentDto {
 	
-	int employeeNo;
+	Integer employeeNo;
 
     @Size(min = 2, max = 15, message = "물품 이름은 2~15자로 입력 가능합니다.")
     private String itemName;

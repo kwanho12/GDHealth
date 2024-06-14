@@ -5,7 +5,6 @@ import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderInformation;
 import com.tree.gdhealth.sportsequipment.dto.SportsEquipmentOrderRetrieveCriteria;
 import com.tree.gdhealth.utils.pagination.PageUri;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,6 @@ import java.util.List;
 /**<p>본사의 물품 발주업무 컨트롤러</p>
  * @author 정인호
  */
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class SportsEquipmentOrderController {
@@ -66,8 +64,6 @@ public class SportsEquipmentOrderController {
     @PostMapping("/headoffice/sportsEquipmentOrderOne")
     public String changeOrderStatus(@RequestParam(name = "orderNo") Integer orderNo,
                                     @RequestParam(name = "changeOrderStatus") String changeOrderStatus){
-            boolean isSuccess = branchServiceFacade.changeSportsEquipmentOrderStatus(orderNo,changeOrderStatus);
         return "redirect:/headoffice/sportsEquipmentOrderOne?orderNo="+orderNo;
-
     }
 }

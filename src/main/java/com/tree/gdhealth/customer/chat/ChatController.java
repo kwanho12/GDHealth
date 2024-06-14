@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.tree.gdhealth.domain.ChatMessage;
-import com.tree.gdhealth.domain.ChatRoom;
+import com.tree.gdhealth.dto.ChatRoomServiceDto;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 
@@ -43,10 +43,9 @@ public class ChatController {
 		boolean isRoomExists = chatService.checkRoomExists(customerNo);
 
 		if (!isRoomExists) {
-			ChatRoom chatRoom = new ChatRoom();
-			chatRoom.setCustomerNo(customerNo);
-			chatService.insertRoom(chatRoom);
-			roomNo = chatRoom.getChatRoomNo();
+			ChatRoomServiceDto chatRoomServiceDto = new ChatRoomServiceDto();
+			chatRoomServiceDto.setCustomerNo(customerNo);
+			roomNo = chatService.insertRoom(chatRoomServiceDto);
 		} else {
 			roomNo = chatService.getRoomNo(customerNo);
 			List<ChatMessage> messageList = chatService.getChatList(roomNo);

@@ -3,7 +3,7 @@
 <mapper
 	namespace="com.tree.gdhealth.headoffice.sportsEquipment.EquipmentMapper">
 
-	<select id="selectEquipmentList" parameterType="map" resultType="map">
+	<select id="selectEquipmentList" resultType="map">
 		SELECT
 		s.sports_equipment_no equipmentNo,
 		s.item_name itemName,
@@ -47,7 +47,7 @@
 		ON si.sports_equipment_no = s.sports_equipment_no
 	</select>
 
-	<select id="selectSearchCnt" parameterType="map" resultType="int">
+	<select id="selectSearchCnt" resultType="int">
 		SELECT COUNT(*)
 		FROM sports_equipment s
 		INNER JOIN sports_equipment_img si
@@ -73,7 +73,7 @@
 		</where>
 	</select>
 
-	<select id="selectEquipmentOne" parameterType="int" resultType="map">
+	<select id="selectEquipmentOne" resultType="map">
 		SELECT
 		s.sports_equipment_no equipmentNo,
 		s.item_name itemName,
@@ -87,8 +87,7 @@
 		s.sports_equipment_no = #{equipmentNo}
 	</select>
 
-	<insert id="insertEquipment"
-		parameterType="com.tree.gdhealth.domain.SportsEquipment">
+	<insert id="insertEquipment">
 		INSERT INTO sports_equipment(
 		writer_employee_no,
 		item_name,
@@ -106,8 +105,7 @@
 		</selectKey>
 	</insert>
 
-	<insert id="insertEquipmentImg"
-		parameterType="com.tree.gdhealth.domain.SportsEquipmentImg">
+	<insert id="insertEquipmentImg">
 		INSERT INTO sports_equipment_img (
 		sports_equipment_no,
 		sports_equipment_img_origin_name,
@@ -123,8 +121,7 @@
 		)
 	</insert>
 
-	<update id="updateEquipment"
-		parameterType="com.tree.gdhealth.domain.SportsEquipment">
+	<update id="updateEquipment">
 		UPDATE sports_equipment
 		SET
 		item_name = #{itemName},
@@ -134,8 +131,7 @@
 		WHERE sports_equipment_no = #{sportsEquipmentNo}
 	</update>
 
-	<update id="updateEquipmentImg"
-		parameterType="com.tree.gdhealth.domain.SportsEquipmentImg">
+	<update id="updateEquipmentImg">
 		UPDATE sports_equipment_img
 		SET
 		sports_equipment_img_origin_name = #{sportsEquipmentImgOriginName},

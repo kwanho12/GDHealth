@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tree.gdhealth.headoffice.dto.AddEmpDto;
-import com.tree.gdhealth.headoffice.dto.PageDto;
+import com.tree.gdhealth.dto.AddEmpDto;
+import com.tree.gdhealth.dto.AddEmpServiceDto;
+import com.tree.gdhealth.dto.PageDto;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 import com.tree.gdhealth.utils.exception.EmpNotFoundException;
@@ -24,10 +25,12 @@ import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 진관호
  */
+@Slf4j
 @RequestMapping("/headoffice/emp")
 @RequiredArgsConstructor
 @Controller
@@ -147,11 +150,14 @@ public class EmpController {
 			HttpSession session, Model model) {
 
 		if (bindingResult.hasErrors()) {
+			log.error("errors = {}", bindingResult);
 			return "headoffice/addEmp";
 		}
 
 		String path = session.getServletContext().getRealPath("/upload/emp");
-		empService.addEmployee(addEmpDto, path);
+		
+		AddEmpServiceDto serviceDto = toAddEmpServiceDto(addEmpDto);
+		empService.addEmployee(serviceDto, path);
 
 		return "redirect:/headoffice/emp";
 	}
@@ -165,14 +171,26 @@ public class EmpController {
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/{employeeId}")
 	public String getEmpOne(Model model, @PathVariable String employeeId) {
-
+		
 		Map<String, Object> employeeOne = empService.getEmployeeOne(employeeId);
 		if (employeeOne == null) {
 			throw new EmpNotFoundException(String.format("직원 ID[%s]를 찾지 못하였습니다.", employeeId));
 		}
-
 		model.addAttribute("empOne", employeeOne);
-
 		return "headoffice/empOne";
+	}
+	
+	private AddEmpServiceDto toAddEmpServiceDto(AddEmpDto dto) {
+		AddEmpServiceDto serviceDto = new AddEmpServiceDto();
+		serviceDto.setEmployeeId(dto.getEmployeeId());
+		serviceDto.setEmployeePw(dto.getEmployeePw());
+		serviceDto.setEmployeeName(dto.getEmployeeName());
+		serviceDto.setEmployeePhone(dto.getEmployeePhone());
+		serviceDto.setEmployeeEmail(dto.getEmployeeEmail());
+		serviceDto.setEmployeeGender(dto.getEmployeeGender());
+		serviceDto.setBranchNo(dto.getBranchNo());
+		serviceDto.setEmployeePosition(dto.getEmployeePosition());
+		serviceDto.setEmployeeFile(dto.getEmployeeFile());
+		return serviceDto;
 	}
 }

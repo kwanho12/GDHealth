@@ -1,4 +1,4 @@
-package com.tree.gdhealth.utils;
+package com.tree.gdhealth.utils.imagesave;
 
 import com.tree.gdhealth.utils.exception.MisMatchedContentTypeException;
 import com.tree.gdhealth.utils.enumtype.ImageType;

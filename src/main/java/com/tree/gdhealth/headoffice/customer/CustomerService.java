@@ -1,12 +1,12 @@
 package com.tree.gdhealth.headoffice.customer;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tree.gdhealth.dto.PaginationDto;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
@@ -30,12 +30,10 @@ public class CustomerService {
 	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getCustomerList(int beginRow, int rowPerPage) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("beginRow", beginRow);
-		map.put("rowPerPage", rowPerPage);
-
-		return customerMapper.selectCustomerList(map);
+		PaginationDto paginationDto = new PaginationDto();
+		paginationDto.setBeginRow(beginRow);
+		paginationDto.setRowPerPage(rowPerPage);
+		return customerMapper.selectCustomerList(paginationDto);
 	}
 
 	/**
@@ -59,14 +57,12 @@ public class CustomerService {
 	 */
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getCustomerList(int beginRow, int rowPerPage, String type, String keyword) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("beginRow", beginRow);
-		map.put("rowPerPage", rowPerPage);
-		map.put("type", type);
-		map.put("keyword", keyword);
-		
-		return customerMapper.selectCustomerList(map);
+		PaginationDto paginationDto = new PaginationDto();
+		paginationDto.setBeginRow(beginRow);
+		paginationDto.setRowPerPage(rowPerPage);
+		paginationDto.setType(type);
+		paginationDto.setKeyword(keyword);
+		return customerMapper.selectCustomerList(paginationDto);
 	}
 
 	/**
@@ -78,12 +74,7 @@ public class CustomerService {
 	 */
 	@Transactional(readOnly = true)
 	public int getCustomerCnt(String type, String keyword) {
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("keyword", keyword);
-		map.put("type", type);
-
-		return customerMapper.selectSearchCnt(map);
+		return customerMapper.selectSearchCnt(type, keyword);
 	}
 	
 	/**

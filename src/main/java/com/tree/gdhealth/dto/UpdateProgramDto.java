@@ -1,4 +1,4 @@
-package com.tree.gdhealth.headoffice.dto;
+package com.tree.gdhealth.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +18,7 @@ public class UpdateProgramDto {
 	
 	private String originDate;
 	
-	private int programNo;
+	private Integer programNo;
 	
 	private String filename;
 	

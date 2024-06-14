@@ -14,7 +14,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.tree.gdhealth.customer.chat.ChatService;
-import com.tree.gdhealth.domain.ChatMessage;
+import com.tree.gdhealth.dto.ChatMessageDto;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.headoffice.chat.AdministratorChatService;
 
@@ -75,11 +75,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		int dbIndex = Integer.parseInt((String) jsonObject.get("indexNo"));
 
 		if (!roomSessionsMap.isEmpty()) {
-			ChatMessage chatMessage = new ChatMessage();
-			chatMessage.setChatRoomNo(messageRoomNo);
-			chatMessage.setMessageContent(messageContent);
+			ChatMessageDto chatMessageDto = new ChatMessageDto();
+			chatMessageDto.setChatRoomNo(messageRoomNo);
+			chatMessageDto.setMessageContent(messageContent);
 
-			saveChatMessage(status, dbIndex, chatMessage);
+			saveChatMessage(status, dbIndex, chatMessageDto);
 			sendChatMessages(jsonObject, roomSessionsMap.get(messageRoomNo));
 		}
 	}
@@ -101,15 +101,15 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param dbIndex     고객 또는 직원의 데이터베이스 인덱스
 	 * @param chatMessage 저장할 {@code ChatMessage} 객체
 	 */
-	private void saveChatMessage(String status, int dbIndex, ChatMessage chatMessage) {
+	private void saveChatMessage(String status, int dbIndex, ChatMessageDto chatMessageDto) {
 		boolean isCustomer = status.equals("customer");
-		chatMessage.setCustomerNo(isCustomer ? dbIndex : null);
-		chatMessage.setEmployeeNo(isCustomer ? null : dbIndex);
+		chatMessageDto.setCustomerNo(isCustomer ? dbIndex : null);
+		chatMessageDto.setEmployeeNo(isCustomer ? null : dbIndex);
 
-		if (chatMessage.getCustomerNo() != null) {
-			customerChatService.saveMessage(chatMessage);
+		if (chatMessageDto.getCustomerNo() != null) {
+			customerChatService.saveMessage(chatMessageDto);
 		} else {
-			adminChatService.saveMessage(chatMessage);
+			adminChatService.saveMessage(chatMessageDto);
 		}
 	}
 

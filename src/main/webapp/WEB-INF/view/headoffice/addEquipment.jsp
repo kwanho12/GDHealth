@@ -261,7 +261,6 @@
 					return;
 				}
 
-				alert('추가가 완료되었습니다.')
 				$('#insertForm').submit();
 			});
 </script>

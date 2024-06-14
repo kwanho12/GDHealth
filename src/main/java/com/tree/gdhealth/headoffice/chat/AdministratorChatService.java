@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tree.gdhealth.domain.ChatMessage;
+import com.tree.gdhealth.dto.ChatMessageDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,11 +51,17 @@ public class AdministratorChatService {
 	}
 	
 	/**
-	 * 채팅 메시지를 저장합니다.
-	 * 
-	 * @param chatMessage 메시지를 DB에 저장하기 위한 객체
+	 * 채팅 메시지를 데이터베이스에 저장합니다.
+	 *
+	 * @param chatMessageDto 채팅 메시지의 세부 정보를 포함하는 데이터 전송 객체
 	 */
-	public void saveMessage(ChatMessage chatMessage) {
+	public void saveMessage(ChatMessageDto chatMessageDto) {
+		ChatMessage chatMessage = ChatMessage.builder()
+									.chatRoomNo(chatMessageDto.getChatRoomNo())
+									.customerNo(chatMessageDto.getCustomerNo())
+									.employeeNo(chatMessageDto.getEmployeeNo())
+									.messageContent(chatMessageDto.getMessageContent())
+									.build();
 		chatMapper.insertMessage(chatMessage);
 	}
 

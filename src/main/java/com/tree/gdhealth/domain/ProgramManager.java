@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ProgramManager {
-
 	private int programManagerNo;
 	private int programDateNo;
 	private int programNo;

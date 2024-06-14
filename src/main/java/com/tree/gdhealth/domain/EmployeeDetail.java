@@ -1,15 +1,12 @@
 package com.tree.gdhealth.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-//@Data
 @Getter
 @Builder
-@AllArgsConstructor
 public class EmployeeDetail {
-	private int employeeNo;
+	private Integer employeeNo;
 	private String employeeName;
 	private String employeePhone;
 	private String employeeEmail;

@@ -55,5 +55,4 @@ public class AdministratorChatController {
 
 		return "chat/chatRoom";
 	}
-
 }

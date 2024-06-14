@@ -3,7 +3,6 @@ package com.tree.gdhealth.employee.login;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tree.gdhealth.customer.login.LoginService;
 import com.tree.gdhealth.domain.Employee;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +22,8 @@ import jakarta.servlet.http.HttpSession;
 @RequiredArgsConstructor
 @Controller
 public class EmpLoginController {
-private final EmpLoginService empLoginService;
+	
+	private final EmpLoginService empLoginService;
 	
 	@GetMapping("/employee/login")
 	public String getLoginForm(@SessionAttribute(name = "loginEmployee", required = false) LoginEmployee loginEmployee) {

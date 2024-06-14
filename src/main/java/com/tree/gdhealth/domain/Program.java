@@ -1,15 +1,13 @@
 package com.tree.gdhealth.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class Program {
-	private int programNo;
-	private int employeeNo;
+	private Integer programNo;
+	private Integer employeeNo;
 	private String programName;
 	private String programDetail;
 	private Integer programMaxCustomer;

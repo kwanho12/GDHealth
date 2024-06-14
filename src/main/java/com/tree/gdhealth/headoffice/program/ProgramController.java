@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tree.gdhealth.dto.AddProgramDto;
+import com.tree.gdhealth.dto.AddProgramServiceDto;
+import com.tree.gdhealth.dto.PageDto;
+import com.tree.gdhealth.dto.UpdateProgramDto;
+import com.tree.gdhealth.dto.UpdateProgramServiceDto;
 import com.tree.gdhealth.employee.login.LoginEmployee;
-import com.tree.gdhealth.headoffice.dto.AddProgramDto;
-import com.tree.gdhealth.headoffice.dto.PageDto;
-import com.tree.gdhealth.headoffice.dto.UpdateProgramDto;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
 import com.tree.gdhealth.utils.exception.ProgramNotFoundException;
@@ -29,10 +31,12 @@ import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 진관호
  */
+@Slf4j
 @RequestMapping("/headoffice/program")
 @RequiredArgsConstructor
 @Controller
@@ -160,12 +164,14 @@ public class ProgramController {
 			HttpSession session, @SessionAttribute(name = "loginEmployee") LoginEmployee empInfo) {
 		
 		if (bindingResult.hasErrors()) {
+			log.error("errors = {}", bindingResult);
 			return "headoffice/addProgram";
 		}
-		addProgramDto.setEmployeeNo(empInfo.getEmployeeNo());
-
 		String path = session.getServletContext().getRealPath("/upload/program");
-		programService.addProgram(addProgramDto, path);
+		addProgramDto.setEmployeeNo(empInfo.getEmployeeNo());
+		
+		AddProgramServiceDto serviceDto = toAddProgramServiceDto(addProgramDto);
+		programService.addProgram(serviceDto, path);
 
 		return "redirect:/headoffice/program";
 	}
@@ -179,7 +185,7 @@ public class ProgramController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/{programNo}/{programDate}")
-	public String getProgramOne(Model model, @PathVariable int programNo, @PathVariable String programDate) {
+	public String getProgramOne(Model model, @PathVariable Integer programNo, @PathVariable String programDate) {
 
 		Map<String, Object> programOne = programService.getProgramOne(programNo, programDate);
 		if (programOne == null) {
@@ -199,7 +205,7 @@ public class ProgramController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/update/{programNo}/{programDate}")
-	public String modifyProgram(Model model, @PathVariable int programNo, @PathVariable String programDate) {
+	public String modifyProgram(Model model, @PathVariable Integer programNo, @PathVariable String programDate) {
 		model.addAttribute("programOne", programService.getProgramOne(programNo, programDate));
 		return "headoffice/updateProgram";
 	}
@@ -220,13 +226,17 @@ public class ProgramController {
 		redirectAttributes.addAttribute("programDate", updateProgramDto.getProgramDate());
 
 		if (bindingResult.hasErrors()) {
+			log.error("errors = {}", bindingResult);
 			redirectAttributes.addAttribute("originDate", updateProgramDto.getOriginDate());
 			return "redirect:/headoffice/program/update/{programNo}/{originDate}";
 		}
 
 		String oldPath = session.getServletContext().getRealPath("/upload/program/" + updateProgramDto.getFilename());
 		String newPath = session.getServletContext().getRealPath("/upload/program");
-		programService.modifyProgram(updateProgramDto, newPath, oldPath);
+		
+		UpdateProgramServiceDto serviceDto = toUpdateProgramServiceDto(updateProgramDto);
+		
+		programService.modifyProgram(serviceDto, newPath, oldPath);
 
 		return "redirect:/headoffice/program/{programNo}/{programDate}";
 	}
@@ -240,7 +250,7 @@ public class ProgramController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/deactivate/{programNo}/{programDate}")
-	public String deactivateProgram(@PathVariable int programNo, @PathVariable String programDate) {
+	public String deactivateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {
 		programService.modifyDeactivation(programNo);
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
 	}
@@ -254,9 +264,33 @@ public class ProgramController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/activate/{programNo}/{programDate}")
-	public String activateProgram(@PathVariable int programNo, @PathVariable String programDate) {
+	public String activateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {
 		programService.modifyActivation(programNo);
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
+	}
+	
+	private UpdateProgramServiceDto toUpdateProgramServiceDto(UpdateProgramDto dto) {
+		UpdateProgramServiceDto serviceDto = new UpdateProgramServiceDto();
+		serviceDto.setOriginDate(dto.getOriginDate());
+		serviceDto.setProgramNo(dto.getProgramNo());
+		serviceDto.setFilename(dto.getFilename());
+		serviceDto.setProgramFile(dto.getProgramFile());
+		serviceDto.setProgramMaxCustomer(dto.getProgramMaxCustomer());
+		serviceDto.setProgramDate(dto.getProgramDate());
+		serviceDto.setProgramName(dto.getProgramName());
+		serviceDto.setProgramDetail(dto.getProgramDetail());
+		return serviceDto;
+	}
+	
+	private AddProgramServiceDto toAddProgramServiceDto(AddProgramDto dto) {
+		AddProgramServiceDto serviceDto = new AddProgramServiceDto();
+		serviceDto.setEmployeeNo(dto.getEmployeeNo());
+		serviceDto.setProgramName(dto.getProgramName());
+		serviceDto.setProgramDetail(dto.getProgramDetail());
+		serviceDto.setProgramMaxCustomer(dto.getProgramMaxCustomer());
+		serviceDto.setProgramDates(dto.getProgramDates());
+		serviceDto.setProgramFile(dto.getProgramFile());
+		return serviceDto;
 	}
 	
 }

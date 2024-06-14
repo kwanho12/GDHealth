@@ -361,7 +361,7 @@
 							$('#employeePw').focus();
 							return;
 						}
-
+/*
 						if ($('#employeeName').val().trim() == '') {
 							alert('이름을 입력하세요.');
 							$('#employeeName').val('');
@@ -384,7 +384,7 @@
 							$('#employeeName').focus();
 							return;
 						}
-
+*/
 						if ($('#employeePhone').val().trim() == '') {
 							alert('휴대폰 번호를 입력하세요.');
 							$('#employeePhone').val('');
@@ -452,7 +452,6 @@
 							return;
 						}
 
-						alert('추가가 완료되었습니다.');
 						$('#insertForm').submit();
 					});
 </script>
