@@ -10,11 +10,11 @@ import com.tree.gdhealth.utils.exception.ExtensionNotMatchException;
 import com.tree.gdhealth.utils.exception.ImageNotSaveException;
 
 /**
- * 이미지 파일과 관련된 작업을 수행하는 유틸리티 클래스
+ * 이미지 파일 저장과 관련된 작업을 수행하는 유틸리티 클래스
  * 
  * @author 진관호
  */
-public class HeadofficeImageSaver {
+public class ImageSaveUtil {
 	
 	private static final String PNG = ".png";
 	private static final String JPG = ".jpg";
@@ -30,14 +30,14 @@ public class HeadofficeImageSaver {
 	 * @return 고유한 파일 이름
 	 * @throws ExtensionNotMatchException 이미지 파일이 아닌 경우
 	 */
-	public String getFileName(String originalName) {
+	public static String getFileName(String originalName) {
 
 		String uniqueName = UUID.randomUUID().toString();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
 
 		if (!(extension.equals(PNG) || extension.equals(JPG) || extension.equals(JPEG)
 				|| extension.equals(GIF) || extension.equals(WEBP) || extension.equals(TIF))) {
-			throw new ExtensionNotMatchException("이미지 형식의 확장자가 아닙니다.");
+			throw new ExtensionNotMatchException(extension.substring(1) + "은(는) 이미지 형식의 확장자가 아닙니다.");
 		}
 
 		return uniqueName + extension;
@@ -51,13 +51,13 @@ public class HeadofficeImageSaver {
 	 * @param fileName      저장할 파일 이름
 	 * @throws ImageNotSaveException 파일 저장에 실패한 경우
 	 */
-	public void saveFile(MultipartFile multipartFile, String path, String fileName) {
+	public static void saveFile(MultipartFile multipartFile, String path, String fileName) {
 
 		File file = new File(path + "/" + fileName);
 		try {
 			multipartFile.transferTo(file);
 		} catch (IllegalStateException | IOException e) {
-			throw new ImageNotSaveException("이미지 저장 실패");
+			throw new ImageNotSaveException("이미지 저장을 실패하였습니다.");
 		}
 	}
 }

@@ -18,7 +18,7 @@ import com.tree.gdhealth.dto.AddProgramServiceDto;
 import com.tree.gdhealth.dto.PaginationDto;
 import com.tree.gdhealth.dto.UpdateProgramServiceDto;
 import com.tree.gdhealth.utils.exception.DatesDuplicatedException;
-import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
+import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
@@ -246,10 +246,8 @@ public class ProgramService {
 	 */
 	private void addProgramImg(MultipartFile programFile, String path, Integer programNo) {
 		
-		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
-		
 		String originalName = programFile.getOriginalFilename();
-		String fileName = imgSaver.getFileName(originalName);
+		String fileName = ImageSaveUtil.getFileName(originalName);
 		
 		ProgramImg img = ProgramImg.builder()
 							.programNo(programNo)
@@ -260,7 +258,7 @@ public class ProgramService {
 							.build();
 		programMapper.insertProgramImg(img);
 		
-		imgSaver.saveFile(programFile, path, fileName);
+		ImageSaveUtil.saveFile(programFile, path, fileName);
 	}
 
 	/**
@@ -272,10 +270,8 @@ public class ProgramService {
 	 */
 	private void modifyProgramImg(MultipartFile programFile, String path, Integer programNo) {
 		
-		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
-		
 		String originalName = programFile.getOriginalFilename();
-		String fileName = imgSaver.getFileName(originalName);
+		String fileName = ImageSaveUtil.getFileName(originalName);
 		
 		ProgramImg img = ProgramImg.builder()
 							.programNo(programNo)
@@ -286,6 +282,6 @@ public class ProgramService {
 							.build();
 		programMapper.updateProgramImg(img);
 
-		imgSaver.saveFile(programFile, path, fileName);
+		ImageSaveUtil.saveFile(programFile, path, fileName);
 	}
 }

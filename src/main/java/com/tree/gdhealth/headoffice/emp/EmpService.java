@@ -12,7 +12,7 @@ import com.tree.gdhealth.domain.EmployeeDetail;
 import com.tree.gdhealth.domain.EmployeeImg;
 import com.tree.gdhealth.dto.AddEmpServiceDto;
 import com.tree.gdhealth.dto.PaginationDto;
-import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
+import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
@@ -154,11 +154,9 @@ public class EmpService {
 	 * @param employeeNo   이미지가 속하는 직원의 번호
 	 */
 	public void addEmpImg(MultipartFile employeeFile, String path, int employeeNo) {
-
-		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
 		
 		String originalName = employeeFile.getOriginalFilename();
-		String fileName = imgSaver.getFileName(originalName);
+		String fileName = ImageSaveUtil.getFileName(originalName);
 		
 		EmployeeImg img = EmployeeImg.builder()
 							.employeeNo(employeeNo)
@@ -169,7 +167,7 @@ public class EmpService {
 							.build();
 		empMapper.insertEmployeeImg(img);
 
-		imgSaver.saveFile(employeeFile, path, fileName);
+		ImageSaveUtil.saveFile(employeeFile, path, fileName);
 	}
 
 	/**

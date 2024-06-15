@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 @SuppressWarnings("serial")
-public class ExtensionNotMatchException extends RuntimeException{
+public class ExtensionNotMatchException extends RuntimeException {
 	public ExtensionNotMatchException(String message) {
 		super(message);
 	}

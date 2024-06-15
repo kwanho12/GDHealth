@@ -14,7 +14,7 @@ import com.tree.gdhealth.dto.AddSportsEquipmentServiceDto;
 import com.tree.gdhealth.dto.PaginationDto;
 import com.tree.gdhealth.dto.UpdateSportsEquipmentServiceDto;
 import com.tree.gdhealth.utils.enumtype.ImageType;
-import com.tree.gdhealth.utils.imagesave.HeadofficeImageSaver;
+import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
@@ -138,11 +138,9 @@ public class EquipmentService {
 		equipmentMapper.insertEquipment(sportsEquipment);
 
 		MultipartFile equipmentFile = addSportsEquipmenServicetDto.getEquipmentFile();
-				
-		HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
-		
+						
 		String originalName = equipmentFile.getOriginalFilename();
-		String fileName = imgSaver.getFileName(originalName);
+		String fileName = ImageSaveUtil.getFileName(originalName);
 
 		SportsEquipmentImg img = SportsEquipmentImg.builder()
 									.sportsEquipmentNo(sportsEquipment.getSportsEquipmentNo())
@@ -153,7 +151,7 @@ public class EquipmentService {
 									.build();
 		equipmentMapper.insertEquipmentImg(img);
 
-		imgSaver.saveFile(equipmentFile, path, fileName);
+		ImageSaveUtil.saveFile(equipmentFile, path, fileName);
 	}
 
 	/**
@@ -177,11 +175,9 @@ public class EquipmentService {
 		if (!equipmentFile.isEmpty()) {
 			
 			new File(oldPath).delete();
-					
-			HeadofficeImageSaver imgSaver = new HeadofficeImageSaver();
-			
+				
 			String originalName = equipmentFile.getOriginalFilename();
-			String fileName = imgSaver.getFileName(originalName);
+			String fileName = ImageSaveUtil.getFileName(originalName);
 
 			SportsEquipmentImg img = SportsEquipmentImg.builder()
 										.sportsEquipmentNo(updateSportsEquipmentServiceDto.getSportsEquipmentNo())
@@ -192,7 +188,7 @@ public class EquipmentService {
 										.build();
 			equipmentMapper.updateEquipmentImg(img);
 
-			imgSaver.saveFile(equipmentFile, newPath, fileName);
+			ImageSaveUtil.saveFile(equipmentFile, newPath, fileName);
 		}
 	}
 	
@@ -206,10 +202,10 @@ public class EquipmentService {
 	public HeadofficePagination getPagination(int pageNum, int equipmentCnt) {
 
 		HeadofficePagination pagination = HeadofficePagination.builder()
-				.numberOfPaginationToShow(10)
-				.rowPerPage(8)
-				.currentPageNum(pageNum)
-				.rowCnt(equipmentCnt).build();
+											.numberOfPaginationToShow(10)
+											.rowPerPage(8)
+											.currentPageNum(pageNum)
+											.rowCnt(equipmentCnt).build();
 		pagination.calculateProperties();
 
 		return pagination;

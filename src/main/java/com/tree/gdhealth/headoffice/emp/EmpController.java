@@ -174,7 +174,7 @@ public class EmpController {
 		
 		Map<String, Object> employeeOne = empService.getEmployeeOne(employeeId);
 		if (employeeOne == null) {
-			throw new EmpNotFoundException(String.format("직원 ID[%s]를 찾지 못하였습니다.", employeeId));
+			throw new EmpNotFoundException(String.format("직원 ID[%s]의 상세 정보를 찾지 못하였습니다.", employeeId));
 		}
 		model.addAttribute("empOne", employeeOne);
 		return "headoffice/empOne";
