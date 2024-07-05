@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tree.gdhealth.dto.AddProgramDto;
-import com.tree.gdhealth.dto.AddProgramServiceDto;
 import com.tree.gdhealth.dto.PageDto;
 import com.tree.gdhealth.dto.UpdateProgramDto;
-import com.tree.gdhealth.dto.UpdateProgramServiceDto;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
@@ -170,8 +168,7 @@ public class ProgramController {
 		String path = session.getServletContext().getRealPath("/upload/program");
 		addProgramDto.setEmployeeNo(empInfo.getEmployeeNo());
 		
-		AddProgramServiceDto serviceDto = toAddProgramServiceDto(addProgramDto);
-		programService.addProgram(serviceDto, path);
+		programService.addProgram(addProgramDto, path);
 
 		return "redirect:/headoffice/program";
 	}
@@ -233,10 +230,8 @@ public class ProgramController {
 
 		String oldPath = session.getServletContext().getRealPath("/upload/program/" + updateProgramDto.getFilename());
 		String newPath = session.getServletContext().getRealPath("/upload/program");
-		
-		UpdateProgramServiceDto serviceDto = toUpdateProgramServiceDto(updateProgramDto);
-		
-		programService.modifyProgram(serviceDto, newPath, oldPath);
+				
+		programService.modifyProgram(updateProgramDto, newPath, oldPath);
 
 		return "redirect:/headoffice/program/{programNo}/{programDate}";
 	}
@@ -267,30 +262,6 @@ public class ProgramController {
 	public String activateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {
 		programService.modifyActivation(programNo);
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
-	}
-	
-	private UpdateProgramServiceDto toUpdateProgramServiceDto(UpdateProgramDto dto) {
-		UpdateProgramServiceDto serviceDto = new UpdateProgramServiceDto();
-		serviceDto.setOriginDate(dto.getOriginDate());
-		serviceDto.setProgramNo(dto.getProgramNo());
-		serviceDto.setFilename(dto.getFilename());
-		serviceDto.setProgramFile(dto.getProgramFile());
-		serviceDto.setProgramMaxCustomer(dto.getProgramMaxCustomer());
-		serviceDto.setProgramDate(dto.getProgramDate());
-		serviceDto.setProgramName(dto.getProgramName());
-		serviceDto.setProgramDetail(dto.getProgramDetail());
-		return serviceDto;
-	}
-	
-	private AddProgramServiceDto toAddProgramServiceDto(AddProgramDto dto) {
-		AddProgramServiceDto serviceDto = new AddProgramServiceDto();
-		serviceDto.setEmployeeNo(dto.getEmployeeNo());
-		serviceDto.setProgramName(dto.getProgramName());
-		serviceDto.setProgramDetail(dto.getProgramDetail());
-		serviceDto.setProgramMaxCustomer(dto.getProgramMaxCustomer());
-		serviceDto.setProgramDates(dto.getProgramDates());
-		serviceDto.setProgramFile(dto.getProgramFile());
-		return serviceDto;
 	}
 	
 }

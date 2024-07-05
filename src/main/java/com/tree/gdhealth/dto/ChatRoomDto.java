@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChatRoomServiceDto {
+public class ChatRoomDto {
 	private int chatRoomNo;
 	private int customerNo;
 	private String createdate;

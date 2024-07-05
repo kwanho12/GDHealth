@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tree.gdhealth.dto.AddSportsEquipmentDto;
-import com.tree.gdhealth.dto.AddSportsEquipmentServiceDto;
 import com.tree.gdhealth.dto.PageDto;
 import com.tree.gdhealth.dto.UpdateSportsEquipmentDto;
-import com.tree.gdhealth.dto.UpdateSportsEquipmentServiceDto;
 import com.tree.gdhealth.employee.login.LoginEmployee;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
@@ -144,8 +142,7 @@ public class EquipmentController {
 		addSportsEquipmentDto.setEmployeeNo(empInfo.getEmployeeNo());
 		String path = session.getServletContext().getRealPath("/upload/equipment");
 		
-		AddSportsEquipmentServiceDto serviceDto = toSportsEquipmentServiceDto(addSportsEquipmentDto);
-		equipmentService.addEquipment(serviceDto, path);
+		equipmentService.addEquipment(addSportsEquipmentDto, path);
 
 		return "redirect:/headoffice/equipment";
 	}
@@ -185,8 +182,7 @@ public class EquipmentController {
 				.getRealPath("/upload/equipment/" + updateSportsEquipmentDto.getSportsEquipmentImgFileName());
 		String newPath = session.getServletContext().getRealPath("/upload/equipment");
 
-		UpdateSportsEquipmentServiceDto serviceDto = toUpdateSportsEquipmentServiceDto(updateSportsEquipmentDto);
-		equipmentService.modifyEquipment(serviceDto, newPath, oldPath);
+		equipmentService.modifyEquipment(updateSportsEquipmentDto, newPath, oldPath);
 
 		return "redirect:/headoffice/equipment";
 	}
@@ -216,25 +212,4 @@ public class EquipmentController {
 		return equipmentService.modifyActivation(equipmentNo);
 	}
 	
-	private AddSportsEquipmentServiceDto toSportsEquipmentServiceDto(AddSportsEquipmentDto dto) {
-		AddSportsEquipmentServiceDto serviceDto = new AddSportsEquipmentServiceDto();
-		serviceDto.setEmployeeNo(dto.getEmployeeNo());
-		serviceDto.setItemName(dto.getItemName());
-		serviceDto.setNote(dto.getNote());
-		serviceDto.setItemPrice(dto.getItemPrice());
-		serviceDto.setEquipmentFile(dto.getEquipmentFile());
-		return serviceDto;
-	}
-	
-	private UpdateSportsEquipmentServiceDto toUpdateSportsEquipmentServiceDto(UpdateSportsEquipmentDto dto) {
-		UpdateSportsEquipmentServiceDto serviceDto = new UpdateSportsEquipmentServiceDto();
-		serviceDto.setSportsEquipmentNo(dto.getSportsEquipmentNo());
-		serviceDto.setSportsEquipmentImgFileName(dto.getSportsEquipmentImgFileName());
-		serviceDto.setItemName(dto.getItemName());
-		serviceDto.setItemPrice(dto.getItemPrice());
-		serviceDto.setEquipmentFile(dto.getEquipmentFile());
-		serviceDto.setNote(dto.getNote());
-		return serviceDto;
-	}
-
 }

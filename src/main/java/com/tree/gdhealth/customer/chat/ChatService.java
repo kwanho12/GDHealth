@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tree.gdhealth.domain.ChatMessage;
 import com.tree.gdhealth.domain.ChatRoom;
 import com.tree.gdhealth.dto.ChatMessageDto;
-import com.tree.gdhealth.dto.ChatRoomServiceDto;
+import com.tree.gdhealth.dto.ChatRoomDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,7 +60,7 @@ public class ChatService {
 	 * @param chatRoom 객체
 	 * @return 채팅방이 추가되었다면 1, 그렇지 않다면 0
 	 */
-	public int insertRoom(ChatRoomServiceDto chatRoomDto) {
+	public int insertRoom(ChatRoomDto chatRoomDto) {
 		ChatRoom chatRoom = ChatRoom.builder()
 								.customerNo(chatRoomDto.getCustomerNo())
 								.build();

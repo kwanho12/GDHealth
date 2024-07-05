@@ -46,7 +46,7 @@
 							<div class="form-group py-1 pb-2">
 								<div class="input-field">
 									<span class="fas fa-lock px-2"></span> <input type="password"
-										placeholder="Password" value="1234qwer!" id="customerPw" name="customerPw"
+										placeholder="Password" value="jinkwanho12#" id="customerPw" name="customerPw"
 										required>
 									<button type="button" class="btn bg-white text-muted toggle-password">
 										<span class="far fa-eye-slash"></span>
@@ -77,7 +77,7 @@
         $("#customerId").val(key);
     	$('#customerId').val("test1");
         $("#customerPw").val(password);
-    	$('#customerPw').val("1234qwer!");
+    	$('#customerPw').val("jinkwanho12#");
 
 
         // 그 전에 ID와 비밀번호를 저장해서 처음 페이지 로딩 시, 입력 칸에 저장된 ID와 비밀번호가 표시된 상태라면,

@@ -10,9 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tree.gdhealth.domain.SportsEquipment;
 import com.tree.gdhealth.domain.SportsEquipmentImg;
-import com.tree.gdhealth.dto.AddSportsEquipmentServiceDto;
+import com.tree.gdhealth.dto.AddSportsEquipmentDto;
 import com.tree.gdhealth.dto.PaginationDto;
-import com.tree.gdhealth.dto.UpdateSportsEquipmentServiceDto;
+import com.tree.gdhealth.dto.UpdateSportsEquipmentDto;
 import com.tree.gdhealth.utils.enumtype.ImageType;
 import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -123,21 +123,21 @@ public class EquipmentService {
 	 * @param path                  물품 이미지 파일을 저장할 경로
 	 * @apiNote 물품의 메모(note)가 null인 경우 빈 문자열로 설정하여 데이터베이스에 저장합니다.
 	 */
-	public void addEquipment(AddSportsEquipmentServiceDto addSportsEquipmenServicetDto, String path) {
+	public void addEquipment(AddSportsEquipmentDto addSportsEquipmentDto, String path) {
 
-		if (addSportsEquipmenServicetDto.getNote() == null) {
-			addSportsEquipmenServicetDto.setNote("");
+		if (addSportsEquipmentDto.getNote() == null) {
+			addSportsEquipmentDto.setNote("");
 		}
 
 		SportsEquipment sportsEquipment = SportsEquipment.builder()
-											.employeeNo(addSportsEquipmenServicetDto.getEmployeeNo())
-											.itemName(addSportsEquipmenServicetDto.getItemName())
-											.itemPrice(addSportsEquipmenServicetDto.getItemPrice())
-											.note(addSportsEquipmenServicetDto.getNote())
+											.employeeNo(addSportsEquipmentDto.getEmployeeNo())
+											.itemName(addSportsEquipmentDto.getItemName())
+											.itemPrice(addSportsEquipmentDto.getItemPrice())
+											.note(addSportsEquipmentDto.getNote())
 											.build();
 		equipmentMapper.insertEquipment(sportsEquipment);
 
-		MultipartFile equipmentFile = addSportsEquipmenServicetDto.getEquipmentFile();
+		MultipartFile equipmentFile = addSportsEquipmentDto.getEquipmentFile();
 						
 		String originalName = equipmentFile.getOriginalFilename();
 		String fileName = ImageSaveUtil.getFileName(originalName);
@@ -161,17 +161,17 @@ public class EquipmentService {
 	 * @param newPath               새로운 이미지 파일을 저장할 경로
 	 * @param oldPath               기존 이미지 파일의 경로
 	 */
-	public void modifyEquipment(UpdateSportsEquipmentServiceDto updateSportsEquipmentServiceDto, String newPath, String oldPath) {
+	public void modifyEquipment(UpdateSportsEquipmentDto updateSportsEquipmentDto, String newPath, String oldPath) {
 
 		SportsEquipment sportsEquipment = SportsEquipment.builder()
-											.itemName(updateSportsEquipmentServiceDto.getItemName())
-											.itemPrice(updateSportsEquipmentServiceDto.getItemPrice())
-											.note(updateSportsEquipmentServiceDto.getNote())
-											.sportsEquipmentNo(updateSportsEquipmentServiceDto.getSportsEquipmentNo())
+											.itemName(updateSportsEquipmentDto.getItemName())
+											.itemPrice(updateSportsEquipmentDto.getItemPrice())
+											.note(updateSportsEquipmentDto.getNote())
+											.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
 											.build();
 		equipmentMapper.updateEquipment(sportsEquipment);
 
-		MultipartFile equipmentFile = updateSportsEquipmentServiceDto.getEquipmentFile();
+		MultipartFile equipmentFile = updateSportsEquipmentDto.getEquipmentFile();
 		if (!equipmentFile.isEmpty()) {
 			
 			new File(oldPath).delete();
@@ -180,7 +180,7 @@ public class EquipmentService {
 			String fileName = ImageSaveUtil.getFileName(originalName);
 
 			SportsEquipmentImg img = SportsEquipmentImg.builder()
-										.sportsEquipmentNo(updateSportsEquipmentServiceDto.getSportsEquipmentNo())
+										.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
 										.sportsEquipmentImgOriginName(originalName)
 										.sportsEquipmentImgSize(equipmentFile.getSize())
 										.sportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()))

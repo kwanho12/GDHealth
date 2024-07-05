@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -39,7 +40,8 @@ public class EmpLoginController {
 	}
 	
 	@PostMapping("/employee/login")
-	public String login(HttpSession session, Employee employee, RedirectAttributes red) {
+	public String login(HttpSession session, @ModelAttribute Employee employee, RedirectAttributes red) {
+		log.info("==========================  employee : " + employee);
 		LoginEmployee loginEmployee = empLoginService.login(employee);
 		if(loginEmployee == null) {
 			red.addFlashAttribute("msg", "로그인에 실패했습니다. 아이디와 비밀번호를 확인하세요.");

@@ -14,9 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tree.gdhealth.domain.Program;
 import com.tree.gdhealth.domain.ProgramDate;
 import com.tree.gdhealth.domain.ProgramImg;
-import com.tree.gdhealth.dto.AddProgramServiceDto;
+import com.tree.gdhealth.dto.AddProgramDto;
 import com.tree.gdhealth.dto.PaginationDto;
-import com.tree.gdhealth.dto.UpdateProgramServiceDto;
+import com.tree.gdhealth.dto.UpdateProgramDto;
 import com.tree.gdhealth.utils.exception.DatesDuplicatedException;
 import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -137,17 +137,17 @@ public class ProgramService {
 	 * @param path          프로그램 이미지 파일을 저장할 경로
 	 * @throws DatesDuplicatedException 선택한 날짜들 중에서 중복된 프로그램 날짜가 있는 경우 발생
 	 */
-	public void addProgram(AddProgramServiceDto addProgramServiceDto, String path) {
+	public void addProgram(AddProgramDto addProgramDto, String path) {
 		
 		Program program = Program.builder()
-							.employeeNo(addProgramServiceDto.getEmployeeNo())
-							.programName(addProgramServiceDto.getProgramName())
-							.programDetail(addProgramServiceDto.getProgramDetail())
-							.programMaxCustomer(addProgramServiceDto.getProgramMaxCustomer())
+							.employeeNo(addProgramDto.getEmployeeNo())
+							.programName(addProgramDto.getProgramName())
+							.programDetail(addProgramDto.getProgramDetail())
+							.programMaxCustomer(addProgramDto.getProgramMaxCustomer())
 							.build();
 		programMapper.insertProgram(program);
 
-		List<String> dates = addProgramServiceDto.getProgramDates();
+		List<String> dates = addProgramDto.getProgramDates();
 		Set<String> datesSet = new HashSet<>(dates);
 		if (dates.size() != datesSet.size()) {
 			throw new DatesDuplicatedException("선택한 날짜들 중에서 중복된 프로그램 날짜가 존재합니다.");
@@ -163,7 +163,7 @@ public class ProgramService {
 		}
 		programMapper.insertProgramDates(dateList);
 
-		addProgramImg(addProgramServiceDto.getProgramFile(), path, program.getProgramNo());
+		addProgramImg(addProgramDto.getProgramFile(), path, program.getProgramNo());
 	}
 
 	/**
@@ -173,24 +173,24 @@ public class ProgramService {
 	 * @param newPath          새로운 이미지 파일을 저장할 경로
 	 * @param oldPath          기존 이미지 파일의 경로
 	 */
-	public void modifyProgram(UpdateProgramServiceDto updateProgramServiceDto, String newPath, String oldPath) {
+	public void modifyProgram(UpdateProgramDto updateProgramDto, String newPath, String oldPath) {
 
 		Program program = Program.builder()
-							.programName(updateProgramServiceDto.getProgramName())
-							.programDetail(updateProgramServiceDto.getProgramDetail())
-							.programMaxCustomer(updateProgramServiceDto.getProgramMaxCustomer())
-							.programNo(updateProgramServiceDto.getProgramNo())
+							.programName(updateProgramDto.getProgramName())
+							.programDetail(updateProgramDto.getProgramDetail())
+							.programMaxCustomer(updateProgramDto.getProgramMaxCustomer())
+							.programNo(updateProgramDto.getProgramNo())
 							.build();
 		programMapper.updateProgram(program);
 
 		ProgramDate programDate = ProgramDate.builder()
-									.programDate(updateProgramServiceDto.getProgramDate())
-									.programNo(updateProgramServiceDto.getProgramNo())
-									.originDate(updateProgramServiceDto.getOriginDate())
+									.programDate(updateProgramDto.getProgramDate())
+									.programNo(updateProgramDto.getProgramNo())
+									.originDate(updateProgramDto.getOriginDate())
 									.build();
 		programMapper.updateProgramDate(programDate);
 
-		MultipartFile programFile = updateProgramServiceDto.getProgramFile();
+		MultipartFile programFile = updateProgramDto.getProgramFile();
 		if (!programFile.isEmpty()) {
 			new File(oldPath).delete();
 			modifyProgramImg(programFile, newPath, program.getProgramNo());

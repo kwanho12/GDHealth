@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tree.gdhealth.domain.Employee;
 import com.tree.gdhealth.domain.EmployeeDetail;
 import com.tree.gdhealth.domain.EmployeeImg;
-import com.tree.gdhealth.dto.AddEmpServiceDto;
+import com.tree.gdhealth.dto.AddEmpDto;
 import com.tree.gdhealth.dto.PaginationDto;
 import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
@@ -123,26 +123,26 @@ public class EmpService {
 	 * @param employeeImg    삽입할 직원의 이미지 정보를 담은 EmployeeImg 객체
 	 * @param path           직원 이미지 파일을 저장할 경로
 	 */
-	public void addEmployee(AddEmpServiceDto addEmpServiceDto, String path) {
+	public void addEmployee(AddEmpDto addEmpDto, String path) {
 
 		Employee employee = Employee.builder()
-								.branchNo(addEmpServiceDto.getBranchNo())
-								.employeeId(addEmpServiceDto.getEmployeeId())
-								.employeePw(addEmpServiceDto.getEmployeePw())
-								.employeePosition(addEmpServiceDto.getEmployeePosition())
+								.branchNo(addEmpDto.getBranchNo())
+								.employeeId(addEmpDto.getEmployeeId())
+								.employeePw(addEmpDto.getEmployeePw())
+								.employeePosition(addEmpDto.getEmployeePosition())
 								.build();
 		empMapper.insertEmployee(employee);
 
 		EmployeeDetail employeeDetail = EmployeeDetail.builder()
 											.employeeNo(employee.getEmployeeNo())
-											.employeeName(addEmpServiceDto.getEmployeeName())
-											.employeePhone(addEmpServiceDto.getEmployeePhone())
-											.employeeEmail(addEmpServiceDto.getEmployeeEmail())
-											.employeeGender(addEmpServiceDto.getEmployeeGender())
+											.employeeName(addEmpDto.getEmployeeName())
+											.employeePhone(addEmpDto.getEmployeePhone())
+											.employeeEmail(addEmpDto.getEmployeeEmail())
+											.employeeGender(addEmpDto.getEmployeeGender())
 											.build();
 		empMapper.insertEmployeeDetail(employeeDetail);
 
-		MultipartFile employeeFile = addEmpServiceDto.getEmployeeFile();
+		MultipartFile employeeFile = addEmpDto.getEmployeeFile();
 		addEmpImg(employeeFile, path, employee.getEmployeeNo());
 	}
 

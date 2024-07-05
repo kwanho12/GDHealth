@@ -58,7 +58,7 @@
 							<div class="text-center pt-4 text-muted">
 								<a href="#" id="lookAroundBranch">(둘러보기) 지점관리자 계정</a>
 								<br>
-								<a href="#"  id="lookAroundHeadOffice">(둘러보기) 본사관리자 계정</a>
+								<a href="#"  id="lookAroundHeadoffice">(둘러보기) 본사관리자 계정</a>
 							</div>
 						</form>
 					</div>
@@ -68,13 +68,13 @@
 		</div>
 	</div>
 <script>
-	$('#lookAroundHeadOffice').click(function (){
+	$('#lookAroundHeadoffice').click(function (){
 		$('#employeeId').val('headoffice');
 		$('#employeePw').val('jinkwanho12#');
 	});
 	$('#lookAroundBranch').click(function (){
 		$('#employeeId').val('gdhealth01');
-		$('#employeePw').val('qlalfqjsgh1!');
+		$('#employeePw').val('jinkwanho12#');
 	})
 
 </script>

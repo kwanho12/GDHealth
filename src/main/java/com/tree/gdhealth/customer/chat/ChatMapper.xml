@@ -4,9 +4,9 @@
 
 	<select id="selectChatList" resultType="com.tree.gdhealth.domain.ChatMessage">
 		SELECT
-		message_content messageContent,
 		customer_no customerNo,
-		employee_no employeeNo
+		employee_no employeeNo,
+		message_content messageContent
 		FROM chat_message
 		WHERE chat_room_no = #{chatRoomNo}
 	</select>

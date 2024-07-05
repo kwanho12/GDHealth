@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tree.gdhealth.dto.AddEmpDto;
-import com.tree.gdhealth.dto.AddEmpServiceDto;
 import com.tree.gdhealth.dto.PageDto;
 import com.tree.gdhealth.utils.auth.Auth;
 import com.tree.gdhealth.utils.auth.Authority;
@@ -156,8 +155,7 @@ public class EmpController {
 
 		String path = session.getServletContext().getRealPath("/upload/emp");
 		
-		AddEmpServiceDto serviceDto = toAddEmpServiceDto(addEmpDto);
-		empService.addEmployee(serviceDto, path);
+		empService.addEmployee(addEmpDto, path);
 
 		return "redirect:/headoffice/emp";
 	}
@@ -180,17 +178,4 @@ public class EmpController {
 		return "headoffice/empOne";
 	}
 	
-	private AddEmpServiceDto toAddEmpServiceDto(AddEmpDto dto) {
-		AddEmpServiceDto serviceDto = new AddEmpServiceDto();
-		serviceDto.setEmployeeId(dto.getEmployeeId());
-		serviceDto.setEmployeePw(dto.getEmployeePw());
-		serviceDto.setEmployeeName(dto.getEmployeeName());
-		serviceDto.setEmployeePhone(dto.getEmployeePhone());
-		serviceDto.setEmployeeEmail(dto.getEmployeeEmail());
-		serviceDto.setEmployeeGender(dto.getEmployeeGender());
-		serviceDto.setBranchNo(dto.getBranchNo());
-		serviceDto.setEmployeePosition(dto.getEmployeePosition());
-		serviceDto.setEmployeeFile(dto.getEmployeeFile());
-		return serviceDto;
-	}
 }
