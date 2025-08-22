@@ -337,7 +337,7 @@
 						// 선택한 개설 날짜가 DB에 이미 존재하는지 확인
 						$
 								.ajax({
-									url : '${pageContext.request.contextPath}/headoffice/program/checkDateOne',
+									url : '${pageContext.request.contextPath}/headoffice/program/date',
 									method : 'post',
 									data : {
 										programDate : programDate

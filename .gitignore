@@ -4,8 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### DB properties file####
-database.properties
+application.properties
 
 ### STS ###
 .apt_generated
@@ -28,9 +27,18 @@ database.properties
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
+
+# Gradle 관련 무시할 파일들
+.gradle/
+build/
+*.bin
+buildfingerprint.bin
+
+# 또는 더 포괄적으로
+build/**
+.gradle/**

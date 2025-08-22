@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Employee {
 	private Integer employeeNo;
 	private Integer branchNo;
@@ -26,4 +26,5 @@ public class Employee {
 	public void setEmployeePw(String employeePw) {
 		this.employeePw = employeePw;
 	}
+	
 }

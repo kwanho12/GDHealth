@@ -195,7 +195,7 @@ public class EquipmentController {
 	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@ResponseBody
-	@PostMapping("/deactivate")
+	@PostMapping("/deactivation")
 	public int deactivateEquipment(@RequestParam Integer equipmentNo) {
 		return equipmentService.modifyDeactivation(equipmentNo);
 	}
@@ -207,7 +207,7 @@ public class EquipmentController {
 	 * @return 활성화 상태로 정상적으로 변경되었다면 1
 	 */
 	@ResponseBody
-	@PostMapping("/activate")
+	@PostMapping("/activation")
 	public int activateEquipment(@RequestParam Integer equipmentNo) {
 		return equipmentService.modifyActivation(equipmentNo);
 	}

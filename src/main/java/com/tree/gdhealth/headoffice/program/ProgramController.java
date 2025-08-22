@@ -130,7 +130,7 @@ public class ProgramController {
 	 * @return 입력한 날짜들 중 최소 1개가 이미 존재한다면 true, 존재하지 않는다면 false
 	 */
 	@ResponseBody
-	@PostMapping("/checkDates")
+	@PostMapping("/dates")
 	public boolean checkDates(@RequestBody List<String> programDates) {
 		return programService.getResultOfDatesCheck(programDates);
 	}
@@ -143,8 +143,8 @@ public class ProgramController {
 	 * @return 입력한 날짜가 이미 존재한다면 false, 존재하지 않는다면 true
 	 */
 	@ResponseBody
-	@PostMapping("/checkDateOne")
-	public boolean checkDateOne(@RequestParam String programDate) {
+	@PostMapping("/date")
+	public boolean checkDate(@RequestParam String programDate) {
 		return programService.getResultOfDateOneCheck(programDate);
 	}
 

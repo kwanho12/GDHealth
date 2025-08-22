@@ -93,7 +93,6 @@ public class ProgramService {
 	 * 프로그램 상세 정보를 리턴합니다.
 	 * 
 	 * @param programNo   조회할 프로그램의 번호
-	 * @param programDate 조회할 프로그램의 날짜
 	 * @return 프로그램 상세 정보
 	 */
 	@Transactional(readOnly = true)
@@ -176,10 +175,10 @@ public class ProgramService {
 	public void modifyProgram(UpdateProgramDto updateProgramDto, String newPath, String oldPath) {
 
 		Program program = Program.builder()
+							.programNo(updateProgramDto.getProgramNo())
 							.programName(updateProgramDto.getProgramName())
 							.programDetail(updateProgramDto.getProgramDetail())
 							.programMaxCustomer(updateProgramDto.getProgramMaxCustomer())
-							.programNo(updateProgramDto.getProgramNo())
 							.build();
 		programMapper.updateProgram(program);
 
@@ -221,7 +220,6 @@ public class ProgramService {
 	 * 페이지네이션 정보를 생성하여 페이지네이션 객체를 리턴합니다.
 	 *
 	 * @param pageNum     현재 페이지 번호
-	 * @param customerCnt 고객 수
 	 * @return 페이지네이션 정보
 	 */
 	public HeadofficePagination getPagination(int pageNum, int programCnt) {

@@ -120,7 +120,7 @@ public class EmpController {
 	 * @return 입력한 id가 데이터베이스에 존재하지 않는다면 0, 이미 존재한다면 1
 	 */
 	@ResponseBody
-	@PostMapping("/checkExistingId")
+	@PostMapping("/existingId")
 	public int checkExistingId(@RequestParam String employeeId) {
 		return empService.getResultOfIdCheck(employeeId);
 	}

@@ -23,14 +23,14 @@
 Backend
 >Java 17<br>
 >Spring Boot 3.2.0<br>
->MariaDB 10.5.22<br>
+>MySQL 8.0.43<br>
 >MyBatis
   
 Frontend
 >JavaScript(JQuery)
   
 Tool
->Maven<br>
+>Gradle<br>
 >Git<br>
 >AWS
 

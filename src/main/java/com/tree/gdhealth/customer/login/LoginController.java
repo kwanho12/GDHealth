@@ -1,7 +1,5 @@
 package com.tree.gdhealth.customer.login;
 
-import java.util.Enumeration;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

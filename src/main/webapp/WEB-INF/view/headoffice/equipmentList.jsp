@@ -326,7 +326,7 @@
 		let equipmentNo = deactivateBtn.data('equipmentno');
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/equipment/deactivate',
+			url : '${pageContext.request.contextPath}/headoffice/equipment/deactivation',
 			method : 'post',
 			data : {
 				equipmentNo : equipmentNo
@@ -349,7 +349,7 @@
 		let equipmentNo = activateBtn.data('equipmentno');
 		
 		$.ajax({
-			url : '${pageContext.request.contextPath}/headoffice/equipment/activate',
+			url : '${pageContext.request.contextPath}/headoffice/equipment/activation',
 			method : 'post',
 			data : {
 				equipmentNo : equipmentNo
