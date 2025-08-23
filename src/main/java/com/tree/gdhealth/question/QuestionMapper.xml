@@ -1,108 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tree.gdhealth.question.QuestionMapper">
-<select id="questionList"
-		parameterType="com.tree.gdhealth.domain.Question"
-		resultType="com.tree.gdhealth.domain.Question">
-	
-	SELECT
-	    q.question_no AS questionNo,
-	    b.branch_no AS branchNo,
-	    b.branch_name AS branchName,
-	    q.isSecret AS isSecret,
-	    q.question_title AS questionTitle,
-	    c.customer_no AS customerNo,
-	    c.customer_id AS customerId,
-	    q.createdate AS createdate,
-	    q.updatedate AS updatedate
-	FROM 
-	    question q
-	JOIN customer c 
-	ON q.customer_no = c.customer_no
-	JOIN branch b 
-	ON q.branch_no = b.branch_no
-	ORDER BY q.question_no DESC
-	LIMIT #{beginRow}, #{rowPerPage};
-	
-</select>
+    <select id="questionList"
+            resultType="com.tree.gdhealth.domain.Question">
 
-<select id = "questionOne"
-	parameterType="int"
-	resultType="com.tree.gdhealth.domain.Question">
-	
-	SELECT
-		q.question_no AS questionNo,
-		b.branch_name AS branchName,
-		c.customer_id AS customerId,
-		c.customer_no AS customerNo,
-		q.question_title AS questionTitle,
-		q.question_content AS questionContent,
-		q.createdate AS createdate,
-		q.updatedate AS updatedate
-	FROM
-		question q
-	JOIN customer c
-	ON q.customer_no = c.customer_no
-	JOIN branch b
-	ON q.branch_no = b.branch_no
-	WHERE q.question_no = #{questionNo};
-		
-</select>
+        SELECT
+            q.question_no AS questionNo,
+            b.branch_no AS branchNo,
+            b.branch_name AS branchName,
+            q.isSecret AS isSecret,
+            q.question_title AS questionTitle,
+            c.customer_no AS customerNo,
+            c.customer_id AS customerId,
+            q.createdate AS createdate,
+            q.updatedate AS updatedate
+        FROM
+            question q
+        JOIN customer c
+        ON q.customer_no = c.customer_no
+        JOIN branch b
+        ON q.branch_no = b.branch_no
+        ORDER BY q.question_no DESC
+        LIMIT #{beginRow}, #{rowPerPage};
 
-<select id="getBranchLevel"
-		parameterType="int"
-		resultType="int">
-		
-		SELECT
-		b.branch_level AS branchLevel
-		FROM branch b
-		JOIN employee e
-		ON b.branch_no = e.branch_no
-		WHERE e.employee_no = #{employeeNo};
+    </select>
 
-</select>
+    <select id = "questionOne"
+        parameterType="int"
+        resultType="com.tree.gdhealth.domain.Question">
 
-<insert id="addQuestion"
-		parameterType="com.tree.gdhealth.domain.Question">
-		
-		INSERT INTO question(
-			question_no,
-			customer_no,
-			branch_no,
-			question_title,
-			question_content,
-			isSecret
-		) VALUES (
-			#{questionNo},
-			#{customerNo},
-			#{branchNo},
-			#{questionTitle},
-			#{questionContent},
-			#{isSecret}
-		)
-</insert>
+        SELECT
+            q.question_no AS questionNo,
+            b.branch_name AS branchName,
+            c.customer_id AS customerId,
+            c.customer_no AS customerNo,
+            q.question_title AS questionTitle,
+            q.question_content AS questionContent,
+            q.createdate AS createdate,
+            q.updatedate AS updatedate
+        FROM
+            question q
+        JOIN customer c
+        ON q.customer_no = c.customer_no
+        JOIN branch b
+        ON q.branch_no = b.branch_no
+        WHERE q.question_no = #{questionNo};
 
-<update id="updateQuestion"
-		parameterType="com.tree.gdhealth.domain.Question">
-		
-		UPDATE question
-		SET branch_no = #{branchNo}, question_title = #{questionTitle}, question_content = #{questionContent}, isSecret = #{isSecret}, updatedate = NOW()
-		WHERE question_no = #{questionNo}
-</update>
+    </select>
 
-<delete id="deleteQuestion"
-		parameterType="com.tree.gdhealth.domain.Question">
-		
-		DELETE 
-		FROM question
-		WHERE question_no = #{questionNo}
+    <select id="getBranchLevel"
+            parameterType="int"
+            resultType="int">
 
-</delete>
+            SELECT
+            b.branch_level AS branchLevel
+            FROM branch b
+            JOIN employee e
+            ON b.branch_no = e.branch_no
+            WHERE e.employee_no = #{employeeNo};
+
+    </select>
+
+    <insert id="addQuestion"
+            parameterType="com.tree.gdhealth.domain.Question">
+
+            INSERT INTO question(
+                customer_no,
+                branch_no,
+                question_title,
+                question_content,
+                isSecret
+            ) VALUES (
+                #{questionNo},
+                #{customerNo},
+                #{branchNo},
+                #{questionTitle},
+                #{questionContent},
+                #{isSecret}
+            )
+    </insert>
+
+    <update id="updateQuestion"
+            parameterType="com.tree.gdhealth.domain.Question">
+
+            UPDATE question
+            SET branch_no = #{branchNo}, question_title = #{questionTitle}, question_content = #{questionContent}, isSecret = #{isSecret}, updatedate = NOW()
+            WHERE question_no = #{questionNo}
+    </update>
+
+    <delete id="deleteQuestion"
+            parameterType="com.tree.gdhealth.domain.Question">
+
+            DELETE
+            FROM question
+            WHERE question_no = #{questionNo}
+
+    </delete>
 
 <!-- 질문 개수 --> 
  	<select id="questionCount"
  	parameterType="java.util.Map"
  	resultType="int">
- 	SELECT count (*) FROM question
+ 	SELECT COUNT(*) FROM question
  	</select>
 </mapper>

@@ -73,7 +73,7 @@
  	<select id="noticeCount"
  	parameterType="java.util.Map"
  	resultType="int">
- 	SELECT count (*) FROM notice
+ 	SELECT COUNT(*) FROM notice
  	</select>
  
 </mapper>

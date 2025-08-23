@@ -97,7 +97,7 @@
 	<select id="reviewCount"
 	parameterType="java.util.Map"
 	resultType="int">
-	SELECT count (*) FROM review
+	SELECT count(*) FROM review
 	
 	</select>
 </mapper>

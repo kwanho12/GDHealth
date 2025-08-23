@@ -122,7 +122,7 @@
 		) VALUES (
 		#{branchNo},
 		#{employeeId},
-		PASSWORD(#{employeePw}),
+		#{employeePw},
 		#{employeePosition}
 		)
 		<selectKey resultType="int" keyProperty="employeeNo" order="AFTER">

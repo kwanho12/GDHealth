@@ -71,7 +71,7 @@
 		WHERE YEAR(pd.program_date) = #{year}
 		AND MONTH(pd.program_date) = #{month}
 		 AND p.customer_no = #{customerNo}
-		GROUP BY pd.program_date
+		GROUP BY pd.program_date, pd.program_date_no
 		ORDER BY pd.program_date ASC
 	</select>
 	

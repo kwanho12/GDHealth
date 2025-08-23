@@ -13,6 +13,16 @@ repositories {
     mavenCentral()
 }
 
+// Java 소스 폴더의 XML 파일들을 리소스로 포함
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources', 'src/main/java']
+            excludes = ['**/*.java']
+        }
+    }
+}
+
 dependencies {
     // Spring Boot 스타터
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -22,28 +32,36 @@ dependencies {
     // JSON
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
-    // MyBatis - 버전 업그레이드
+    // MyBatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
+    // JSR-305 어노테이션 (경고 해결용)
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.32'
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
-    // JSTL
-    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
-    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
+    // JSTL - Spring Boot 3.x 호환 버전
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-    // JSP
+    // JSP - Spring Boot 3.x 호환
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
-    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
     // MySQL 드라이버 - Spring Boot 3.x 호환 버전
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // 개발 시에만 필요한 라이브러리
-    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+
+}
+
+// 컴파일러 경고 최소화
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:deprecation', '-Xlint:unchecked']
 }

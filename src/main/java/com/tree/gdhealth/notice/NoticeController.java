@@ -27,6 +27,7 @@ public class NoticeController {
    @GetMapping("/notice/noticeList")
    public String noticeList(HttpSession session,Model model, @RequestParam(defaultValue="1")int currentPage) {
 	  Map<String, Object> noticeData = noticeService.noticeList(currentPage);
+      @SuppressWarnings("unchecked")
 	  List<Notice> list = (List<Notice>) noticeData.get("resultNoticeList");
 	  int lastPage = (int) noticeData.get("lastPage");
 	  

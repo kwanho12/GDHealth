@@ -5,7 +5,7 @@
 	SELECT
 	customer_no
 	FROM customer
-	WHERE customer_id = #{customerId} AND customer_active = 'Y' AND customer_pw = PASSWORD(#{customerPw})
+	WHERE customer_id = #{customerId} AND customer_active = 'Y' AND customer_pw = #{customerPw}
 </select>
 <select id="customerFindPwCk" parameterType="com.tree.gdhealth.domain.Customer" resultType="INTEGER">
 	SELECT
@@ -17,7 +17,7 @@
 
 <update id="customerResetPw" parameterType="com.tree.gdhealth.domain.Customer">
 	UPDATE customer
-	SET customer_pw = PASSWORD(#{customerPw})
+	SET customer_pw = #{customerPw}
 	WHERE customer_no = #{customerNo}
 </update>
 

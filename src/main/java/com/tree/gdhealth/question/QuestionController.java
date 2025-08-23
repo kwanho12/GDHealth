@@ -31,6 +31,7 @@ public class QuestionController {
 	@GetMapping("/question/questionList")
 	public String questionList(Model model, Question question, HttpSession session, @RequestParam(defaultValue="1")int currentPage) {
 		Map<String, Object> questionData = questionService.questionList(currentPage);
+        @SuppressWarnings("unchecked")
 		List<Question> list = (List<Question>) questionData.get("resultQuestionList");
 		int lastPage = (int) questionData.get("lastPage");
 		  
