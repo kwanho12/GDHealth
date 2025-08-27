@@ -42,24 +42,12 @@ public class ProgramController {
 
 	private final ProgramService programService;
 
-	/**
-	 * 전체 프로그램 목록을 나타내는 페이지로 이동합니다.
-	 * 
-	 * @return 프로그램 목록 페이지
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping
 	public String getProgramList() {
 		return "headoffice/programList";
 	}
 
-	/**
-	 * 페이지네이션 후의 프로그램 목록 영역을 리턴합니다.
-	 * 
-	 * @param pageDto 페이지네이션과 관련한 데이터를 전송하기 위한 객체
-	 * @return 페이지네이션 후의 프로그램 목록
-	 * @apiNote 페이지 전체가 아닌 프로그램의 목록을 나타내는 영역만 리턴합니다.
-	 */
 	@GetMapping("/pagination")
 	public String getPagination(Model model, @ModelAttribute PageDto pageDto) {
 
@@ -81,13 +69,6 @@ public class ProgramController {
 		return "headoffice/fragment/programList";
 	}
 
-	/**
-	 * 검색 결과가 반영된 페이지네이션 후의 프로그램 목록 영역을 리턴합니다.
-	 * 
-	 * @param pageDto 페이지네이션과 관련한 데이터를 전송하기 위한 객체
-	 * @return 페이지네이션 후의 프로그램 목록
-	 * @apiNote 페이지 전체가 아닌 프로그램의 목록을 나타내는 영역만 리턴합니다.
-	 */
 	@GetMapping("/searchPagination")
 	public String getSearchPagination(Model model, @ModelAttribute PageDto pageDto) {
 
@@ -111,51 +92,24 @@ public class ProgramController {
 		return "headoffice/fragment/searchProgramList";
 	}
 
-	/**
-	 * 프로그램 추가 페이지로 이동합니다.
-	 * 
-	 * @return 프로그램 추가 페이지
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/add")
 	public String addProgram() {
 		return "headoffice/addProgram";
 	}
 
-	/**
-	 * 데이터베이스에서 해당 날짜들을 검색하여 프로그램 날짜들의 중복 여부를 확인합니다. 입력한 날짜들이 모두 데이터베이스에 존재하지 않는다면
-	 * false를 반환합니다.
-	 * 
-	 * @param programDates 프로그램 날짜 목록
-	 * @return 입력한 날짜들 중 최소 1개가 이미 존재한다면 true, 존재하지 않는다면 false
-	 */
 	@ResponseBody
 	@PostMapping("/dates")
 	public boolean checkDates(@RequestBody List<String> programDates) {
 		return programService.getResultOfDatesCheck(programDates);
 	}
 
-	/**
-	 * 데이터베이스에서 해당 날짜를 검색하여 프로그램 날짜의 중복 여부를 확인합니다. 입력한 날짜가 데이터베이스에 존재하지 않는다면 false를
-	 * 반환합니다.
-	 * 
-	 * @param programDate 프로그램 날짜
-	 * @return 입력한 날짜가 이미 존재한다면 false, 존재하지 않는다면 true
-	 */
 	@ResponseBody
 	@PostMapping("/date")
 	public boolean checkDate(@RequestParam String programDate) {
 		return programService.getResultOfDateOneCheck(programDate);
 	}
 
-	/**
-	 * 성공적으로 프로그램을 추가했을 경우 프로그램 목록 페이지로 리다이렉트합니다. 유효성 검사 실패로 인해 추가가 중단된 경우 다시 프로그램
-	 * 추가 페이지로 이동합니다.
-	 * 
-	 * @param addProgramDto 프로그램을 추가하기 위해 필요한 데이터를 전송하기 위한 객체
-	 * @param empInfo       로그인한 직원의 정보를 담은 LoginEmployee 객체
-	 * @return 프로그램 목록 페이지로 리다이렉트
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/add")
 	public String addProgram(@Validated @ModelAttribute AddProgramDto addProgramDto, BindingResult bindingResult,
@@ -173,13 +127,6 @@ public class ProgramController {
 		return "redirect:/headoffice/program";
 	}
 
-	/**
-	 * 프로그램의 상세 정보 페이지로 이동합니다.
-	 * 
-	 * @param programNo   조회할 프로그램의 번호
-	 * @param programDate 조회할 프로그램의 날짜
-	 * @return 프로그램 상세 정보 페이지
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/{programNo}/{programDate}")
 	public String getProgramOne(Model model, @PathVariable Integer programNo, @PathVariable String programDate) {
@@ -193,13 +140,6 @@ public class ProgramController {
 		return "headoffice/programOne";
 	}
 
-	/**
-	 * 프로그램의 업데이트 페이지로 이동합니다.
-	 * 
-	 * @param programNo   업데이트할 프로그램의 번호
-	 * @param programDate 업데이트할 프로그램의 날짜
-	 * @return 프로그램 업데이트 페이지
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/update/{programNo}/{programDate}")
 	public String modifyProgram(Model model, @PathVariable Integer programNo, @PathVariable String programDate) {
@@ -207,13 +147,6 @@ public class ProgramController {
 		return "headoffice/updateProgram";
 	}
 
-	/**
-	 * 프로그램 업데이트를 성공했을 경우 프로그램 상세 페이지로 리다이렉트합니다. 유효성 검사 실패로 인해 업데이트가 중단된 경우 다시 프로그램
-	 * 업데이트 페이지로 리다이렉트합니다.
-	 * 
-	 * @param updateProgramDto 프로그램을 수정하기 위해 필요한 데이터를 전송하기 위한 객체
-	 * @return 프로그램 상세 정보 페이지로 리다이렉트
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@PostMapping("/update")
 	public String modifyProgram(@Validated @ModelAttribute UpdateProgramDto updateProgramDto,
@@ -236,13 +169,6 @@ public class ProgramController {
 		return "redirect:/headoffice/program/{programNo}/{programDate}";
 	}
 
-	/**
-	 * 프로그램을 비활성화하고 프로그램 상세 정보 페이지로 리다이렉트합니다.
-	 * 
-	 * @param programNo   비활성화할 프로그램 번호
-	 * @param programDate 비활성화할 프로그램 날짜
-	 * @return 프로그램 상세 정보 페이지로 리다이렉트
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/deactivate/{programNo}/{programDate}")
 	public String deactivateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {
@@ -250,13 +176,6 @@ public class ProgramController {
 		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
 	}
 
-	/**
-	 * 프로그램을 활성화하고 프로그램 상세 정보 페이지로 리다이렉트합니다.
-	 * 
-	 * @param programNo   활성화할 프로그램 번호
-	 * @param programDate 활성화할 프로그램 날짜
-	 * @return 프로그램 상세 정보 페이지로 리다이렉트
-	 */
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/activate/{programNo}/{programDate}")
 	public String activateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {

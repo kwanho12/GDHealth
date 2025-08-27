@@ -5,7 +5,7 @@
 	SELECT
 	employee_no
 	FROM employee
-	WHERE employee_id = #{employeeId} AND employee_active = 'Y' AND employee_pw = PASSWORD(#{employeePw})
+	WHERE employee_id = #{employeeId} AND employee_active = 'Y' AND employee_pw = #{employeePw}
 </select>
 	<select id="getLoginEmployeeInfo" resultType="com.tree.gdhealth.employee.login.LoginEmployee">
 	SELECT
@@ -25,7 +25,6 @@
 		ei.employee_img_type employeeImgType,
 		b.branch_name branchName,
 		b.branch_level branchLevel
-
 	FROM employee e
 	    LEFT JOIN employee_detail ed ON e.employee_no = ed.employee_no
 		LEFT JOIN employee_img ei ON  e.employee_no = ei.employee_no

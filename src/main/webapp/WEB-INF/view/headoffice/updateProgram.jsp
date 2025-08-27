@@ -14,8 +14,7 @@
 <link type="image/png" sizes="32x32" rel="icon" href="/admin/workoutFavicon.png">
 <!------------------- favicon end -------------------->
 
-<!-- Google Fonts
-		============================================ -->
+<!-- Google Fonts ============================================ -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
 <!-- Bootstrap CSS
 		============================================ -->

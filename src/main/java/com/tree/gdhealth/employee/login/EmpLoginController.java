@@ -1,6 +1,8 @@
 package com.tree.gdhealth.employee.login;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -44,10 +46,9 @@ public class EmpLoginController {
 		log.info("==========================  employee : " + employee);
 		LoginEmployee loginEmployee = empLoginService.login(employee);
 		if(loginEmployee == null) {
-			red.addFlashAttribute("msg", "로그인에 실패했습니다. 아이디와 비밀번호를 확인하세요.");
 	        return "redirect:/employee/login";
 		}
-		red.addFlashAttribute("msg", "로그인 되셨습니다."+loginEmployee.getEmployeeName()+" 님");
+		red.addAttribute("msg", "로그인 되셨습니다."+loginEmployee.getEmployeeName()+" 님");
 		log.debug("로그인된 직원정보 = "+loginEmployee.toString());
 		session.removeAttribute("customerNo");
 		session.removeAttribute("userLevel");
@@ -62,13 +63,12 @@ public class EmpLoginController {
 	
 	@GetMapping("/employee/logout")
 	public String logout(HttpServletRequest request,
-						 HttpSession session,
-						 RedirectAttributes red,
-						 @RequestParam(name = "ref", required = false)boolean ref) {
-		System.out.println("로그아웃");
-		String msg = "로그아웃 되셨습니다.";
-		red.addFlashAttribute("msg",msg);
-		session.invalidate();
+                         HttpSession session,
+                         @RequestParam(name = "ref", required = false)boolean ref) {
+        if (session != null) {
+            session.invalidate();
+        }
+
 		if(ref){
 			return "redirect:"+request.getHeader("referer");
 		}

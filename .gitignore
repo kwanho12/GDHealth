@@ -42,3 +42,6 @@ buildfingerprint.bin
 # 또는 더 포괄적으로
 build/**
 .gradle/**
+
+# 저장 파일
+upload

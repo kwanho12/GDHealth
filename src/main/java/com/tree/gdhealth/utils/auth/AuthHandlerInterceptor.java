@@ -50,7 +50,7 @@ public class AuthHandlerInterceptor implements HandlerInterceptor {
                 if(loginEmployee == null || loginEmployee.getBranchLevel() != 1){
                     response.sendRedirect("/employee/login");
                     return false;
-                }else {
+                } else {
                     return true;
                 }
             }

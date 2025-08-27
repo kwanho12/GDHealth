@@ -77,12 +77,11 @@ pageEncoding="UTF-8"%>
 				<h1> GD HEALTH</h1>
                 <h5>종합 헬스클럽 프랜차이즈 프로젝트</h5>
                 <br>
-				<p>👑임미현, 장현수, 진관호, 이은택, 정인호</p>
 			</div>
 			<div class="text-center login-footer">
                 <div><br></div>
+				<p> <a href="/employee/login" style="font-size:25px">·본사 관리자 페이지</a></p>
                 <p><a href="/customer/home">·고객 페이지</a></p>
-				<p> <a href="/employee/login">·본사/지점관리자 페이지</a></p>
                 <br>
 			</div>
                 <img src="/img/breadcrumb-bg.jpg" class="rounded-circle mg-b-30">

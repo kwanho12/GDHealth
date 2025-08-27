@@ -35,7 +35,7 @@ public class LoginController {
 		}
 		red.addFlashAttribute("msg", "로그인 되셨습니다.");
 		
-//		session.removeAttribute("loginEmployee");
+		session.removeAttribute("loginEmployee");
 
 		session.setAttribute("customerNo", customerNo);
 		session.setAttribute("customerId", customer.getCustomerId());
@@ -45,7 +45,6 @@ public class LoginController {
 	
 	@GetMapping("/customer/logout")
 	public String logout(HttpSession session,RedirectAttributes red) {
-		System.out.println("로그아웃");
 		String msg = "로그아웃 되셨습니다.";
 		red.addFlashAttribute("msg",msg);
 		session.invalidate();

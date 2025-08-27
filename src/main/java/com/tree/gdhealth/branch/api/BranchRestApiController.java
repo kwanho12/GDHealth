@@ -1,6 +1,5 @@
 package com.tree.gdhealth.branch.api;
 
-import com.tree.gdhealth.domain.Branch;
 import com.tree.gdhealth.utils.ResponseEntityGenerator;
 import com.tree.gdhealth.utils.exception.TooManyResultsException;
 
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**<p>지점도메인의 RestApiController</p>
  * @author 정인호

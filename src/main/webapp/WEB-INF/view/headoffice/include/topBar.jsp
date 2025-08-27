@@ -11,7 +11,12 @@
 								<ul class="nav navbar-nav mai-top-nav header-right-menu">
 
 									<li class="nav-item">
-										<a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"> <img src="${pageContext.request.contextPath}/upload/emp/${sessionScope.loginEmployee.employeeImgFileName}" alt="" /> <span class="admin-name">${sessionScope.loginEmployee.employeeName}</span> <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
+										<a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
+										    <img src="${pageContext.request.contextPath}/upload/emp/${sessionScope.loginEmployee.employeeImgFileName}" alt="" />
+										    <span class="admin-name">
+										        ${sessionScope.loginEmployee.employeeName}
+										    </span>
+										    <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
 										</a>
 										<ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 											<li>

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" session="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
 <html>
@@ -56,9 +56,7 @@
 							<button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
 							<a type="button" href="/customer/home" class="btn btn-secondary btn-sm btn-block mt-3">고객 홈으로</a>
 							<div class="text-center pt-4 text-muted">
-								<a href="#" id="lookAroundBranch">(둘러보기) 지점관리자 계정</a>
-								<br>
-								<a href="#"  id="lookAroundHeadoffice">(둘러보기) 본사관리자 계정</a>
+								<a href="#"  id="lookAroundHeadoffice">본사관리자 계정 아이디/비밀번호 자동입력</a>
 							</div>
 						</form>
 					</div>
