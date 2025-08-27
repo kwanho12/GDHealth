@@ -43,14 +43,6 @@ public class ImageSaveUtil {
 		return uniqueName + extension;
 	}
 
-	/**
-	 * MultipartFile을 지정된 경로에 저장합니다.
-	 * 
-	 * @param multipartFile 저장할 MultipartFile 객체
-	 * @param path          저장할 경로
-	 * @param fileName      저장할 파일 이름
-	 * @throws ImageNotSaveException 파일 저장에 실패한 경우
-	 */
 	public static void saveFile(MultipartFile multipartFile, String path, String fileName) {
 
 		File file = new File(path + "/" + fileName);

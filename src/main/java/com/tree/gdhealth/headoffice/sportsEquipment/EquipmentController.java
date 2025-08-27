@@ -3,6 +3,7 @@ package com.tree.gdhealth.headoffice.sportsEquipment;
 import java.util.List;
 import java.util.Map;
 
+import com.tree.gdhealth.utils.exception.UnauthorizedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -142,16 +143,24 @@ public class EquipmentController {
 		return "redirect:/headoffice/equipment";
 	}
 
-	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@ResponseBody
 	@PostMapping("/deactivation")
-	public int deactivateEquipment(@RequestParam Integer equipmentNo) {
+	public int deactivateEquipment(@RequestParam Integer equipmentNo, HttpSession session) {
+        LoginEmployee loginEmployee = (LoginEmployee) session.getAttribute("loginEmployee");
+        if(loginEmployee == null || loginEmployee.getBranchLevel() != 1){
+            throw new UnauthorizedException();
+        }
+
 		return equipmentService.modifyDeactivation(equipmentNo);
 	}
 
 	@ResponseBody
 	@PostMapping("/activation")
-	public int activateEquipment(@RequestParam Integer equipmentNo) {
+	public int activateEquipment(@RequestParam Integer equipmentNo, HttpSession session) {
+        LoginEmployee loginEmployee = (LoginEmployee) session.getAttribute("loginEmployee");
+        if(loginEmployee == null || loginEmployee.getBranchLevel() != 1){
+            throw new UnauthorizedException();
+        }
 		return equipmentService.modifyActivation(equipmentNo);
 	}
 	

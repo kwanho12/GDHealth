@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-@SuppressWarnings("serial")
 public class DatesDuplicatedException extends RuntimeException {
 	public DatesDuplicatedException(String message) {
 		super(message);

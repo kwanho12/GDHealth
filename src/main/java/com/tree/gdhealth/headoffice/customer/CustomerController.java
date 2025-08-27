@@ -3,6 +3,9 @@ package com.tree.gdhealth.headoffice.customer;
 import java.util.List;
 import java.util.Map;
 
+import com.tree.gdhealth.employee.login.LoginEmployee;
+import com.tree.gdhealth.utils.exception.UnauthorizedException;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +34,13 @@ public class CustomerController {
 		return "headoffice/customerList";
 	}
 
-	@GetMapping("/pagination")
-	public String getPagination(Model model, @RequestParam int pageNum) {
+    @Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
+    @GetMapping("/pagination")
+	public String getPagination(Model model, @RequestParam int pageNum, HttpSession session) {
+        LoginEmployee loginEmployee = (LoginEmployee) session.getAttribute("loginEmployee");
+        if(loginEmployee == null || loginEmployee.getBranchLevel() != 1){
+            throw new UnauthorizedException();
+        }
 
 		HeadofficePagination pagination = customerService.getPagination(pageNum, customerService.getCustomerCnt());
 

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
  * @author 진관호
  */
 @NoArgsConstructor
-@SuppressWarnings("serial")
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class EmpNotFoundException extends NotFoundException {
 	public EmpNotFoundException(String message) {

@@ -9,7 +9,7 @@
 		s.item_name itemName,
 		s.item_price itemPrice,
 		s.note note,
-		s.active active,
+		TRIM(s.active) active,
 		s.createdate createdate,
 		si.sports_equipment_img_file_name filename,
 		ed.employee_name employeeName

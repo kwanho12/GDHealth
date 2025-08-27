@@ -254,7 +254,9 @@
 	<!-- main JS
 		============================================ -->
 	<script src="/admin/js/main.js"></script>
-
+    <!-- 공통 에러 핸들러
+        	    ============================================ -->
+    <script src="/js/common.js"></script>
 </body>
 <script>
 	$('#employeeId').focus();

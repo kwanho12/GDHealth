@@ -39,11 +39,11 @@
 			    				<td>${m.note}</td>
 			    				<td>${m.employeeName}</td>
 			    				<td>${m.createdate}</td>
-			    				<c:if test="${m.active == 'Y'}">
+			    				<c:if test="${m.active eq 'Y'}">
 			    					<td><button type="button" class="btn btn-primary deactivateBtn" 
 			    									data-equipmentno="${m.equipmentNo}">활성화</button></td>
 			    				</c:if>
-			    				<c:if test="${m.active == 'N'}">
+			    				<c:if test="${m.active eq 'N'}">
 			    					<td><button type="button" class="btn btn-primary activateBtn" 
 			    									data-equipmentno="${m.equipmentNo}">비활성화</button></td>
 			    				</c:if>	

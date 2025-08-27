@@ -195,7 +195,9 @@
 	<!-- main JS
 		============================================ -->
 	<script src="/admin/js/main.js"></script>
-
+    <!-- 공통 에러 핸들러
+    	    ============================================ -->
+    <script src="/js/common.js"></script>
 </body>
 <script>
 	
@@ -259,7 +261,7 @@
 		}
 			
 	});
-	
+
 	// 동적으로 추가된 요소에 대해 이벤트 처리
 	// 검색
 	$(document).on('click', '#searchBtn', function(e){
