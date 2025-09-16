@@ -59,6 +59,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
 
+    // AWS SDK BOM (버전은 여기서만 관리)
+    implementation platform("software.amazon.awssdk:bom:2.20.0")
+
+    // 필요한 서비스 모듈 추가
+    implementation "software.amazon.awssdk:s3"
+    implementation "software.amazon.awssdk:dynamodb"
+    implementation "software.amazon.awssdk:ses"
 }
 
 // 컴파일러 경고 최소화

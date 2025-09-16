@@ -99,7 +99,7 @@
 					<div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
 						<div class="profile-info-inner">
 							<div class="profile-img col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
-								<img src="${pageContext.request.contextPath}/upload/emp/${empOne.filename}" style="width: 350px; height: 350px;" alt="${pageContext.request.contextPath}/noImg" />
+								<img src="https://gdhealth.s3.ap-southeast-2.amazonaws.com/employee/${empOne.filename}" style="width: 350px; height: 350px;" alt="${pageContext.request.contextPath}/noImg" />
 							</div>
 
 							<div class="profile-details-hr">

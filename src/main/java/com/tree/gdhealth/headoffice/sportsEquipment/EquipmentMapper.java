@@ -24,13 +24,13 @@ public interface EquipmentMapper {
 
 	Map<String, Object> selectEquipmentOne(int equipmentNo);
 
-	int insertEquipment(SportsEquipment sportsEquipment);
+	void insertEquipment(SportsEquipment sportsEquipment);
 
-	int insertEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
+	void insertEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
 
-	int updateEquipment(SportsEquipment sportsEquipment);
+	void updateEquipment(SportsEquipment sportsEquipment);
 
-	int updateEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
+	void updateEquipmentImg(SportsEquipmentImg sportsEquipmentImg);
 
 	int updateToDeactiveEquipment(int sportsEquipmentNo);
 

@@ -33,7 +33,7 @@
 			    			<tr>	
 			    				<td>${m.itemName}</td>
 			    				<td>
-			    					<img src="${pageContext.request.contextPath}/upload/equipment/${m.filename}" style="width:70px; height:70px;">
+			    					<img src="https://gdhealth.s3.ap-southeast-2.amazonaws.com/equipment/${m.filename}" style="width:70px; height:70px;">
 			    				</td>
 			    				<td>${m.itemPrice}</td>   				
 			    				<td>${m.note}</td>

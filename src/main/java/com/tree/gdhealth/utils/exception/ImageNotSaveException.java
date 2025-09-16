@@ -16,4 +16,8 @@ public class ImageNotSaveException extends RuntimeException{
 	public ImageNotSaveException(String message) {
 		super(message);
 	}
+
+    public ImageNotSaveException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

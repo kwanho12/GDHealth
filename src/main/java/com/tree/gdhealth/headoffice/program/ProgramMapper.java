@@ -29,20 +29,20 @@ public interface ProgramMapper {
 
 	Map<String, Object> selectProgramOne(ProgramDate programDate);
 
-	int insertProgram(Program program);
+	void insertProgram(Program program);
 
-	int insertProgramDates(List<ProgramDate> dateList);
+	void insertProgramDates(List<ProgramDate> dateList);
 
-	int insertProgramImg(ProgramImg programImg);
+	void insertProgramImg(ProgramImg programImg);
 
-	int updateProgram(Program program);
+	void updateProgram(Program program);
 
-	int updateProgramDate(ProgramDate programDate);
+	void updateProgramDate(ProgramDate programDate);
 
-	int updateProgramImg(ProgramImg programImg);
+	void updateProgramImg(ProgramImg programImg);
 
-	int updateToDeactiveProgram(int programNo);
+	void updateToDeactiveProgram(int programNo);
 
-	int updateToActiveProgram(int programNo);
+	void updateToActiveProgram(int programNo);
 
 }

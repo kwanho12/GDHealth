@@ -72,8 +72,8 @@
 		SELECT
 		ed.employee_name empName,
 		p.program_no programNo,
+        p.writer_employee_no writerEmployeeNo,
 		p.program_name programName,
-		p.program_max_customer maxCustomer,
 		p.program_detail programDetail,
 		p.program_max_customer maxCustomer,
 		p.program_active active,
@@ -171,6 +171,7 @@
 		program_max_customer = #{programMaxCustomer},
 		updatedate = NOW()
 		WHERE program_no = #{programNo}
+        AND writer_employee_no = #{employeeNo}
 	</update>
 	<update id="updateProgramDate"
 		parameterType="com.tree.gdhealth.domain.ProgramDate">

@@ -1,20 +1,33 @@
 package com.tree.gdhealth.utils.imagesave;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tree.gdhealth.utils.exception.ExtensionNotMatchException;
 import com.tree.gdhealth.utils.exception.ImageNotSaveException;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 /**
  * 이미지 파일 저장과 관련된 작업을 수행하는 유틸리티 클래스
  * 
  * @author 진관호
  */
+@Component
+@RequiredArgsConstructor
 public class ImageSaveUtil {
+
+    private final S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 	
 	private static final String PNG = ".png";
 	private static final String JPG = ".jpg";
@@ -23,14 +36,7 @@ public class ImageSaveUtil {
 	private static final String WEBP = ".webp";
 	private static final String TIF = ".tif";
 
-	/**
-	 * 원본 이미지명으로부터 확장자명을 추출하여 고유한 이미지명을 리턴합니다.
-	 * 
-	 * @param originalName 원본 이미지명
-	 * @return 고유한 파일 이름
-	 * @throws ExtensionNotMatchException 이미지 파일이 아닌 경우
-	 */
-	public static String getFileName(String originalName) {
+	public String getFileName(String originalName) {
 
 		String uniqueName = UUID.randomUUID().toString();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
@@ -43,13 +49,22 @@ public class ImageSaveUtil {
 		return uniqueName + extension;
 	}
 
-	public static void saveFile(MultipartFile multipartFile, String path, String fileName) {
+    public void saveFileToS3(MultipartFile multipartFile, String keyName, String folder) {
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(folder + "/" + keyName)
+                    .contentType(multipartFile.getContentType())
+                    .acl(ObjectCannedACL.PUBLIC_READ) // 업로드 시 자동으로 퍼블릭 읽기
+                    .build();
 
-		File file = new File(path + "/" + fileName);
-		try {
-			multipartFile.transferTo(file);
-		} catch (IllegalStateException | IOException e) {
-			throw new ImageNotSaveException("이미지 저장을 실패하였습니다.");
-		}
-	}
+            s3Client.putObject(
+                    putObjectRequest,
+                    RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize())
+            );
+
+        } catch (IOException e) {
+            throw new ImageNotSaveException("S3 업로드 실패", e);
+        }
+    }
 }

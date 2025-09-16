@@ -10,7 +10,7 @@
                		<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-bottom:15px;">
                         <div class="courses-inner res-mg-b-30">
                             <div style="text-align:center;">	           
-                               	<img src="${pageContext.request.contextPath}/upload/program/${m.filename}" style="height:270px; width:300px;">   
+                               	<img src="https://gdhealth.s3.ap-southeast-2.amazonaws.com/program/${m.filename}" style="height:270px; width:300px;">
                             </div>
                           
                             <div class="course-des">

@@ -1,20 +1,24 @@
 package com.tree.gdhealth.headoffice.sportsEquipment;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import com.tree.gdhealth.domain.SportsEquipmentImg;
+import com.tree.gdhealth.utils.enumtype.ImageType;
+import com.tree.gdhealth.utils.exception.ImageNotDeleteException;
+import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tree.gdhealth.domain.SportsEquipment;
-import com.tree.gdhealth.domain.SportsEquipmentImg;
 import com.tree.gdhealth.dto.AddSportsEquipmentDto;
 import com.tree.gdhealth.dto.PaginationDto;
 import com.tree.gdhealth.dto.UpdateSportsEquipmentDto;
-import com.tree.gdhealth.utils.enumtype.ImageType;
-import com.tree.gdhealth.utils.imagesave.ImageSaveUtil;
 import com.tree.gdhealth.utils.pagination.HeadofficePagination;
 
 import lombok.RequiredArgsConstructor;
@@ -27,122 +31,122 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class EquipmentService {
 
-	private final EquipmentMapper equipmentMapper;
+    private final EquipmentMapper equipmentMapper;
+    private final ImageSaveUtil imageSaveUtil;
 
-	@Transactional(readOnly = true)
-	public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage) {	
-		PaginationDto paginationDto = new PaginationDto();
-		paginationDto.setBeginRow(beginRow);
-		paginationDto.setRowPerPage(rowPerPage);
-		return equipmentMapper.selectEquipmentList(paginationDto);
-	}
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage) {
+        PaginationDto paginationDto = new PaginationDto();
+        paginationDto.setBeginRow(beginRow);
+        paginationDto.setRowPerPage(rowPerPage);
+        return equipmentMapper.selectEquipmentList(paginationDto);
+    }
 
-	@Transactional(readOnly = true)
-	public int getEquipmentCnt() {
-		return equipmentMapper.selectEquipmentCnt();
-	}
+    @Transactional(readOnly = true)
+    public int getEquipmentCnt() {
+        return equipmentMapper.selectEquipmentCnt();
+    }
 
-	@Transactional(readOnly = true)
-	public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage, String type, String keyword) {
-		PaginationDto paginationDto = new PaginationDto();
-		paginationDto.setBeginRow(beginRow);
-		paginationDto.setRowPerPage(rowPerPage);
-		paginationDto.setType(type);
-		paginationDto.setKeyword(keyword);
-		return equipmentMapper.selectEquipmentList(paginationDto);
-	}
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getEquipmentList(int beginRow, int rowPerPage, String type, String keyword) {
+        PaginationDto paginationDto = new PaginationDto();
+        paginationDto.setBeginRow(beginRow);
+        paginationDto.setRowPerPage(rowPerPage);
+        paginationDto.setType(type);
+        paginationDto.setKeyword(keyword);
+        return equipmentMapper.selectEquipmentList(paginationDto);
+    }
 
-	@Transactional(readOnly = true)
-	public int getEquipmentCnt(String type, String keyword) {
-		return equipmentMapper.selectSearchCnt(type, keyword);
-	}
+    @Transactional(readOnly = true)
+    public int getEquipmentCnt(String type, String keyword) {
+        return equipmentMapper.selectSearchCnt(type, keyword);
+    }
 
-	@Transactional(readOnly = true)
-	public Map<String, Object> getEquipmentOne(int equipmentNo) {
-		return equipmentMapper.selectEquipmentOne(equipmentNo);
-	}
+    @Transactional(readOnly = true)
+    public Map<String, Object> getEquipmentOne(int equipmentNo) {
+        return equipmentMapper.selectEquipmentOne(equipmentNo);
+    }
 
-	public int modifyDeactivation(int sportsEquipmentNo) {
-		return equipmentMapper.updateToDeactiveEquipment(sportsEquipmentNo);
-	}
+    public int modifyDeactivation(int sportsEquipmentNo) {
+        return equipmentMapper.updateToDeactiveEquipment(sportsEquipmentNo);
+    }
 
-	public int modifyActivation(int sportsEquipmentNo) {
-		return equipmentMapper.updateToActiveEquipment(sportsEquipmentNo);
-	}
+    public int modifyActivation(int sportsEquipmentNo) {
+        return equipmentMapper.updateToActiveEquipment(sportsEquipmentNo);
+    }
 
-	public void addEquipment(AddSportsEquipmentDto addSportsEquipmentDto, String path) {
+    public void addEquipment(AddSportsEquipmentDto dto, String path) {
 
-		if (addSportsEquipmentDto.getNote() == null) {
-			addSportsEquipmentDto.setNote("");
-		}
+        if (dto.getNote() == null) {
+            dto.setNote("");
+        }
 
-		SportsEquipment sportsEquipment = SportsEquipment.builder()
-											.employeeNo(addSportsEquipmentDto.getEmployeeNo())
-											.itemName(addSportsEquipmentDto.getItemName())
-											.itemPrice(addSportsEquipmentDto.getItemPrice())
-											.note(addSportsEquipmentDto.getNote())
-											.build();
-		equipmentMapper.insertEquipment(sportsEquipment);
+        SportsEquipment equipment = SportsEquipment.builder()
+                .employeeNo(dto.getEmployeeNo())
+                .itemName(dto.getItemName())
+                .itemPrice(dto.getItemPrice())
+                .note(dto.getNote())
+                .build();
+        equipmentMapper.insertEquipment(equipment);
 
-		MultipartFile equipmentFile = addSportsEquipmentDto.getEquipmentFile();
-						
-		String originalName = equipmentFile.getOriginalFilename();
-		String fileName = ImageSaveUtil.getFileName(originalName);
+        MultipartFile file = dto.getEquipmentFile();
+        if (file != null && !file.isEmpty()) {
+            saveEquipmentImg(file, path, equipment.getSportsEquipmentNo(), true);
+        }
+    }
 
-		SportsEquipmentImg img = SportsEquipmentImg.builder()
-									.sportsEquipmentNo(sportsEquipment.getSportsEquipmentNo())
-									.sportsEquipmentImgOriginName(originalName)
-									.sportsEquipmentImgSize(equipmentFile.getSize())
-									.sportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()))
-									.sportsEquipmentImgFileName(fileName)
-									.build();
-		equipmentMapper.insertEquipmentImg(img);
+    public void modifyEquipment(UpdateSportsEquipmentDto dto, String newPath, String oldPath) {
 
-		ImageSaveUtil.saveFile(equipmentFile, path, fileName);
-	}
+        SportsEquipment sportsEquipment = SportsEquipment.builder()
+                .itemName(dto.getItemName())
+                .itemPrice(dto.getItemPrice())
+                .note(dto.getNote())
+                .sportsEquipmentNo(dto.getSportsEquipmentNo())
+                .build();
+        equipmentMapper.updateEquipment(sportsEquipment);
 
+        MultipartFile file = dto.getEquipmentFile();
+        if (file != null && !file.isEmpty()) {
+            try {
+                Files.delete(Paths.get(oldPath));
+            } catch (IOException e) {
+                throw new ImageNotDeleteException("기존 장비 이미지를 삭제하지 못했습니다.", e);
+            }
+            saveEquipmentImg(file, newPath, dto.getSportsEquipmentNo(), false);
+        }
+    }
 
-	public void modifyEquipment(UpdateSportsEquipmentDto updateSportsEquipmentDto, String newPath, String oldPath) {
+    public HeadofficePagination getPagination(int pageNum, int equipmentCnt) {
 
-		SportsEquipment sportsEquipment = SportsEquipment.builder()
-											.itemName(updateSportsEquipmentDto.getItemName())
-											.itemPrice(updateSportsEquipmentDto.getItemPrice())
-											.note(updateSportsEquipmentDto.getNote())
-											.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
-											.build();
-		equipmentMapper.updateEquipment(sportsEquipment);
+        HeadofficePagination pagination = HeadofficePagination.builder()
+                .numberOfPaginationToShow(10)
+                .rowPerPage(8)
+                .currentPageNum(pageNum)
+                .rowCnt(equipmentCnt).build();
+        pagination.calculateProperties();
 
-		MultipartFile equipmentFile = updateSportsEquipmentDto.getEquipmentFile();
-		if (!equipmentFile.isEmpty()) {
-			
-			new File(oldPath).delete();
-				
-			String originalName = equipmentFile.getOriginalFilename();
-			String fileName = ImageSaveUtil.getFileName(originalName);
+        return pagination;
+    }
 
-			SportsEquipmentImg img = SportsEquipmentImg.builder()
-										.sportsEquipmentNo(updateSportsEquipmentDto.getSportsEquipmentNo())
-										.sportsEquipmentImgOriginName(originalName)
-										.sportsEquipmentImgSize(equipmentFile.getSize())
-										.sportsEquipmentImgType(ImageType.fromText(equipmentFile.getContentType()))
-										.sportsEquipmentImgFileName(fileName)
-										.build();
-			equipmentMapper.updateEquipmentImg(img);
+    private void saveEquipmentImg(MultipartFile file, String path, Integer equipmentNo, boolean isInsert) {
+        String originalName = Optional.ofNullable(file.getOriginalFilename())
+                .orElseThrow(() -> new IllegalArgumentException("파일 이름이 없습니다."));
+        String fileName = imageSaveUtil.getFileName(originalName);
 
-			ImageSaveUtil.saveFile(equipmentFile, newPath, fileName);
-		}
-	}
+        SportsEquipmentImg img = SportsEquipmentImg.builder()
+                .sportsEquipmentNo(equipmentNo)
+                .sportsEquipmentImgOriginName(originalName)
+                .sportsEquipmentImgSize(file.getSize())
+                .sportsEquipmentImgType(ImageType.fromText(file.getContentType()))
+                .sportsEquipmentImgFileName(fileName)
+                .build();
 
-	public HeadofficePagination getPagination(int pageNum, int equipmentCnt) {
+        if (isInsert) {
+            equipmentMapper.insertEquipmentImg(img);
+        } else {
+            equipmentMapper.updateEquipmentImg(img);
+        }
 
-		HeadofficePagination pagination = HeadofficePagination.builder()
-											.numberOfPaginationToShow(10)
-											.rowPerPage(8)
-											.currentPageNum(pageNum)
-											.rowCnt(equipmentCnt).build();
-		pagination.calculateProperties();
-
-		return pagination;
-	}
-
+        imageSaveUtil.saveFileToS3(file, fileName, "equipment");
+    }
 }

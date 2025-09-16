@@ -110,6 +110,7 @@
 										<input type="hidden" value="${programOne.programDate}" name="originDate"> 
 										<input type="hidden" value="${programOne.programNo}" name="programNo"> 
 										<input type="hidden" value="${programOne.filename}" name="filename">
+										<input type="hidden" value="${programOne.writerEmployeeNo}" name="writerEmployeeNo">
 										<div class="latest-blog-single blog-single-full-view">
 											<div class="blog-details blog-sig-details">
 												<div class="blog-details" style="text-align: center;">

@@ -101,7 +101,7 @@
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 									<div class="latest-blog-single blog-single-full-view">
 										<div class="blog-image col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
-											<img src="${pageContext.request.contextPath}/upload/program/${programOne.filename}" alt="${pageContext.request.contextPath}/noImg" style="width: 450px; height: 450px;" />
+											<img src="https://gdhealth.s3.ap-southeast-2.amazonaws.com/program/${programOne.filename}" alt="${pageContext.request.contextPath}/noImg" style="width: 450px; height: 450px;" />
 										</div>
 
 										<div class="blog-details blog-sig-details">

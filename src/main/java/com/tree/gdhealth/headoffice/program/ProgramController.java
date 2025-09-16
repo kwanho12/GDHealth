@@ -173,14 +173,14 @@ public class ProgramController {
 	@GetMapping("/deactivate/{programNo}/{programDate}")
 	public String deactivateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {
 		programService.modifyDeactivation(programNo);
-		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
+		return "redirect:/headoffice/program/{programNo}/{programDate}";
 	}
 
 	@Auth(AUTHORITY = Authority.HEAD_EMP_ONLY)
 	@GetMapping("/activate/{programNo}/{programDate}")
 	public String activateProgram(@PathVariable Integer programNo, @PathVariable String programDate) {
 		programService.modifyActivation(programNo);
-		return "redirect:/headoffice/program/programOne/{programNo}/{programDate}";
+		return "redirect:/headoffice/program/{programNo}/{programDate}";
 	}
 	
 }

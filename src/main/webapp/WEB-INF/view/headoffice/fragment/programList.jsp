@@ -11,7 +11,7 @@
                         <div class="courses-inner res-mg-b-30">
                             <div style="text-align:center;">	     
                             	<c:if test="${not empty m.filename}">
-                            		<img src="${pageContext.request.contextPath}/upload/program/${m.filename}" style="height:270px; width:300px;">
+                            		<img src="https://gdhealth.s3.ap-southeast-2.amazonaws.com/program/${m.filename}" style="height:270px; width:300px;">
                             	</c:if>
                         	    <c:if test="${empty m.filename}">
                             		<img src="${pageContext.request.contextPath}/noImg.jpg" style="height:270px; width:300px;">
@@ -33,6 +33,7 @@
   
                </div>
            </div>
+
            <!--------------------- 프로그램 list end-------------------------->
 	           	         
            <!--------------------- start pagination -----------------------------------> 

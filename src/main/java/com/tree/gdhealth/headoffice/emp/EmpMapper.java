@@ -29,10 +29,10 @@ public interface EmpMapper {
 
 	int selectIsIdExists(String employeeId);
 
-	int insertEmployee(Employee employee);
+	void insertEmployee(Employee employee);
 
-	int insertEmployeeDetail(EmployeeDetail employeeDetail);
+	void insertEmployeeDetail(EmployeeDetail employeeDetail);
 
-	int insertEmployeeImg(EmployeeImg employeeImg);
+	void insertEmployeeImg(EmployeeImg employeeImg);
 
 }

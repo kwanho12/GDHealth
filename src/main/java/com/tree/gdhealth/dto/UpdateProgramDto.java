@@ -23,6 +23,8 @@ public class UpdateProgramDto {
 	private String filename;
 	
 	private MultipartFile programFile;
+
+    private int writerEmployeeNo;
 	
 	@Max(value = 100, message = "수용 인원은 최대 100명까지 가능합니다.")
 	@Min(value = 1, message = "수용 인원은 1명 이상이어야 합니다.")
